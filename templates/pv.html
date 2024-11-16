@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <title>design</title>
+    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css" />
+    <link
+      rel="stylesheet"
+      href="/assets/fonts/fontawesome5-overrides.min.css"
+    />
+    <link rel="stylesheet" href="/assets/css/bs-theme-overrides.css" />
+    <link rel="stylesheet" href="/assets/css/aos.min.css" />
+    <link rel="stylesheet" href="/assets/css/animate.min.css" />
+    <link rel="stylesheet" href="/assets/css/Bootstrap-Cards-v2.css" />
+    <link rel="stylesheet" href="/assets/css/Hero-Clean-images.css" />
+    <link
+      rel="stylesheet"
+      href="/assets/css/Hero-with-image-and-overlapping-content.css"
+    />
+    <link rel="stylesheet" href="/assets/css/Login-with-overlay-image.css" />
+    <link
+      rel="stylesheet"
+      href="/assets/css/Navbar-Centered-Brand-Dark-icons.css"
+    />
+    <link rel="stylesheet" href="/assets/css/Nice-breadcrumb.css" />
+    <link rel="stylesheet" href="/assets/css/responsive-blog-card-slider.css" />
+    <link
+      rel="stylesheet"
+      href="/assets/css/Sidebar-Cool-SB-Admin-Inspirate.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+      .carousel-item {
+        height: auto; /* Allows the height to adjust based on the image */
+        overflow: hidden; /* Hides any overflow */
+      }
+
+      .img-fluid {
+        max-width: 100%; /* Ensures the image does not exceed the container width */
+        height: auto; /* Maintains the aspect ratio */
+      }
+
+      .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .modal-header {
+        border-bottom: none;
+        font-weight: bold;
+        background-color: #fff;
+      }
+      .list-group-item {
+        border: none;
+        border-bottom: 1px solid #f1f1f1;
+      }
+      .list-group-item:last-child {
+        border-bottom: none;
+      }
+      .list-group-item img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 5px;
+      }
+      .list-group-item .btn {
+        background: none;
+        border: none;
+        color: #dc3545;
+      }
+    </style>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      footer {
+        margin-top: auto;
+      }
+      .product-container {
+        display: flex;
+        padding: 20px;
+      }
+      .product-images {
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .product-images img {
+        width: 80%;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+      .product-main-image img {
+        width: 100%;
+      }
+      .product-details {
+        width: 70%;
+        padding-left: 20px;
+      }
+      .product-details h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+      .product-details .price {
+        font-size: 24px;
+        color: red;
+        margin-bottom: 10px;
+      }
+      .product-details .original-price {
+        text-decoration: line-through;
+        color: gray;
+        margin-left: 10px;
+      }
+      .product-details .color-options img {
+        width: 50px;
+        margin-right: 10px;
+        cursor: pointer;
+      }
+      .product-details .size-options button {
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+      .product-details .quantity {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .product-details .quantity input {
+        width: 50px;
+        text-align: center;
+      }
+      .product-details .availability {
+        color: green;
+        margin-bottom: 10px;
+      }
+      .product-details .add-to-cart {
+        width: 100%;
+        padding: 10px;
+        background-color: black;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .product-details .details {
+        margin-top: 20px;
+      }
+    </style>
+
+    <style>
+      .card {
+        height: 100%; /* Ensure cards take full height of the container */
+      }
+
+      .card-img-top {
+        height: 200px; /* Set a fixed height for images */
+        object-fit: cover; /* Maintain aspect ratio */
+      }
+
+      .card-body {
+        display: flex;
+        flex-direction: column; /* Stack elements vertically */
+        flex-grow: 1; /* Allow card body to grow to fill space */
+      }
+
+      .input-group {
+        margin-top: auto; /* Push the input group to the bottom */
+      }
+    </style>
+    <style>
+      .product-title {
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .product-price {
+        color: #ff5722;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .product-old-price {
+        text-decoration: line-through;
+        color: #999;
+      }
+      .product-discount {
+        background-color: #ff5722;
+        color: white;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+      .product-rating {
+        color: #ffcc00;
+      }
+      .product-brand a {
+        color: #007bff;
+        text-decoration: none;
+      }
+      .product-color {
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .product-quantity input {
+        width: 50px;
+        text-align: center;
+      }
+      .btn-buy,
+      .btn-cart {
+        width: 150px;
+        font-size: 16px;
+      }
+      .btn-buy {
+        background-color: #ff5722;
+        color: white;
+      }
+      .btn-cart {
+        background-color: #ff9800;
+        color: white;
+      }
+      .product-images img {
+        width: 100%;
+        height: auto;
+      }
+      .product-thumbnails img {
+        width: 50px;
+        height: 50px;
+        margin: 5px;
+        border: 1px solid #ddd;
+      }
+      .product-thumbnails img:hover {
+        border: 1px solid #ff5722;
+      }
+
+      .highlight {
+        border: 5px solid blue; /* Change the color and width as desired */
+        padding: 5px; /* Optional: adds space between the image and the border */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 
+    <nav class="navbar navbar-expand-md bg-dark pulse animated py-3" data-bs-theme="dark">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="#"><span class="pulse animated infinite">Bench</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-6"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse flex-grow-0 order-md-first" id="navcol-6">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link active" href="{{url_for('index')}}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('shop')}}">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('contact_us')}}">Contact us</a></li>
+                    
+                </ul>
+            </div>
+            <ul class="navbar-nav me-auto">
+                <a href="#" class="position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-cart2" style="color: #ffffff;font-size: 30px;">
+                        <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"></path>
+                    </svg>
+
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {%if cart_len<=99%}
+                            {{cart_len}}
+                        {%else%}
+                            {{cart_len}}+
+                        {%endif%}
+                        <span class="visually-hidden">unread messages</span>
+                </a>
+                
+                 <div class="dropdown">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person-circle" style="color: #ffffff;margin-left: 8px;font-size: 30px;">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"></path>
+                        </svg>
+                    </a>
+                  
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                  </div>
+
+               
+                  
+                
+
+            </ul>
+        </div>
+    </nav> -->
+
+    <nav
+      class="navbar navbar-expand-md bg-dark pulse animated py-3"
+      data-bs-theme="dark"
+    >
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+          <span class="pulse animated infinite">Bench</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navcol-6"
+          aria-controls="navcol-6"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navcol-6">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="{{url_for('index')}}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('shop')}}">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('contact_us')}}"
+                >Contact us</a
+              >
+            </li>
+          </ul>
+          <div class="d-flex justify-content-between align-items-baseline">
+            <a
+              href=""
+              class="position-relative"
+              data-bs-toggle="modal"
+              data-bs-target="#cartModal"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                class="bi bi-cart2"
+                style="color: #ffffff; font-size: 30px"
+              >
+                <path
+                  d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0  0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"
+                ></path>
+              </svg>
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              >
+                {%if cart_len<=99%} {{cart_len}} {%else%} {{cart_len}}+
+                {%endif%}
+                <span class="visually-hidden">unread messages</span>
+              </span>
+            </a>
+            <div class="dropdown">
+              <a
+                class="dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  class="bi bi-person-circle"
+                  style="color: #ffffff; margin-left: 8px; font-size: 30px"
+                >
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                  <path
+                    fill-rule="evenodd"
+                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                  ></path>
+                </svg>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Lagout</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container p-5">
+      <div class="row">
+        <div class="col-md-4">
+          <div id="carouselExampleIndicators" class="carousel slide">
+            <div class="carousel-inner">
+              {% for i in data['image'] %}
+              <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <img
+                  alt="Thumbnail image of Women's Sweat Shorts"
+                  class="img-fluid img-thumbnail"
+                  src="{{i}}"
+                />
+              </div>
+              {% endfor %}
+            </div>
+            <div class="carousel-thumbnails">
+              {% for i in data['image'] %}
+              <img
+                alt="Thumbnail image of Women's Sweat Shorts"
+                class="img-fluid img-thumbnail"
+                src="{{i}}"
+                style="
+                  width: 50px;
+                  height: 50px;
+                  margin: 5px;
+                  border: 1px solid #ddd;
+                "
+              />
+              {% endfor %}
+            </div>
+            <button
+              class="carousel-control-prev"
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next"
+              type="button"
+              data-bs-target="#carouselExampleIndicators"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="product-details">
+            <h1>
+              {{data['name']}}
+
+              <input
+                type="hidden"
+                name="productName"
+                id="productName"
+                value="{{data['name']}}"
+              />
+            </h1>
+            <p>sku:{{data['sku']}}</p>
+            <input
+              type="hidden"
+              name="productSku"
+              id="productSku"
+              value="{{data['sku']}}"
+            />
+            <p class="price">
+              ₱ {{product['price']}}
+              <input
+                type="hidden"
+                name="productPrice"
+                id="productPrice"
+                value="{{product['price']}}"
+              />
+            </p>
+
+            <!-- <div class="color-options">
+             <img alt="Color option: Solid Brown" height="50" src="https://storage.googleapis.com/a1aa/image/0coyavFdt66IA9j8Z7mM80tlgjoVkkrKKLkn5VgtQE27WB8E.jpg" width="50"/>
+             <img alt="Color option: Solid Beige" height="50" src="https://storage.googleapis.com/a1aa/image/BBat1Mf5eth0cEgOzRb7PC9jRPgOkhiuxk7PgeHwUGWk3KgnA.jpg" width="50"/>
+            </div> -->
+            {%if colors%}
+            <input
+              type="hidden"
+              name="productImage"
+              id="productImage"
+              value=""
+            />
+            <input
+              type="hidden"
+              name="productColor"
+              id="productColor"
+              value=""
+            />
+            <p>
+              <strong> COLOR </strong>
+            </p>
+            <div class="product-color mt-2 d-flex color-options">
+              {%for i in colors%}
+
+              <span class="product-color-option text-center">
+                <p>{{i['variant']}}</p>
+                <img
+                  src="{{i['image_url']}}"
+                  class="img-fluid highlightable-color"
+                  id="{{i['variant'].replace(' ','')}}"
+                  alt=""
+                />
+                <script>
+                  function clearHighlights{{i['variant'].replace(' ','')}}() {
+                      const highlights = document.querySelectorAll('.highlightable-color');
+                      highlights.forEach(item => {
+                          item.classList.remove('highlight');
+                      });
+                  }
+
+                  document.getElementById('{{i['variant'].replace(' ','')}}').onclick = function() {
+                      setColorAndImage("{{i['variant']}}" , "{{i['image_url']}}")
+                      clearHighlights{{i['variant'].replace(' ','')}}();
+                      this.classList.toggle('highlight');
+                  };
+                </script>
+              </span>
+              {%endfor%}
+            </div>
+            {%else%}
+            <input
+              type="hidden"
+              name="productColor"
+              id="productColor"
+              value="none"
+            />
+            <input
+              type="hidden"
+              name="productImage"
+              id="productImage"
+              value="{{data['image'][0]}}"
+            />
+            {%endif%} {%if data['size']%}
+            <input type="hidden" name="productSize" id="productSize" value="" />
+            <p>
+              <strong> SIZE </strong>
+            </p>
+            <h1>Size</h1>
+            <div class="size-options">
+              {%for i in data['size']%}
+              <button
+                class="btn btn-outline-secondary highlightable-size"
+                id="size-{{i}}"
+              >
+                {{i}}
+              </button>
+
+              <script>
+                function clearHighlightsSize{{i}}() {
+                    const highlights = document.querySelectorAll('.highlightable-size');
+                    highlights.forEach(item => {
+                    item.classList.remove('highlight');
+                    });
+                }
+
+                document.getElementById('size-{{i}}').onclick = function() {
+                    setSize('{{i}}')
+                    clearHighlightsSize{{i}}()
+                    this.classList.toggle('highlight');
+                };
+              </script>
+              {%endfor%}
+            </div>
+            {%else%}
+            <input
+              type="hidden"
+              name="productSize"
+              id="productSize"
+              value="none"
+            />
+            {%endif%}
+
+            <p>
+              <strong> QUANTITY </strong>
+            </p>
+
+            <div class="input-group input-group-sm" style="width: 120px">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="decrease-quantity"
+              >
+                -
+              </button>
+              <input
+                class="form-control form-control text-center"
+                type="number"
+                id="productQuantity"
+                name="productQuantity"
+                min="1"
+                value="1"
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="increase-quantity"
+              >
+                +
+              </button>
+            </div>
+
+            <!-- <div class="quantity">
+              <button class="btn btn-outline-secondary">-</button>
+              <input type="text" >
+              <button class="btn btn-outline-secondary">+</button>
+          
+            </div> -->
+            <p class="availability">Available</p>
+            <button class="add-to-cart" onclick="addToCart()">
+              ADD TO CART
+            </button>
+            <div class="details">
+              <p>
+                <strong> DETAILS </strong>
+              </p>
+              {{data['description']|safe}}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="container py-4 py-lg-5" data-aos="zoom-in">
+          <div class="row justify-content-center">
+            <div
+              class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item"
+              data-aos="zoom-in-up"
+            >
+              <h3 class="fs-6">Services</h3>
+              <ul class="list-unstyled">
+                <li><a class="link-secondary" href="#">Web design</a></li>
+                <li><a class="link-secondary" href="#">Development</a></li>
+                <li><a class="link-secondary" href="#">Hosting</a></li>
+              </ul>
+            </div>
+            <div
+              class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item"
+              data-aos="zoom-in-up"
+            >
+              <h3 class="fs-6">About</h3>
+              <ul class="list-unstyled">
+                <li><a class="link-secondary" href="#">Company</a></li>
+                <li><a class="link-secondary" href="#">Team</a></li>
+                <li><a class="link-secondary" href="#">Legacy</a></li>
+              </ul>
+            </div>
+            <div
+              class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item"
+              data-aos="zoom-in-up"
+            >
+              <h3 class="fs-6">Careers</h3>
+              <ul class="list-unstyled">
+                <li><a class="link-secondary" href="#">Job openings</a></li>
+                <li><a class="link-secondary" href="#">Employee success</a></li>
+                <li><a class="link-secondary" href="#">Benefits</a></li>
+              </ul>
+            </div>
+            <div
+              class="col-lg-3 text-center text-lg-start d-flex flex-column align-items-center order-first align-items-lg-start order-lg-last item social"
+              data-aos="zoom-in-up"
+            >
+              <div class="fw-bold d-flex align-items-center mb-2">
+                <span>Bench</span>
+              </div>
+              <p class="text-muted copyright">
+                Sem eleifend donec molestie, integer quisque orci aliquam.
+              </p>
+            </div>
+          </div>
+          <hr />
+          <div class="d-flex justify-content-between align-items-center pt-3">
+            <p class="text-muted mb-0" data-aos="fade-up">
+              Copyright © 2024 Bench
+            </p>
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  class="bi bi-facebook"
+                  data-aos="zoom-in"
+                >
+                  <path
+                    d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"
+                  ></path>
+                </svg>
+              </li>
+              <li class="list-inline-item">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  class="bi bi-twitter"
+                  data-aos="zoom-in"
+                >
+                  <path
+                    d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15"
+                  ></path>
+                </svg>
+              </li>
+              <li class="list-inline-item">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  class="bi bi-instagram"
+                  data-aos="zoom-in"
+                >
+                  <path
+                    d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"
+                  ></path>
+                </svg>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+      <!-- closing of container -->
+    </div>
+
+    <!-- <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Your Cart</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="cartItems">
+                        <div class="row mb-2">
+                            {% for item in cart %}
+                                <div class="col-6">
+                                    <img src="{{ item.image }}" class="img-fluid" alt="product image of  {{item.color}}" />
+                                </div>
+                                <div class="col-6">
+                                    <h5>{{ item.color }} - Size: {{ item.size }}</h5>
+                                    <p>Quantity: {{ item.quantity }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+  
+
+    <script>
+      function closeModal() {
+        const modalElement = document.getElementById("cartModal");
+        const modal = bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+        modal.hide(); // Use Bootstrap's method to hide the modal
+      }
+    </script>
+    <!-- Bootstrap Modal for Cart -->
+    <div
+      class="modal fade"
+      id="cartModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="cartModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cartModalLabel">
+              <i class="fas fa-arrow-left"></i> Continue shopping
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              onclick=""
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="p-3">
+              <h2 class="mb-4">Shopping cart</h2>
+              <p class="text-muted">You have {{cart_len}} items in your cart</p>
+              <script>
+                var cartTotal = 0;
+                var selected = 0;
+                var totalcart = 0;
+              </script>
+              <ul class="list-group">
+                {% for item in cart %}
+                <li
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <div class="d-flex align-items-center">
+                    <input
+                      class="form-check-input m-3 cart-ch"
+                      type="checkbox"
+                      value=""
+                      id="checkbox-{{item.id}}"
+                    />
+                    <script>
+                      totalcart+=({{item.price}}*{{item.quantity}})
+
+                      document.addEventListener('DOMContentLoaded', function() {
+                          document.getElementById('checkbox-{{item.id}}').addEventListener('change', function() {
+                              if (this.checked) {
+                              cartTotal+=({{item.price}}*{{item.quantity}});
+                              document.getElementById("cart-total").innerText=cartTotal;
+                              selected+=1;
+                              document.getElementById("cart-selected").innerText=selected;
+                              if (selected=={{cart_len}}){
+                                  document.getElementById("selected").innerText="Unselect all";
+                                  document.getElementById("selected").onclick = UnSelectAll;
+                              }
+                              }
+                              else{
+                                  cartTotal-=({{item.price}}*{{item.quantity}});
+                                  document.getElementById("cart-total").innerText=cartTotal;
+                                  selected-=1;
+                                  document.getElementById("cart-selected").innerText=selected;
+                                  if (selected<{{cart_len}}){
+                                  document.getElementById("selected").innerText="Select all";
+                                  document.getElementById("selected").onclick = SelectAll;
+                              }
+
+                              }
+                          });
+                      });
+                    </script>
+                    <img
+                      alt="Iphone 11 pro"
+                      src="{{ item.image }}"
+                      class="img-fluid rounded"
+                      style="width: 50px; height: 50px; object-fit: cover"
+                    />
+                    <div class="ms-3">
+                      <h6 class="mb-0">{{item.name}}</h6>
+                      <small class="text-muted"
+                        >size:{{ item.size }}, color:{{item.color}}</small
+                      >
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span class="me-3">{{ item.quantity }}</span>
+                    <span class="me-3">{{ item.price }}</span>
+                    <button class="btn btn-sm btn-danger">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+          <div
+            class="modal-footer d-flex justify-content-between align-items-center"
+          >
+            <div class="left-section">
+              <h5 class="mb-0">
+                Selected items: <span id="cart-selected">0</span>
+              </h5>
+              <div class="total">
+                <h5 class="mb-0">Total: <span id="cart-total">0</span></h5>
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                id="selected"
+                class="btn btn-secondary"
+                onclick="SelectAll()"
+              >
+                Select all
+              </button>
+              <button type="button" class="btn btn-primary">Check out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+
+      function SelectAll() {
+          cartTotal=totalcart
+          selected={{cart_len}}
+          document.getElementById("cart-total").innerText=cartTotal;
+          document.getElementById("cart-selected").innerText=selected;
+          if (selected=={{cart_len}}){
+                                                      document.getElementById("selected").innerText="Unselect all";
+                                                      document.getElementById("selected").onclick = UnSelectAll;
+                                                  }
+          // Get all checkboxes with the class 'cart-ch'
+          const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
+          // Set each checkbox's checked property to true
+          checkboxes.forEach(checkbox => {
+              checkbox.checked = true;
+          });
+          // Optionally, you can also update the cart total and selected count here if needed
+      }
+
+      function UnSelectAll() {
+          cartTotal = 0;
+          selected = 0;
+          document.getElementById("cart-total").innerText=cartTotal;
+          document.getElementById("cart-selected").innerText=selected;
+          if (selected<{{cart_len}}){
+                                                      document.getElementById("selected").innerText="Select all";
+                                                      document.getElementById("selected").onclick = SelectAll;
+                                                  }
+          // Get all checkboxes with the class 'cart-ch'
+          const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
+          // Set each checkbox's checked property to false
+          checkboxes.forEach(checkbox => {
+              checkbox.checked = false;
+          });
+          // Optionally, you can also update the cart total and selected count here if needed
+      }
+
+
+              function setColorAndImage(color,image){
+                  console.log('setting',color,image)
+                  document.getElementById("productColor").value=color;
+                  document.getElementById("productImage").value=image;
+
+              }
+
+              function setSize(size){
+                  document.getElementById("productSize").value=size;
+
+              }
+
+              function updateQuantity(increment) {
+                  const quantityInput = document.getElementById('productQuantity');
+                  let currentValue = parseInt(quantityInput.value);
+                  currentValue += increment;
+                  // Ensure quantity doesn't go below 1
+                  if (currentValue < 1) {
+                      currentValue = 1;
+                  }
+                  quantityInput.value = currentValue;
+              }
+
+              // Add event listeners to buttons
+              document.querySelectorAll('.btn').forEach(button => {
+                  button.addEventListener('click', function() {
+                      if (this.textContent === '+') {
+                          updateQuantity(1);
+                      } else if (this.textContent === '-') {
+                          updateQuantity(-1);
+                      }
+                  });
+              });
+
+
+
+
+
+
+          function validateInputs() {
+          // Get product details
+          var productName = document.getElementById("productName").value;
+          var productSku = document.getElementById("productSku").value;
+          var productPrice = document.getElementById("productPrice").value;
+          var productQuantity = document.getElementById("productQuantity").value;
+          var productSize = document.getElementById("productSize").value;
+          var productColor = document.getElementById("productColor").value;
+          var productImage = document.getElementById("productImage").value;
+
+          console.log("Product Name: " + productName);
+
+      console.log("Product SKU: " + productSku);
+      console.log("Product Price: " + productPrice);
+      console.log("Product Quantity: " + productQuantity);
+      console.log("Product Size: " + productSize);
+      console.log("Product Color: " + productColor);
+      console.log("Product Image: " + productImage);
+
+
+
+          // Validate product name
+          if (!productColor &&  productColor!=="none") {
+              alert("Please enter product productColor",productColor);
+              return false
+          }
+          if (!productSize && ! productSize!=="none") {
+              alert("Please enter product productSize");
+              return false
+          }
+
+          return true; // All validations passed
+      }
+
+      function addToCart() {
+          // Validate inputs
+          if (!validateInputs()) {
+              return; // Stop if validation fails
+          }
+
+          // Get product details
+          var productName = document.getElementById("productName").value;
+          var productSku = document.getElementById("productSku").value;
+          var productPrice = document.getElementById("productPrice").value;
+          var productQuantity = document.getElementById("productQuantity").value;
+          var productSize = document.getElementById("productSize").value;
+          var productColor = document.getElementById("productColor").value;
+          var productImage = document.getElementById("productImage").value;
+
+          // Create product object
+          var product = {
+              name: productName,
+              sku: productSku,
+              price: parseFloat(productPrice),
+              quantity: parseInt(productQuantity),
+              size: productSize,
+              color: productColor,
+              image: productImage,
+              user_id:12345,
+              product_id:"{{id}}",
+
+          };
+
+
+
+          // Send product data to server using fetch
+          fetch('/cart/add', {
+              method: 'POST', // Specify the request method
+              headers: {
+                  'Content-Type': 'application/json' // Set the content type to JSON
+              },
+              body: JSON.stringify(product) // Convert the product object to a JSON string
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json(); // Parse JSON response
+          })
+          .then(data => {
+              console.log('Success:', data); // Handle success
+              alert("Product added to cart successfully!");
+          })
+          .catch((error) => {
+              console.error('Error:', error); // Handle errors
+              alert("There was an error adding the product to the cart.");
+          });
+
+
+      }
+    </script>
+
+    <script>
+      const cart = {{ cart|tojson }};
+
+      function renderCartItems() {
+          const cartItemsContainer = document.getElementById('cartItems');
+          cartItemsContainer.innerHTML = ''; // Clear previous items
+
+          cart.forEach(item => {
+              const itemHtml = `
+                  <div class="row mb-2">
+                      <div class="col-4">
+                          <img src="${item.image}" class="img-fluid" alt="${item.color} ${item size}">
+                      </div>
+                      <div class="col-8">
+                          <h5>${item.color} - Size: ${item.size}</h5>
+                          <p>SKU: ${item.sku}</p>
+                          <p>Quantity: ${item.quantity}</p>
+                      </div>
+                  </div>
+              `;
+              cartItemsContainer.innerHTML += itemHtml;
+          });
+      }
+
+      // Render cart items when modal is shown
+      $('#cartModal').on('show.bs.modal', function () {
+          renderCartItems();
+      });
+    </script>
+
+    <script src="assets/js/aos.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/responsive-blog-card-slider-01-swiper-bundle.min.js"></script>
+    <script src="assets/js/responsive-blog-card-slider-02-responsive-blog-card-slider.js"></script>
+  </body>
+</html>

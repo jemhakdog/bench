@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Login</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bs-theme-overrides.css">
+    <link rel="stylesheet" href="assets/css/Login-with-overlay-image.css">
+</head>
+
+<body>
+    <div class="container" style="position:absolute; left:0; right:0; top: 50%; transform: translateY(-50%); -ms-transform: translateY(-50%); -moz-transform: translateY(-50%); -webkit-transform: translateY(-50%); -o-transform: translateY(-50%);">
+        <div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
+            <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;">
+                <div class="p-5">
+                    <div class="text-center">
+                        <h4 class="text-dark mb-4">Login to Your Account</h4>
+                    </div>
+                    <form class="user">
+                        <div class="mb-3"><input class="form-control form-control-user" type="email" id="email" placeholder="Email Address" required=""></div>
+                        <div class="mb-3"><input class="form-control form-control-user" type="password" id="password" placeholder="Password" required=""></div>
+                        <div class="row mb-3">
+                            <p id="errorMsg" class="text-danger" style="display:none;">Invalid email or password</p>
+                        </div>
+                        <button class="btn btn-primary d-block btn-user w-100" id="loginBtn" type="submit">Login</button>
+                        <hr>
+                    </form>
+                    <div class="text-center"><a class="small" href="{{url_for('account_recovery')}}">Forgot Password?</a></div>
+                    <div class="text-center"><a class="small" href="{{url_for('register')}}">Create an Account!</a></div>
+                </div>
+            </div>
+        </div>
+        <script>
+            let email = document.getElementById("email");
+            let password = document.getElementById("password");
+            let loginBtn = document.getElementById("loginBtn");
+            let errorMsg = document.getElementById('errorMsg');
+
+            function displayErrorMsg(msg) {
+                errorMsg.style.display = "block";
+                errorMsg.innerHTML = msg;
+                loginBtn.disabled = true;
+            }
+
+            function hideErrorMsg() {
+                errorMsg.style.display = "none";
+                errorMsg.innerHTML = "";
+                loginBtn.disabled = false;
+            }
+
+            // Validate email and password upon change
+            email.addEventListener("change", function() {
+                if (email.value.match(/^[^@]+@[^@]+\.[^@]+$/)) {
+                    hideErrorMsg();
+                } else {
+                    displayErrorMsg("Invalid email format");
+                }
+            });
+
+            password.addEventListener("change", function() {
+                if (password.value.length < 8) {
+                    displayErrorMsg("Password must be at least 8 characters long");
+                } else {
+                    hideErrorMsg();
+                }
+            });
+
+            // Handle form submission
+            document.querySelector('form.user').addEventListener('submit', function(event) {
+                event.preventDefault();
+                if (email.value.match(/^[^@]+@[^@]+\.[^@]+$/) && password.value.length >= 8) {
+                    // Perform login action (e.g., send data to server)
+                    alert("Login successful!"); // Placeholder for actual login logic
+                } else {
+                    displayErrorMsg("Invalid email or password");
+                }
+            });
+        </script>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

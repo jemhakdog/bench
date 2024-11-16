@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <title>design</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css" />
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css" />
+    <link rel="stylesheet" href="assets/css/bs-theme-overrides.css" />
+    <link rel="stylesheet" href="assets/css/aos.min.css" />
+    <link rel="stylesheet" href="assets/css/animate.min.css" />
+    <link rel="stylesheet" href="assets/css/Bootstrap-Cards-v2.css" />
+    <link rel="stylesheet" href="assets/css/Hero-Clean-images.css" />
+    <link
+      rel="stylesheet"
+      href="assets/css/Hero-with-image-and-overlapping-content.css"
+    />
+    <link rel="stylesheet" href="assets/css/Login-with-overlay-image.css" />
+    <link
+      rel="stylesheet"
+      href="assets/css/Navbar-Centered-Brand-Dark-icons.css"
+    />
+    <link rel="stylesheet" href="assets/css/responsive-blog-card-slider.css" />
+    <link
+      rel="stylesheet"
+      href="assets/css/Sidebar-Cool-SB-Admin-Inspirate.css"
+    />
+  </head>
+
+  <body>
+    <nav
+    class="navbar navbar-expand-md bg-dark pulse animated py-3"
+    data-bs-theme="dark"
+  >
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <span class="pulse animated infinite">Bench</span>
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navcol-6"
+        aria-controls="navcol-6"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navcol-6">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="{{url_for('index')}}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('shop')}}">Shop</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('contact_us')}}"
+              >Contact us</a
+            >
+          </li>
+        </ul>
+        <div class="d-flex justify-content-between align-items-baseline">
+          <a
+            href=""
+            class="position-relative"
+            data-bs-toggle="modal"
+            data-bs-target="#cartModal"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1em"
+              height="1em"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+              class="bi bi-cart2"
+              style="color: #ffffff; font-size: 30px"
+            >
+              <path
+                d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0  0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"
+              ></path>
+            </svg>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            >
+              {%if cart_len<=99%} {{cart_len}} {%else%} {{cart_len}}+
+              {%endif%}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </a>
+          <div class="dropdown">
+            <a
+              class="dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                class="bi bi-person-circle"
+                style="color: #ffffff; margin-left: 8px; font-size: 30px"
+              >
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                <path
+                  fill-rule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                ></path>
+              </svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="#">Lagout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+    <div class="container py-4 py-xl-5">
+      <div
+        class="row gy-4 gy-md-0"
+        style="padding-bottom: 0px; margin-bottom: -1px"
+      >
+        <div class="col-md-6">
+          <div class="p-xl-5 m-xl-5">
+            <img
+              class="rounded img-fluid w-100 fit-cover"
+              data-aos="fade-right"
+              style="min-height: 300px"
+              src="assets/img/NicePng_astros-png_635724.png"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 d-md-flex align-items-md-center">
+          <div style="max-width: 350px">
+            <h2 class="text-uppercase fw-bold" data-aos="fade-up">
+              Biben dum<br />fringi dictum, augue purus
+            </h2>
+            <p data-aos="fade-up" class="my-3">
+              Tincidunt laoreet leo, adipiscing taciti tempor. Primis senectus
+              sapien, risus donec ad fusce augue interdum.
+            </p>
+            <a
+              class="btn btn-primary btn-lg me-2"
+              role="button"
+              data-aos="fade-up"
+              href="{{url_for('shop')}}"
+              >Shop now</a
+            ><a
+              class="btn btn-outline-primary btn-lg"
+              role="button"
+              data-aos="fade-right"
+              href="{{url_for('register')}}"
+              >Create an account</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="row mb-5" style="margin-top: 35px; margin-bottom: 35px">
+        <div class="col-md-8 col-xl-6 text-center mx-auto">
+          <h2 data-aos="fade-up" style="margin-top: 12px">Our Services</h2>
+          <p data-aos="fade-up" class="w-lg-50">
+            Curae hendrerit donec commodo hendrerit egestas tempus, turpis
+            facilisis nostra nunc. Vestibulum dui eget ultrices.
+          </p>
+        </div>
+      </div>
+      <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3">
+        <div class="col">
+          <div
+            class="text-center d-flex flex-column align-items-center align-items-xl-center"
+            data-aos="fade-right"
+          >
+            <div
+              class="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon lg"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                class="bi bi-award"
+              >
+                <path
+                  d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"
+                ></path>
+                <path
+                  d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"
+                ></path>
+              </svg>
+            </div>
+            <div class="px-3">
+              <h4>High quality</h4>
+              <p>
+                Erat netus est hendrerit, nullam et quis ad cras porttitor
+                iaculis. Bibendum vulputate cras aenean.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div
+            class="text-center d-flex flex-column align-items-center align-items-xl-center"
+            data-aos="fade-up"
+          >
+            <div
+              class="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon lg"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                class="bi bi-truck"
+              >
+                <path
+                  d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"
+                ></path>
+              </svg>
+            </div>
+            <div class="px-3">
+              <h4>Free shipping</h4>
+              <p>
+                Erat netus est hendrerit, nullam et quis ad cras porttitor
+                iaculis. Bibendum vulputate cras aenean.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div
+            class="text-center d-flex flex-column align-items-center align-items-xl-center"
+            data-aos="fade-left"
+          >
+            <div
+              class="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon lg"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                class="bi bi-clock-history"
+              >
+                <path
+                  d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483m.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535m-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"
+                ></path>
+                <path
+                  d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"
+                ></path>
+                <path
+                  d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"
+                ></path>
+              </svg>
+            </div>
+            <div class="px-3">
+              <h4>Support 24/7</h4>
+              <p>
+                Erat netus est hendrerit, nullam et quis ad cras porttitor
+                iaculis. Bibendum vulputate cras aenean.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 80px">
+        <div class="col">
+          <div data-aos="zoom-in" class="blog-slider">
+            <div class="blog-slider__wrp swiper-wrapper">
+              <div class="blog-slider__item swiper-slide">
+                <div class="blog-slider__img">
+                  <img
+                    src="https://res.cloudinary.com/muhammederdem/image/upload/v1535759872/kuldar-kalvik-799168-unsplash.jpg"
+                  />
+                </div>
+                <div class="blog-slider__content">
+                  <span class="blog-slider__code">26 December 2019</span>
+                  <div class="blog-slider__title">
+                    <p>Lorem Ipsum Dolor</p>
+                  </div>
+                  <div class="blog-slider__text">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Recusandae voluptate repellendus magni illo ea animi?
+                    </p>
+                  </div>
+                  <a class="blog-slider__button" href="#">READ MORE</a>
+                </div>
+              </div>
+              <div class="blog-slider__item swiper-slide">
+                <div class="blog-slider__img">
+                  <img
+                    src="https://res.cloudinary.com/muhammederdem/image/upload/v1535759872/kuldar-kalvik-799168-unsplash.jpg"
+                  />
+                </div>
+                <div class="blog-slider__content">
+                  <span class="blog-slider__code">26 December 2019</span>
+                  <div class="blog-slider__title">
+                    <p>Lorem Ipsum Dolor</p>
+                  </div>
+                  <div class="blog-slider__text">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Recusandae voluptate repellendus magni illo ea animi?
+                    </p>
+                  </div>
+                  <a class="blog-slider__button" href="#">READ MORE</a>
+                </div>
+              </div>
+              <div class="blog-slider__item swiper-slide">
+                <div class="blog-slider__img">
+                  <img
+                    src="https://res.cloudinary.com/muhammederdem/image/upload/v1535759872/kuldar-kalvik-799168-unsplash.jpg"
+                  />
+                </div>
+                <div class="blog-slider__content">
+                  <span class="blog-slider__code">26 December 2019</span>
+                  <div class="blog-slider__title">
+                    <p>Lorem Ipsum Dolor</p>
+                  </div>
+                  <div class="blog-slider__text">
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                      Recusandae voluptate repellendus magni illo ea animi?
+                    </p>
+                  </div>
+                  <a class="blog-slider__button" href="#">READ MORE</a>
+                </div>
+              </div>
+            </div>
+            <div class="blog-slider__pagination"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="bootstrap_cards2">
+            <div
+              class="container py-5"
+              style="margin-top: 1px; padding-top: 68px"
+            >
+              <header
+                class="text-center mb-5"
+                style="margin-bottom: -34px"
+              ></header>
+              <h2 data-aos="fade-up" class="font-weight-bold mb-2">
+                From the Shop
+              </h2>
+              <p class="text-muted font-italic mb-4" data-aos="fade-up">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                eiusmod tempor incididunt.
+              </p>
+              <div class="row pb-5 mb-4">
+                <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  <div class="card border-0 shadow-sm rounded">
+                    <div class="card-body p-4" data-aos="fade-up">
+                      <img
+                        class="img-fluid d-block mx-auto mb-3"
+                        data-bss-hover-animate="bounce"
+                        src="https://res.cloudinary.com/mhmd/image/upload/v1556485076/shoes-1_gthops.jpg"
+                        alt=""
+                      />
+                      <h5><a href="#" class="text-dark">Awesome product</a></h5>
+                      <p class="text-muted small font-italic">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit.
+                      </p>
+                      <ul class="list-inline small">
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fa fa-star-o text-success"></i>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  <div class="card border-0 shadow-sm rounded">
+                    <div class="card-body p-4" data-aos="fade-up">
+                      <img
+                        class="img-fluid d-block mx-auto mb-3"
+                        data-bss-hover-animate="bounce"
+                        src="https://res.cloudinary.com/mhmd/image/upload/v1556485077/shoes-3_rk25rt.jpg"
+                        alt=""
+                      />
+                      <h5><a href="#" class="text-dark">Awesome product</a></h5>
+                      <p class="text-muted small font-italic">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit.
+                      </p>
+                      <ul class="list-inline small">
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fa fa-star-o text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fa fa-star-o text-success"></i>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  <div class="card border-0 shadow-sm rounded">
+                    <div class="card-body p-4" data-aos="fade-up">
+                      <img
+                        class="img-fluid d-block mx-auto mb-3"
+                        data-bss-hover-animate="bounce"
+                        src="https://res.cloudinary.com/mhmd/image/upload/v1556485078/shoes-2_g4qame.jpg"
+                        alt=""
+                      />
+                      <h5><a href="#" class="text-dark">Awesome product</a></h5>
+                      <p class="text-muted small font-italic">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit.
+                      </p>
+                      <ul class="list-inline small">
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  <div class="card border-0 shadow-sm rounded">
+                    <div class="card-body p-4" data-aos="fade-up">
+                      <img
+                        class="img-fluid d-block mx-auto mb-3"
+                        data-bss-hover-animate="bounce"
+                        src="https://res.cloudinary.com/mhmd/image/upload/v1556485078/shoes-4_vgfjy9.jpg"
+                        alt=""
+                      />
+                      <h5><a href="#" class="text-dark">Awesome product</a></h5>
+                      <p class="text-muted small font-italic">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit.
+                      </p>
+                      <ul class="list-inline small">
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fas fa-star text-success"></i>
+                        </li>
+                        <li class="list-inline-item list-inline-item m-0">
+                          <i class="fa fa-star-o text-success"></i>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <section>
+            <div class="container-fluid g-0">
+              <img
+                data-aos="zoom-in"
+                class="img-fluid w-100 min-vh-25 min-vh-md-50 mb-n7"
+                src="assets/img/blackshark-v2-x-usb-usp-advanced-passive-noise-cancel.webp"
+                alt="image"
+                style="max-height: 580px; object-fit: cover"
+                width="936"
+                height="341"
+              />
+            </div>
+            <div
+              class="container bg-body p-5 mt-md-n6 position-relative rounded"
+            >
+              <div class="row">
+                <div class="col-md-10 offset-md-1">
+                  <div class="lc-block">
+                    <div>
+                      <h1
+                        data-aos="fade-up"
+                        class="fw-bolder display-3 text-rk-brown-grey"
+                      >
+                        LIGHTWEIGHT AND COMFORT
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-10 offset-md-1">
+                  <div class="lc-block mt-5">
+                    <div>
+                      <p class="lead text-secondary" data-aos="fade-up">
+                        At just 240g, you’ll barely remember you have it on
+                        during gaming marathons. The headset is made even more
+                        comfortable thanks to thicker heading padding and
+                        improved memory foam ear cushions wrapped in a
+                        combination of breathable fabric and plush leatherette.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="row mb-5" style="margin-top: 56px">
+        <div class="col-md-8 col-xl-6 text-center mx-auto">
+          <h2 data-aos="fade-up" style="margin-top: 35px">Testimonials</h2>
+        </div>
+      </div>
+      <div class="row gy-4 row-cols-1 row-cols-sm-2 row-cols-lg-3">
+        <div class="col">
+          <div
+            class="d-flex flex-column justify-content-center align-items-center"
+            data-aos="fade-right"
+          >
+            <p class="text-center">
+              Nisi sit justo faucibus nec ornare amet, tortor torquent. Blandit
+              class dapibus.
+            </p>
+            <div class="d-flex">
+              <img
+                class="rounded-circle flex-shrink-0 me-3 fit-cover"
+                width="50"
+                height="50"
+                src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png"
+              />
+              <div>
+                <p class="fw-bold text-primary mb-0">John Smith</p>
+                <p class="text-muted mb-0">Erat netus</p>
+              </div>
+            </div>
+            <div class="card border-0 shadow-none">
+              <div class="card-body d-flex align-items-center p-0"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div
+            class="d-flex flex-column justify-content-center align-items-center"
+            data-aos="fade-up"
+          >
+            <p class="text-center">
+              Nisi sit justo faucibus nec ornare amet, tortor torquent. Blandit
+              class dapibus.
+            </p>
+            <div class="d-flex">
+              <img
+                class="rounded-circle flex-shrink-0 me-3 fit-cover"
+                width="50"
+                height="50"
+                src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png"
+              />
+              <div>
+                <p class="fw-bold text-primary mb-0">John Smith</p>
+                <p class="text-muted mb-0">Erat netus</p>
+              </div>
+            </div>
+            <div class="card border-0 shadow-none">
+              <div class="card-body d-flex align-items-center p-0"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div
+            class="d-flex flex-column justify-content-center align-items-center"
+            data-aos="fade-left"
+          >
+            <p class="text-center">
+              Nisi sit justo faucibus nec ornare amet, tortor torquent. Blandit
+              class dapibus.
+            </p>
+            <div class="d-flex">
+              <img
+                class="rounded-circle flex-shrink-0 me-3 fit-cover"
+                width="50"
+                height="50"
+                src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png"
+              />
+              <div>
+                <p class="fw-bold text-primary mb-0">John Smith</p>
+                <p class="text-muted mb-0">Erat netus</p>
+              </div>
+            </div>
+            <div class="card border-0 shadow-none">
+              <div class="card-body d-flex align-items-center p-0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 40px">
+        <div class="col">
+          <section class="py-4 py-xl-5">
+            <div class="container">
+              <div
+                class="text-dark bg-light border rounded border-0 border-light d-flex flex-column justify-content-between align-items-center flex-lg-row p-4 p-lg-5"
+                data-aos="zoom-in"
+                data-bs-theme="light"
+              >
+                <div class="text-center text-lg-start py-3 py-lg-1">
+                  <h2 class="fw-bold mb-2">
+                    <strong>Subscribe to our newsletter</strong>
+                  </h2>
+                  <p class="mb-0">Imperdiet consectetur dolor.</p>
+                </div>
+                <form
+                  class="d-flex justify-content-center flex-wrap my-2"
+                  method="post"
+                >
+                  <div class="my-2">
+                    <input
+                      class="form-control"
+                      type="email"
+                      name="email"
+                      placeholder="Your Email"
+                    />
+                  </div>
+                  <div class="my-2">
+                    <button class="btn btn-primary ms-sm-2" type="submit">
+                      Subscribe
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div class="container py-4 py-lg-5" data-aos="zoom-in">
+        <div class="row justify-content-center">
+          <div
+            class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item"
+            data-aos="zoom-in-up"
+          >
+            <h3 class="fs-6">Services</h3>
+            <ul class="list-unstyled">
+              <li><a class="link-secondary" href="#">Web design</a></li>
+              <li><a class="link-secondary" href="#">Development</a></li>
+              <li><a class="link-secondary" href="#">Hosting</a></li>
+            </ul>
+          </div>
+          <div
+            class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item"
+            data-aos="zoom-in-up"
+          >
+            <h3 class="fs-6">About</h3>
+            <ul class="list-unstyled">
+              <li><a class="link-secondary" href="#">Company</a></li>
+              <li><a class="link-secondary" href="#">Team</a></li>
+              <li><a class="link-secondary" href="#">Legacy</a></li>
+            </ul>
+          </div>
+          <div
+            class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item"
+            data-aos="zoom-in-up"
+          >
+            <h3 class="fs-6">Careers</h3>
+            <ul class="list-unstyled">
+              <li><a class="link-secondary" href="#">Job openings</a></li>
+              <li><a class="link-secondary" href="#">Employee success</a></li>
+              <li><a class="link-secondary" href="#">Benefits</a></li>
+            </ul>
+          </div>
+          <div
+            class="col-lg-3 text-center text-lg-start d-flex flex-column align-items-center order-first align-items-lg-start order-lg-last item social"
+            data-aos="zoom-in-up"
+          >
+            <div class="fw-bold d-flex align-items-center mb-2">
+              <span>Bench</span>
+            </div>
+            <p class="text-muted copyright">
+              Sem eleifend donec molestie, integer quisque orci aliquam.
+            </p>
+          </div>
+        </div>
+        <hr />
+        <div class="d-flex justify-content-between align-items-center pt-3">
+          <p class="text-muted mb-0" data-aos="fade-up">
+            Copyright © 2024 Bench
+          </p>
+          <ul class="list-inline mb-0">
+            <li class="list-inline-item">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                class="bi bi-facebook"
+                data-aos="zoom-in"
+              >
+                <path
+                  d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"
+                ></path>
+              </svg>
+            </li>
+            <li class="list-inline-item">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                class="bi bi-twitter"
+                data-aos="zoom-in"
+              >
+                <path
+                  d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15"
+                ></path>
+              </svg>
+            </li>
+            <li class="list-inline-item">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                class="bi bi-instagram"
+                data-aos="zoom-in"
+              >
+                <path
+                  d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"
+                ></path>
+              </svg>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+    <!-- CART MODAL -->
+    <script>
+      function closeModal() {
+        const modalElement = document.getElementById("cartModal");
+        const modal = bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+        modal.hide(); // Use Bootstrap's method to hide the modal
+      }
+    </script>
+    <!-- Bootstrap Modal for Cart -->
+    <div
+      class="modal fade"
+      id="cartModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="cartModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cartModalLabel">
+              <i class="fas fa-arrow-left"  data-bs-dismiss="modal"
+              aria-label="Close"></i> Continue shopping
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              onclick=""
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="p-3">
+              <h2 class="mb-4">Shopping cart</h2>
+              <p class="text-muted">You have {{cart_len}} items in your cart</p>
+              <script>
+                var cartTotal = 0;
+                var selected = 0;
+                var totalcart = 0;
+              </script>
+              <ul class="list-group">
+                {% for item in cart %}
+                <li
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <div class="d-flex align-items-center">
+                    <input
+                      class="form-check-input m-3 cart-ch"
+                      type="checkbox"
+                      value=""
+                      id="checkbox-{{item.id}}"
+                    />
+                    <script>
+                      totalcart+=({{item.price}}*{{item.quantity}})
+
+                      document.addEventListener('DOMContentLoaded', function() {
+                          document.getElementById('checkbox-{{item.id}}').addEventListener('change', function() {
+                              if (this.checked) {
+                              cartTotal+=({{item.price}}*{{item.quantity}});
+                              document.getElementById("cart-total").innerText=cartTotal;
+                              selected+=1;
+                              document.getElementById("cart-selected").innerText=selected;
+                              if (selected=={{cart_len}}){
+                                  document.getElementById("selected").innerText="Unselect all";
+                                  document.getElementById("selected").onclick = UnSelectAll;
+                              }
+                              }
+                              else{
+                                  cartTotal-=({{item.price}}*{{item.quantity}});
+                                  document.getElementById("cart-total").innerText=cartTotal;
+                                  selected-=1;
+                                  document.getElementById("cart-selected").innerText=selected;
+                                  if (selected<{{cart_len}}){
+                                  document.getElementById("selected").innerText="Select all";
+                                  document.getElementById("selected").onclick = SelectAll;
+                              }
+
+                              }
+                          });
+                      });
+                    </script>
+                    <img
+                      alt="Iphone 11 pro"
+                      src="{{ item.image }}"
+                      class="img-fluid rounded"
+                      style="width: 50px; height: 50px; object-fit: cover"
+                    />
+                    <div class="ms-3">
+                      <h6 class="mb-0">{{item.name}}</h6>
+                      <small class="text-muted"
+                        >size:{{ item.size }}, color:{{item.color}}</small
+                      >
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span class="me-3">{{ item.quantity }}</span>
+                    <span class="me-3">{{ item.price }}</span>
+                    <button class="btn btn-sm btn-danger">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+          <div
+            class="modal-footer d-flex justify-content-between align-items-center"
+          >
+            <div class="left-section">
+              <h5 class="mb-0">
+                Selected items: <span id="cart-selected">0</span>
+              </h5>
+              <div class="total">
+                <h5 class="mb-0">Total: <span id="cart-total">0</span></h5>
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                id="selected"
+                class="btn btn-secondary"
+                onclick="SelectAll()"
+              >
+                Select all
+              </button>
+              <button type="button" class="btn btn-primary">Check out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+
+      function SelectAll() {
+          cartTotal=totalcart
+          selected={{cart_len}}
+          document.getElementById("cart-total").innerText=cartTotal;
+          document.getElementById("cart-selected").innerText=selected;
+          if (selected=={{cart_len}}){
+                                                      document.getElementById("selected").innerText="Unselect all";
+                                                      document.getElementById("selected").onclick = UnSelectAll;
+                                                  }
+          // Get all checkboxes with the class 'cart-ch'
+          const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
+          // Set each checkbox's checked property to true
+          checkboxes.forEach(checkbox => {
+              checkbox.checked = true;
+          });
+          // Optionally, you can also update the cart total and selected count here if needed
+      }
+
+      function UnSelectAll() {
+          cartTotal = 0;
+          selected = 0;
+          document.getElementById("cart-total").innerText=cartTotal;
+          document.getElementById("cart-selected").innerText=selected;
+          if (selected<{{cart_len}}){
+                                                      document.getElementById("selected").innerText="Select all";
+                                                      document.getElementById("selected").onclick = SelectAll;
+                                                  }
+          // Get all checkboxes with the class 'cart-ch'
+          const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
+          // Set each checkbox's checked property to false
+          checkboxes.forEach(checkbox => {
+              checkbox.checked = false;
+          });
+          // Optionally, you can also update the cart total and selected count here if needed
+      }
+
+
+      </script>
+      
+    <script>
+      const cart = {{ cart|tojson }};
+
+      function renderCartItems() {
+          const cartItemsContainer = document.getElementById('cartItems');
+          cartItemsContainer.innerHTML = ''; // Clear previous items
+
+          cart.forEach(item => {
+              const itemHtml = `
+                  <div class="row mb-2">
+                      <div class="col-4">
+                          <img src="${item.image}" class="img-fluid" alt="${item.color} ${item size}">
+                      </div>
+                      <div class="col-8">
+                          <h5>${item.color} - Size: ${item.size}</h5>
+                          <p>SKU: ${item.sku}</p>
+                          <p>Quantity: ${item.quantity}</p>
+                      </div>
+                  </div>
+              `;
+              cartItemsContainer.innerHTML += itemHtml;
+          });
+      }
+
+      // Render cart items when modal is shown
+      $('#cartModal').on('show.bs.modal', function () {
+          renderCartItems();
+      });
+    </script>
+    <!-- ENDMODAL -->
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/aos.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/responsive-blog-card-slider-01-swiper-bundle.min.js"></script>
+    <script src="assets/js/responsive-blog-card-slider-02-responsive-blog-card-slider.js"></script>
+  </body>
+</html>

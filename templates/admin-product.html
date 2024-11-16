@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>design</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/bs-theme-overrides.css">
+    <link rel="stylesheet" href="assets/css/Bootstrap-Cards-v2.css">
+    <link rel="stylesheet" href="assets/css/Hero-Clean-images.css">
+    <link rel="stylesheet" href="assets/css/Hero-with-image-and-overlapping-content.css">
+    <link rel="stylesheet" href="assets/css/Login-with-overlay-image.css">
+    <link rel="stylesheet" href="assets/css/Navbar-Centered-Brand-Dark-icons.css">
+    <link rel="stylesheet" href="assets/css/responsive-blog-card-slider.css">
+    <link rel="stylesheet" href="assets/css/Sidebar-Cool-SB-Admin-Inspirate.css">
+    <style>
+        .results-container {
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            background-color: white;
+            z-index: 1000;
+            margin-top: 50px;
+        }
+
+        .result-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .result-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 col-lg-2"
+                style="height: 100vh;border-right-style: solid;margin-top: 20px;width: initial;">
+                <p class="d-lg-flex justify-content-lg-center" style="font-size: 30px;">Dashboard</p>
+                <hr><button
+                    class="btn btn-outline-dark d-flex justify-content-center align-items-baseline align-items-lg-center"
+                    type="button" style="margin-top: 20px;width: 100%;"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-bag"
+                        style="margin-right: 5px;">
+                        <path
+                            d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z">
+                        </path>
+                    </svg>Products</button><button
+                    class="btn btn-outline-dark d-flex justify-content-center align-items-baseline align-items-lg-center"
+                    type="button" style="margin-top: 20px;width: 100%;"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person"
+                        style="margin-right: 5px;">
+                        <path
+                            d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z">
+                        </path>
+                    </svg>Accounts</button><button
+                    class="btn btn-outline-dark d-flex justify-content-center align-items-baseline align-items-lg-center"
+                    type="button" style="margin-top: 20px;width: 100%;"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-graph-up-arrow"
+                        style="margin-right: 5px;">
+                        <path fill-rule="evenodd"
+                            d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5">
+                        </path>
+                    </svg>Sales</button><button
+                    class="btn btn-outline-dark d-flex align-items-baseline align-content-center align-self-baseline justify-content-lg-center align-items-lg-center"
+                    type="button" style="margin-top: 20px;width: 100%;"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-left"
+                        style="margin-right: 5px;padding-top: 0px;padding-bottom: 0px;">
+                        <path fill-rule="evenodd"
+                            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8">
+                        </path>
+                    </svg>Log out</button>
+            </div>
+            <div class="col-5 col-sm-8 col-md-9 col-lg-9 col-xl-10 justify-content-lg-start">
+                <div class="row" style="padding-top: 20px;">
+                    <div class="col-lg-3 d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#"><span>Dashboard</span></a></li>
+                            <li class="breadcrumb-item"><a href="#"><span>products</span></a></li>
+                        </ol>
+                    </div>
+                    <div class="col">
+                        <div class="row padMar">
+                            <div class="col d-flex align-content-center align-self-center justify-content-xl-end">
+                                <div class="d-flex justify-content-xl-center align-items-xl-center">
+                                    <p class="justify-content-between"
+                                        style="padding-top: 0px;margin-bottom: 1px;margin-right: 15px;">Sorted by:</p>
+                                    <select>
+                                        <optgroup label="This is a group">
+                                            <option value="12" selected="">This is item 1</option>
+                                            <option value="13">This is item 2</option>
+                                            <option value="14">This is item 3</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- <div class="col d-flex justify-content-evenly padMar"><button class="btn btn-outline-primary" type="button" style="margin-right: 23px;" data-bs-toggle="modal" data-bs-target="#addProductModal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-bag-plus">
+                                        <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5"></path>
+                                        <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"></path>
+                                    </svg></button>
+                                <div class="input-group"><input class="form-control d-xl-flex justify-content-xl-center align-items-xl-center autocomplete" type="text" placeholder="Busque las tablas"><button class="btn btn-warning" type="button" style="background: #eb4034;"><i class="fa fa-search"></i></button></div>
+                            </div> -->
+                            <div class="col d-flex justify-content-evenly padMar">
+                                <button class="btn btn-outline-primary" type="button" style="margin-right: 23px;"
+                                    data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                                        viewBox="0 0 16 16" class="bi bi-bag-plus">
+                                        <path fill-rule="evenodd"
+                                            d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5">
+                                        </path>
+                                        <path
+                                            d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z">
+                                        </path>
+                                    </svg>
+                                </button>
+                                <div class="input-group position-relative">
+                                    <input
+                                        class="form-control d-xl-flex justify-content-xl-center align-items-xl-center autocomplete"
+                                        id="searchInput" type="text" placeholder="Busque las tablas">
+                                    <button class="btn btn-warning" type="button" style="background: #eb4034;">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                    <div id="results" class="results-container"></div> <!-- Results container -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">image</th>
+                                        <th class="text-center">name</th>
+                                        <th class="text-center">price</th>
+                                        <th class="text-center">section</th>
+                                        <th class="text-center">category</th>
+                                        <th class="text-center">options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- {%for i in products%}
+                                
+                                    <tr>  
+                                        <td class="d-flex justify-content-center"><img
+                                            src="images/{{i['image']}}"
+                                            class="img-thumbnail"
+                                            alt="{{i['image']}}"
+                                            style="height: 50;width: 50px;"
+                                        />
+                                        </td>
+                                        <td class="text-center">{{i['name']}}</td>
+                                        <td class="text-center">{{i['price']}}</td>
+                                        <td class="text-center">{{i['stock']}}</td>
+                                        <td class="text-center">{{i['rating']}}</td>
+                                        <td class="text-center">{{i['description']}}</td> 
+                                        <td class="d-xl-flex justify-content-center align-items-center">
+                                            <button class="btn btn-success" type="button" style="margin-right: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-pencil-square">
+                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"></path>
+                                                </svg></button><button class="btn btn-danger" type="button" style="margin-left: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash3">
+                                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"></path>
+                                                </svg></button>
+                                        </td>
+                                    </tr>
+                                    
+                                    {%endfor%} -->
+
+                                    {% for i in products %}
+                                    
+                                    <tr class="text-center">
+                                        <td class="d-flex justify-content-center align-items-center">
+                                            <img src="{{i['images'][0]}}" class="img-thumbnail" alt="{{i['image']}}"
+                                                style="height: 50px; width: 50px;" />
+                                        </td>
+                                        <td class="align-middle">{{ i['name'] }}</td>
+                                        <td class="align-middle">{{ i['price'] }}</td>
+                                        <td class="align-middle">{{ i['section'] }}</td>
+                                        <td class="align-middle">{{ i['category'] }}</td>
+
+            
+                                        <td class="">
+                                            <button class="btn btn-success" type="button"
+                                                onclick="editProduct({{ i['id'] }}, '{{ i['name'] }}','{{ i['image'] }}', {{ i['price'] }}, {{ i['stock'] }}, {{ i['rating'] }}, '{{ i['description'] }}')">
+                                                <!-- SVG for edit icon -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+                                                    fill="currentColor" viewBox="0 0 16 16" class="bi bi-pencil-square">
+                                                    <path
+                                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z">
+                                                    </path>
+                                                    <path fill-rule="evenodd"
+                                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                            <button class="btn btn-danger" type="button"
+                                                onclick="delete_product({{i['id']}})">
+                                                <!-- SVG for trash icon -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+                                                    fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash3">
+                                                    <path
+                                                        d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal HTML -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm" enctype="multipart/form-data">
+                        <!-- <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                    </div> -->
+
+                        <!-- <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="previewImage(event)">
+                        <img id="imagePreview" src="images/300.png" alt="Image Preview" style="cursor: pointer; width: 100%; max-width: 300px; border: 1px solid #ccc;" onclick="document.getElementById('image').click();">
+                    </div> -->
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*" required
+                                style="display: none;" onchange="previewImage(event)">
+                            <img id="imagePreview" src="images/300.png" alt="Image Preview"
+                                style="cursor: pointer; width: 100%; max-width: 300px; border: 1px solid #ccc;"
+                                onclick="document.getElementById('image').click();">
+                        </div>
+
+                        <script>
+                            function previewImage(event) {
+                                const imagePreview = document.getElementById('imagePreview');
+                                const file = event.target.files[0];
+
+                                if (file) {
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        imagePreview.src = e.target.result;
+                                        imagePreview.style.display = 'block';
+                                    }
+                                    reader.readAsDataURL(file);
+                                }
+                            }
+                        </script>
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="productName" name="name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" id="category" name="category"
+                                aria-label="Default select example">
+                                <option selected>headset</option>
+                                <option value="1">earphones</option>
+                                <option value="2">speaker</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="productPrice" name="price" required
+                                step="0.01">
+                        </div>
+                        <div class="mb-3">
+                            <label for="productRating" class="form-label">Rating</label>
+                            <input type="number" class="form-control" id="productRating" name="rating" required min="1"
+                                max="5">
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="productDescription" name="description"
+                                required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productStock" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="productStock" name="stock" required min="0">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closeaddmodal" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="submitProductBtn">Add Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- edit modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">edit Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm" enctype="multipart/form-data">
+                        <!-- <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                    </div> -->
+                        <div class="mb-3">
+                            <label for="edit_id" class="form-label">id</label>
+                            <input type="number" class="form-control" id="edit_id" name="id" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_image" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="edit_image" name="image" accept="image/*"
+                                required style="display: none;" onchange="editpreviewImage(event)">
+                            <img id="edit_imagePreview" src="images/300.png" alt="Image Preview"
+                                style="cursor: pointer; width: 100%; max-width: 300px; border: 1px solid #ccc;"
+                                onclick="document.getElementById('image').click();">
+                        </div>
+
+                        <script>
+/*************  ✨ Codeium Command ⭐  *************/
+                            /**
+                             * Changes the image preview element's src attribute to the selected image
+                             * @param {Event} event - The change event triggered by the input element
+                             */
+/******  86a4e57e-1424-47f2-838c-8ef48cb2f0fc  *******/                            function editpreviewImage(event) {
+                                const imagePreview = document.getElementById('edit_imagePreview');
+                                const file = event.target.files[0];
+
+                                if (file) {
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        imagePreview.src = e.target.result;
+                                        imagePreview.style.display = 'block';
+                                    }
+                                    reader.readAsDataURL(file);
+                                }
+                            }
+                        </script>
+
+                        <div class="mb-3">
+                            <label for="edit_productName" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="edit_productName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_category" class="form-label">Category</label>
+                            <select class="form-select" id="edit_category" name="category"
+                                aria-label="Default select example">
+                                <option selected>headset</option>
+                                <option value="1">earphones</option>
+                                <option value="2">speaker</option>
+                            </select>
+                        </div>
+
+
+
+                        <div class="mb-3">
+                            <label for="edit_productPrice" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="edit_productPrice" name="price" required
+                                step="0.01">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_productRating" class="form-label">Rating</label>
+                            <input type="number" class="form-control" id="edit_productRating" name="rating" required
+                                min="1" max="5">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_productDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="edit_productDescription" name="description"
+                                required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_productStock" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="edit_productStock" name="stock" required
+                                min="0">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id='closeeditmodal' class="btn btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="edit_submitBtn">edit Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Success</strong>
+                <small>just now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                product added successfully
+            </div>
+        </div>
+    </div>>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="editToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Success</strong>
+                <small>just now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                product edited successfully
+            </div>
+        </div>
+    </div>>
+
+    <script>
+        function clearFields() {
+            document.getElementById('edit_imagePreview').src = 'images/300.png'; // Clear image preview
+            document.getElementById('edit_productName').value = '';
+            document.getElementById('edit_productPrice').value = '';
+            document.getElementById('edit_productStock').value = '';
+            document.getElementById('edit_productRating').value = '';
+            document.getElementById('edit_productDescription').value = '';
+            document.getElementById('edit_category').selectedIndex = 0;
+
+
+
+        }
+        function editProduct(id, name, image, price, stock, rating, description) {
+            // Set the modal fields with the product data
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_imagePreview').src = `images/${image}`
+            document.getElementById('edit_productName').value = name;
+            document.getElementById('edit_productPrice').value = price;
+            document.getElementById('edit_productStock').value = stock;
+            document.getElementById('edit_productRating').value = rating;
+            document.getElementById('edit_productDescription').value = description;
+            document.getElementById('edit_category').selectedIndex = 0;
+
+
+            // Show the modal
+            var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+            myModal.show();
+
+            document.getElementById('editModal').addEventListener('hidden.bs.modal', clearFields);
+
+        }
+
+        const data = [];
+        {%if products %}
+        {% for i in products %}
+        data.push('{{i['name']}}');
+        {% endfor %}
+        {% endif %}
+        // Example data
+
+        function find_img_by_name(name) {
+            {% for i in products %}
+            if (name == '{{i['name']}}') {
+                return '{{i['images'][0]}}';
+            }
+
+            {% endfor %}
+
+        }
+        function find_id_by_name(name) {
+            {% for i in products %}
+            if (name == '{{i['name']}}') {
+                return '{{i['product_id']}}';
+            }
+
+            {% endfor %}
+        }
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const query = this.value.toLowerCase();
+            const resultsContainer = document.getElementById('results');
+
+            // Clear previous results
+            resultsContainer.innerHTML = '';
+
+            if (query) {
+
+                const filteredData = data.filter(item => item.toLowerCase().includes(query));
+
+                // filteredData.forEach(item => {
+                //     const div = document.createElement('div');
+                //     const img = document.createElement('img');
+                //     img.src = 'images/' + find_img_by_name(item);
+                //     img.style.width = '30px';  // Set width to 10 pixels
+                //     img.style.height = '30px'; // Set height to 10 pixels
+                //     div.classList.add('result-item'); // Add some styling if needed
+
+                //     div.appendChild(img); // Append the image first
+                //     div.appendChild(document.createTextNode(item)); // Append the text after the image
+                //     resultsContainer.appendChild(div);
+                // });
+                filteredData.forEach(item => {
+    const div = document.createElement('div');
+    const img = document.createElement('img');
+    img.src = find_img_by_name(item);
+    img.style.width = '30px';  // Set width to 30 pixels
+    img.style.height = '30px'; // Set height to 30 pixels
+    div.classList.add('result-item'); // Add some styling if needed
+
+    // Add an event listener to the div
+    div.addEventListener('click', () => {
+        // alert('You clicked on: ' + find_id_by_name(item));
+        window.location.href = '/product/view/'+find_id_by_name(item);
+    });
+
+    div.appendChild(img); // Append the image first
+    div.appendChild(document.createTextNode(item)); // Append the text after the image
+    resultsContainer.appendChild(div);
+});
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('submitProductBtn').addEventListener('click', function () {
+            const form = document.getElementById('addProductForm');
+            const formData = new FormData(form); // Create a FormData object
+
+            fetch('/products/add', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text(); // or response.json() if expecting JSON
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    // Optionally redirect or update the UI
+                    var toastEl = document.getElementById('liveToast');
+                    var toast = new bootstrap.Toast(toastEl);
+                    var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+                    myModal.hide();
+                    // document.getElementById('closeaddmodal').click();
+                    toast.show();
+                    // window.location.href = '/admin'; // Redirect to the index page
+                })
+                .catch((error) => {
+                    alert('Error:', error);
+                    console.error('Error:', error);
+                });
+        });
+        document.getElementById('edit_submitBtn').addEventListener('click', function () {
+            const form = document.getElementById('editProductForm');
+            const formData = new FormData(form); // Create a FormData object
+            for (const [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+            fetch('/products/edit/' + formData.get('id'), {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+
+                        return response.text(); // or response.json() if expecting JSON
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    // Optionally redirect or update the UI
+                    var toastEl = document.getElementById('editToast');
+                    document.getElementById('closeeditmodal').click();
+
+                    var toast = new bootstrap.Toast(toastEl);
+
+                    toast.show();
+                    // window.location.href = '/admin'; // Redirect to the index page
+                })
+                .catch((error) => {
+                    alert('Error:', error);
+                    console.error('Error:', error);
+                });
+        });
+
+        function delete_product(id) {
+
+            fetch(`/products/delete/${id}`, {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/admin';
+                        return response.text(); // or response.json() if expecting JSON
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+        }
+    </script>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/responsive-blog-card-slider-01-swiper-bundle.min.js"></script>
+    <script src="assets/js/responsive-blog-card-slider-02-responsive-blog-card-slider.js"></script>
+</body>
+
+</html>

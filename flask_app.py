@@ -128,6 +128,7 @@ def getproduct(id):
       
     
     for product in products:#only return the product with the matching id
+        
         print(product['product_id'])
         if int(product['product_id']) == int(id):
             for item in product['data']:

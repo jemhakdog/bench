@@ -866,7 +866,7 @@
                       });
                     </script>
                     <img
-                      alt="Iphone 11 pro"
+                      alt="{{item.name}}"
                       src="{{ item.image }}"
                       class="img-fluid rounded"
                       style="width: 50px; height: 50px; object-fit: cover"
@@ -969,7 +969,7 @@
               const itemHtml = `
                   <div class="row mb-2">
                       <div class="col-4">
-                          <img src="${item.image}" class="img-fluid" alt="${item.color} ${item size}">
+                          <img src="${item.image}" class="img-fluid" alt="${item.color} ${item.size}">
                       </div>
                       <div class="col-8">
                           <h5>${item.color} - Size: ${item.size}</h5>
@@ -982,10 +982,29 @@
           });
       }
 
+     
+
       // Render cart items when modal is shown
       $('#cartModal').on('show.bs.modal', function () {
           renderCartItems();
       });
+
+    
+      
+    </script>
+
+    <script>
+      const product = {{ get_product_by_id("387010") | tojson }};
+      if (product) {
+        Object.entries(product).forEach(([key, value]) => {
+          if (key === "category") {
+            console.log(`Category: ${value}`);
+          }else if (key === "section") {
+            console.log(`Section: ${value}`);
+          }
+          // console.log(`${key}: ${value}`);
+        });
+      }
     </script>
     <!-- ENDMODAL -->
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

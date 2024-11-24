@@ -340,12 +340,15 @@ var categories = document.querySelectorAll(".form-check-input");
 categories.forEach((category) => {
   category.addEventListener("click", () => {
     if (category.checked) {
-      selectedCategories.push(category.id);
+      if (!selectedCategories.includes(category.id)) {
+        selectedCategories.push(category.id);
+      }
     } else {
       const index = selectedCategories.indexOf(category.id);
       if (index > -1) {
         selectedCategories.splice(index, 1);
       }
+      selectedCategories.splice(index);
     }
     
     // Send AJAX request to server with selected categories
@@ -363,7 +366,7 @@ categories.forEach((category) => {
       const productList = document.getElementById('product-list');
       productList.innerHTML = '';
       productList.innerHTML = data;
-      fetch('/paginations/1', {
+      fetch('/pagination', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -374,11 +377,8 @@ categories.forEach((category) => {
       })
       .then(response => response.json())
       .then(data => {
-
+        console.log(data);
         updatePagination(data.current_page, data.total_pages);
-                
-      
-
       });
 
       
@@ -434,8 +434,8 @@ categories.forEach((category) => {
                 const controls = [
                     {page: 1, text: '« First', disabled: currentPage === 1},
                     {page: currentPage - 1, text: 'Previous', disabled: currentPage === 1},
-                    ...Array.from({length: Math.min(5, totalPages)}, (_, i) => {
-                        const pageNum = Math.min(Math.max(currentPage - 2 + i, 1), totalPages);
+                    ...Array.from({length: Math.min(3, totalPages)}, (_, i) => {
+                        const pageNum = Math.min(Math.max(currentPage - 1 + i, 1), totalPages);
                         return {
                             page: pageNum,
                             text: pageNum.toString(),
@@ -457,7 +457,7 @@ categories.forEach((category) => {
                     if (!control.disabled) {
                         a.onclick = () => fetchProducts(control.page);
                     }
-                    a.href = 'javascript:void(0)';
+                    a.href = '/shop/' + control.page;
                     
                     li.appendChild(a);
                     pagination.appendChild(li);
@@ -466,7 +466,7 @@ categories.forEach((category) => {
         }
 
         function fetchProducts(page) {
-            fetch('/paginations/' + page, {
+            fetch('/filter', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -486,7 +486,7 @@ categories.forEach((category) => {
                     productList.innerHTML += productCard;
                 });
                 
-                updatePagination(data.current_page, data.total_pages);
+                // updatePagination(data.current_page, data.total_pages);
             })
             .catch(error => console.error('Error:', error));
         }
@@ -638,14 +638,50 @@ categories.forEach((category) => {
         <div>
           <p class="justify-content-between"
             style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Price</p>
-          <div class="d-flex"><input type="number" class="form-control-sm" style="width:130px;"><input type="number"
-              class="form-control-sm" style="width: 130px;margin-left: 6px;"><button class="btn btn-primary"
+          <div class="d-flex">
+            <input type="number" class="form-control-sm" style="width:130px;" name="min">
+            <input type="number"
+              class="form-control-sm" style="width: 130px;margin-left: 6px;" name="max">
+              
+              <button class="btn btn-primary" onclick="sortByPrice()"
               type="button" style="margin-left: 4px;"><svg class="bi bi-play" xmlns="http://www.w3.org/2000/svg"
                 width="1em" height="1em" fill="currentColor" viewbox="0 0 16 16" style="color:#ffffff;">
                 <path
                   d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z">
                 </path>
-              </svg></button></div>
+              </svg></button ></div>
+              <script>
+                function sortByPrice() {
+                  var min = document.querySelector('input[name="min"]').value;
+                  var max = document.querySelector('input[name="max"]').value;
+                  fetch('/filter', {
+                    method: 'POST',
+                    body: {min:min,max:max}
+                  })
+                  .then(response => {
+                      if (response.ok) {
+                          return response.text(); // or response.json() if expecting JSON
+                      }
+                      throw new Error('Network response was not ok.');
+                  })
+                  .then(data => {
+                      console.log('Success:', data);
+                      // Optionally redirect or update the UI
+                      var toastEl = document.getElementById('liveToast');
+                      var toast = new bootstrap.Toast(toastEl);
+                      var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+                }
+
+             
+              </script>
+              {% for i in filters %}
+              <script>
+                document.getElementById("{{i}}").checked = true;
+                selectedCategories.push("{{i}}");
+              </script>
+              {% endfor %}
+
+         
           <hr>
         </div>
       </div>
@@ -657,13 +693,13 @@ categories.forEach((category) => {
               <div class="position-relative">
                 <!-- Main product image -->
                 <img class="card-img-top w-100 d-block rounded-top-3" src="{{ i['images'][0] }}"
-                  alt="Product Image" id="main-image" style="height: 250px; object-fit: cover;"
+                  alt="Product Image" id="main-image" style="height: 401px;object-fit: cover;"
                   onclick="window.location.href = `/product/view/{{ i['product_id'] }}`">
 
                 <!-- Hover image for the same product -->
                 <img class="card-img-top w-100 d-block rounded-top-3 position-absolute top-0 start-0" 
                   src="{{ i['images'][1] }}" alt="Product Image Hover" id="hover-image" 
-                  style="height: 250px; object-fit: cover; opacity: 0; transition: opacity 0.3s ease;"
+                  style="height: 401px; object-fit: cover; opacity: 0; transition: opacity 0.3s ease;"
                   onclick="window.location.href = `/product/view/{{ i['product_id'] }}`"
                   onmouseover="this.style.opacity=1"
                   onmouseout="this.style.opacity=0">
@@ -717,7 +753,7 @@ categories.forEach((category) => {
                     }
                   </script>
                 </div><button class="btn btn-primary w-100 rounded-pill" id="add-to-cart-btn" class="position-relative"
-                  data-bs-toggle="modal" data-bs-target="#itemviewmodal">Add to Cart</button>
+                  data-bs-toggle="modal" data-bs-target="#itemviewmodal"  onclick="window.location.href = `/product/view/{{ i['product_id'] }}`"  >Add to Cart</button>
               </div>
               <div>
                 <input type="hidden" name="category" value="{{ i['category'] }}">
@@ -833,136 +869,113 @@ categories.forEach((category) => {
   <script>
     function closeModal() {
       const modalElement = document.getElementById("cartModal");
-      const modal = bootstrap.Modal.getInstance(modalElement);
-      modal.hide();
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      // Initialize cart functionality
-      updateCartDisplay();
-      
-      // Add event listeners to checkboxes
-      document.querySelectorAll('.cart-ch').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-          updateCartTotal();
-          updateSelectedCount();
-        });
-      });
-    });
-
-    function updateCartDisplay() {
-      document.getElementById("cart-total").innerText = totalcart;
-      document.getElementById("cart-items-count").innerText = '{{cart_len}}';
-    }
-
-    function updateCartTotal() {
-      cartTotal = 0;
-      document.querySelectorAll('.cart-ch:checked').forEach(checkbox => {
-        const itemId = checkbox.value;
-        const priceElement = checkbox.closest('li').querySelector('.me-3:last-of-type');
-        const quantityElement = checkbox.closest('li').querySelector('.me-3:first-of-type');
-        const price = parseFloat(priceElement.innerText.replace('₱', ''));
-        const quantity = parseInt(quantityElement.innerText);
-        cartTotal += price * quantity;
-      });
-      document.getElementById("cart-total").innerText = cartTotal;
-    }
-
-    function updateSelectedCount() {
-      selected = document.querySelectorAll('.cart-ch:checked').length;
-      document.getElementById("cart-selected").innerText = selected;
-      const selectAllBtn = document.getElementById("selected");
-      if (selected == {{cart_len}}) {
-        selectAllBtn.innerText = "Unselect all";
-        selectAllBtn.onclick = UnSelectAll;
-      } else {
-        selectAllBtn.innerText = "Select all";
-        selectAllBtn.onclick = SelectAll;
-      }
-    }
-
-    function SelectAll() {
-      document.querySelectorAll('.cart-ch').forEach(checkbox => {
-        checkbox.checked = true;
-      });
-      updateCartTotal();
-      updateSelectedCount();
-    }
-
-    function UnSelectAll() {
-      document.querySelectorAll('.cart-ch').forEach(checkbox => {
-        checkbox.checked = false;
-      });
-      updateCartTotal();
-      updateSelectedCount();
-    }
-
-    function removeFromCart(itemId) {
-      fetch(`/cart/${itemId}`, {
-        method: 'DELETE',
-      })
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById(`cart-item-${itemId}`).remove();
-        const newCartLen = parseInt(document.getElementById("cart-items-count").innerText) - 1;
-        document.getElementById("cart-items-count").innerText = newCartLen;
-        updateCartTotal();
-        updateSelectedCount();
-      })
-      .catch(error => console.error('Error:', error));
+      const modal = bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+      modal.hide(); // Use Bootstrap's method to hide the modal
     }
   </script>
   <!-- Bootstrap Modal for Cart -->
-  <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel"
-    aria-hidden="true">
+  <div
+    class="modal fade"
+    id="cartModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="cartModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="cartModalLabel">
-            <i class="fas fa-arrow-left" data-bs-dismiss="modal" aria-label="Close"></i> Continue shopping
+            <i class="fas fa-arrow-left"  data-bs-dismiss="modal"
+            aria-label="Close"></i> Continue shopping
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            onclick=""
+          ></button>
         </div>
         <div class="modal-body">
           <div class="p-3">
             <h2 class="mb-4">Shopping cart</h2>
-            <p class="text-muted">You have <span id="cart-items-count">{{cart_len}}</span> items in your cart</p>
-            <div id="cart-items-container">
+            <p class="text-muted">You have {{cart_len}} items in your cart</p>
             <script>
-              let cartTotal = 0;
-              let selected = 0;
-              let totalcart = 0;
+              var cartTotal = 0;
+              var selected = 0;
+              var totalcart = 0;
             </script>
-            <ul class="list-group" id="cart-items-list">
+            <ul class="list-group">
               {% for item in cart %}
-              <li class="list-group-item d-flex justify-content-between align-items-center" id="cart-item-{{item.id}}">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center" id="cartItems"
+              >
                 <div class="d-flex align-items-center">
-                  <input class="form-check-input m-3 cart-ch" type="checkbox" value="{{item.id}}" id="checkbox-{{item.id}}" />
-                  <img alt="{{item.name}}" src="{{ item.image }}" class="img-fluid rounded"
-                    style="width: 50px; height: 50px; object-fit: cover" />
+                  <input
+                    class="form-check-input m-3 cart-ch"
+                    type="checkbox"
+                    value=""
+                    id="checkbox-{{item.id}}"
+                  />
+                  <script>
+                    totalcart+=({{item.price}}*{{item.quantity}})
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('checkbox-{{item.id}}').addEventListener('change', function() {
+                            if (this.checked) {
+                            cartTotal+=({{item.price}}*{{item.quantity}});
+                            document.getElementById("cart-total").innerText=cartTotal;
+                            selected+=1;
+                            document.getElementById("cart-selected").innerText=selected;
+                            if (selected=={{cart_len}}){
+                                document.getElementById("selected").innerText="Unselect all";
+                                document.getElementById("selected").onclick = UnSelectAll;
+                            }
+                            }
+                            else{
+                                cartTotal-=({{item.price}}*{{item.quantity}});
+                                document.getElementById("cart-total").innerText=cartTotal;
+                                selected-=1;
+                                document.getElementById("cart-selected").innerText=selected;
+                                if (selected<{{cart_len}}){
+                                document.getElementById("selected").innerText="Select all";
+                                document.getElementById("selected").onclick = SelectAll;
+                            }
+
+                            }
+                        });
+                    });
+                  </script>
+                  <img
+                    alt="Iphone 11 pro"
+                    src="{{ item.image }}"
+                    class="img-fluid rounded"
+                    style="width: 50px; height: 50px; object-fit: cover"
+                  />
                   <div class="ms-3">
-                    <h6 class="mb-0">{{ item.name }}</h6>
-                    <small class="text-muted">size:{{ item.size }}, color:{{ item.color }}</small>
+                    <h6 class="mb-0">{{item.name}}</h6>
+                    <small class="text-muted"
+                      >size:{{ item.size }}, color:{{item.color}}</small
+                    >
                   </div>
                 </div>
                 <div class="d-flex align-items-center">
                   <span class="me-3">{{ item.quantity }}</span>
-                  <span class="me-3">₱{{ item.price }}</span>
-                  <button class="btn btn-sm btn-danger" onclick="removeFromCart({{item.id}})">
+                  <span class="me-3">{{ item.price }}</span>
+                  <button class="btn btn-sm btn-danger">
                     <i class="fas fa-trash"></i>
                   </button>
                 </div>
               </li>
-              <script>
-                totalcart += ({{ item.price }} * {{ item.quantity }});
-              </script>
               {% endfor %}
             </ul>
-            </div>
           </div>
         </div>
 
-        <div class="modal-footer d-flex justify-content-between align-items-center">
+        <div
+          class="modal-footer d-flex justify-content-between align-items-center"
+        >
           <div class="left-section">
             <h5 class="mb-0">
               Selected items: <span id="cart-selected">0</span>
@@ -972,7 +985,12 @@ categories.forEach((category) => {
             </div>
           </div>
           <div>
-            <button type="button" id="selected" class="btn btn-secondary" onclick="SelectAll()">
+            <button
+              type="button"
+              id="selected"
+              class="btn btn-secondary"
+              onclick="SelectAll()"
+            >
               Select all
             </button>
             <button type="button" class="btn btn-primary">Check out</button>
@@ -984,81 +1002,284 @@ categories.forEach((category) => {
   <script>
 
     function SelectAll() {
-      cartTotal = totalcart
-      selected = {{ cart_len }}
+        cartTotal=totalcart
+        selected={{cart_len}}
+        document.getElementById("cart-total").innerText=cartTotal;
+        document.getElementById("cart-selected").innerText=selected;
+        if (selected=={{cart_len}}){
+                                                    document.getElementById("selected").innerText="Unselect all";
+                                                    document.getElementById("selected").onclick = UnSelectAll;
+                                                }
+        // Get all checkboxes with the class 'cart-ch'
+        const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
+        // Set each checkbox's checked property to true
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        // Optionally, you can also update the cart total and selected count here if needed
     }
-    document.getElementById("cart-total").innerText = cartTotal;
-    document.getElementById("cart-selected").innerText = selected;
-    if (selected == {{ cart_len }}) {
-      document.getElementById("selected").innerText = "Unselect all";
-      document.getElementById("selected").onclick = UnSelectAll;
-    }
-    // Get all checkboxes with the class 'cart-ch'
-    const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
-    // Set each checkbox's checked property to true
-    checkboxes.forEach(checkbox => {
-      checkbox.checked = true;
-    });
-            // Optionally, you can also update the cart total and selected count here if needed
-        
 
     function UnSelectAll() {
-      cartTotal = 0;
-      selected = 0;
-      document.getElementById("cart-total").innerText = cartTotal;
-      document.getElementById("cart-selected").innerText = selected;
-      if (selected < {{ cart_len }}
-    ) {
-      document.getElementById("selected").innerText = "Select all";
-      document.getElementById("selected").onclick = SelectAll;
+        cartTotal = 0;
+        selected = 0;
+        document.getElementById("cart-total").innerText=cartTotal;
+        document.getElementById("cart-selected").innerText=selected;
+        if (selected<{{cart_len}}){
+                                                    document.getElementById("selected").innerText="Select all";
+                                                    document.getElementById("selected").onclick = SelectAll;
+                                                }
+        // Get all checkboxes with the class 'cart-ch'
+        const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
+        // Set each checkbox's checked property to false
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        // Optionally, you can also update the cart total and selected count here if needed
     }
-    // Get all checkboxes with the class 'cart-ch'
-    const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
-    // Set each checkbox's checked property to false
-    checkboxes.forEach(checkbox => {
-      checkbox.checked = false;
-    });
-            // Optionally, you can also update the cart total and selected count here if needed
-        }
 
 
-  </script>
+    </script>
 
   <script>
-    const cart = {{ cart| tojson }};
+    const cart = {{ cart|tojson }};
 
     function renderCartItems() {
-      const cartItemsContainer = document.getElementById('cartItems');
-      cartItemsContainer.innerHTML = ''; // Clear previous items
+        const cartItemsContainer = document.getElementById('cartItems');
+        cartItemsContainer.innerHTML = ''; // Clear previous items
 
-      cart.forEach(item => {
-        const itemHtml = `
-                    <div class="row mb-2">
-                        <div class="col-4">
-                            <img src="${item.image}" class="img-fluid" alt="${item.color} ${item.size}">
-                        </div >
-        <div class="col-8">
-          <h5>${item.color} - Size: ${item.size}</h5>
-          <p>SKU: ${item.sku}</p>
-          <p>Quantity: ${item.quantity}</p>
-        </div>
-                    </div >
-                `;
-                cartItemsContainer.innerHTML += itemHtml;
-            });
-        }
-
-        // Render cart items when modal is shown
-        $('#cartModal').on('show.bs.modal', function () {
-            renderCartItems();
+        cart.forEach(item => {
+            const itemHtml = `
+                <div class="row mb-2">
+                    <div class="col-4">
+                        <img src="${item.image}" class="img-fluid" alt="${item.color}">
+                    </div>
+                    <div class="col-8">
+                        <h5>${item.color} - Size: ${item.size}</h5>
+                        <p>SKU: ${item.sku}</p>
+                        <p>Quantity: ${item.quantity}</p>
+                    </div>
+                </div>
+            `;
+            cartItemsContainer.innerHTML += itemHtml;
         });
+    }
+
+    // Render cart items when modal is shown
+    // $('#cartModal').on('show.bs.modal', function () {
+    //     renderCartItems();
+    // });
   </script>
 
   <!-- ENDMODAL -->
 
 
+<script>
+    function clearFields() {
+        document.getElementById('edit_imagePreview').src = 'images/300.png'; // Clear image preview
+        document.getElementById('edit_productName').value = '';
+        document.getElementById('edit_productPrice').value = '';
+        document.getElementById('edit_productStock').value = '';
+        document.getElementById('edit_productRating').value = '';
+        document.getElementById('edit_productDescription').value = '';
+        document.getElementById('edit_category').selectedIndex = 0;
 
 
+
+    }
+    function editProduct(id, name, image, price, stock, rating, description) {
+        // Set the modal fields with the product data
+        document.getElementById('edit_id').value = id;
+        document.getElementById('edit_imagePreview').src = `images/${image}`
+        document.getElementById('edit_productName').value = name;
+        document.getElementById('edit_productPrice').value = price;
+        document.getElementById('edit_productStock').value = stock;
+        document.getElementById('edit_productRating').value = rating;
+        document.getElementById('edit_productDescription').value = description;
+        document.getElementById('edit_category').selectedIndex = 0;
+
+
+        // Show the modal
+        var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+        myModal.show();
+
+        document.getElementById('editModal').addEventListener('hidden.bs.modal', clearFields);
+
+    }
+
+    const data = [];
+    {%if products %}
+    {% for i in products %}
+    data.push('{{i['name']}}');
+    {% endfor %}
+    {% endif %}
+    // Example data
+
+    function find_img_by_name(name) {
+        {% for i in products %}
+        if (name == '{{i['name']}}') {
+            return '{{i['images'][0]}}';
+        }
+
+        {% endfor %}
+
+    }
+    function find_id_by_name(name) {
+        {% for i in products %}
+        if (name == '{{i['name']}}') {
+            return '{{i['product_id']}}';
+        }
+
+        {% endfor %}
+    }
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const resultsContainer = document.getElementById('results');
+
+        // Clear previous results
+        resultsContainer.innerHTML = '';
+
+        if (query) {
+
+            const filteredData = data.filter(item => item.toLowerCase().includes(query));
+
+            // filteredData.forEach(item => {
+            //     const div = document.createElement('div');
+            //     const img = document.createElement('img');
+            //     img.src = 'images/' + find_img_by_name(item);
+            //     img.style.width = '30px';  // Set width to 10 pixels
+            //     img.style.height = '30px'; // Set height to 10 pixels
+            //     div.classList.add('result-item'); // Add some styling if needed
+
+            //     div.appendChild(img); // Append the image first
+            //     div.appendChild(document.createTextNode(item)); // Append the text after the image
+            //     resultsContainer.appendChild(div);
+            // });
+            filteredData.forEach(item => {
+const div = document.createElement('div');
+const img = document.createElement('img');
+img.src = find_img_by_name(item);
+img.style.width = '30px';  // Set width to 30 pixels
+img.style.height = '30px'; // Set height to 30 pixels
+div.classList.add('result-item'); // Add some styling if needed
+
+// Add an event listener to the div
+div.addEventListener('click', () => {
+    // alert('You clicked on: ' + find_id_by_name(item));
+    window.location.href = '/product/view/'+find_id_by_name(item);
+});
+
+div.appendChild(img); // Append the image first
+div.appendChild(document.createTextNode(item)); // Append the text after the image
+resultsContainer.appendChild(div);
+});
+        }
+    });
+</script>
+<script>
+getData();
+    document.getElementById('submitProductBtn').addEventListener('click', function () {
+        const form = document.getElementById('addProductForm');
+        const formData = new FormData(form); // Create a FormData object
+
+        fetch('/products/add', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text(); // or response.json() if expecting JSON
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                console.log('Success:', data);
+                // Optionally redirect or update the UI
+                var toastEl = document.getElementById('liveToast');
+                var toast = new bootstrap.Toast(toastEl);
+                var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+                myModal.hide();
+                // document.getElementById('closeaddmodal').click();
+                toast.show();
+                // window.location.href = '/admin'; // Redirect to the index page
+            })
+            .catch((error) => {
+                alert('Error:', error);
+                console.error('Error:', error);
+            });
+    });
+    document.getElementById('edit_submitBtn').addEventListener('click', function () {
+        const form = document.getElementById('editProductForm');
+        const formData = new FormData(form); // Create a FormData object
+        for (const [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+        fetch('/products/edit/' + formData.get('id'), {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+
+                    return response.text(); // or response.json() if expecting JSON
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                console.log('Success:', data);
+                // Optionally redirect or update the UI
+                var toastEl = document.getElementById('editToast');
+                document.getElementById('closeeditmodal').click();
+
+                var toast = new bootstrap.Toast(toastEl);
+
+                toast.show();
+                // window.location.href = '/admin'; // Redirect to the index page
+            })
+            .catch((error) => {
+                alert('Error:', error);
+                console.error('Error:', error);
+            });
+    });
+
+    function delete_product(id) {
+
+        fetch(`/products/delete/${id}`, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/admin';
+                    return response.text(); // or response.json() if expecting JSON
+                }
+                throw new Error('Network response was not ok.');
+            })
+    }
+     function getData() {
+
+    //   const url = "/products";
+    //   try {
+    //     const response = fetch(url);
+    //     if (!response.ok) {
+    //       throw new Error(`Response status: ${response.status}`);
+    //     }
+
+    //     // const json = response.json();
+    //     console.log(response);
+    //     // return json
+    //   } catch (error) {
+    //     console.error(error.message);
+    //   }
+     }
+    fetch('/products')
+            .then(response => {
+                if (response.ok) {
+                    console.log(response);
+                    return response.json(); // or response.json() if expecting JSON
+                }
+                throw new Error('Network response was not ok.');
+            })
+
+</script>
   <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
   <script src="/assets/js/aos.min.js"></script>
   <script src="/assets/js/bs-init.js"></script>

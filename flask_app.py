@@ -209,6 +209,110 @@ def getproduct(id: int) -> List[Dict[str, Any]]:
     return jsonify(results)
 
 
+@app.route('/paginations/<int:page>', methods=['POST'])
+def paginations(page):
+    per_page = 20
+    data = request.get_json()
+        
+        # Get database connection
+    conn = get_db('ecommerce.db')
+    cursor = conn.cursor()
+
+        # Base query
+    query = '''
+        SELECT COUNT(product_id, name, price, images, section, category, data)
+        FROM products
+    '''
+    params = []
+        
+        # Add filters if present
+    if data and 'categories' in data:
+            selected_filters = data.get('categories', [])
+            if selected_filters:
+                filter_conditions = []
+                for filter_id in selected_filters:
+                    clean_filter = filter_id
+                    for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+                        if clean_filter.startswith(prefix):
+                            clean_filter = clean_filter.replace(prefix, '')
+                    # clean_filter = clean_filter.replace('-', ' ')
+                    filter_conditions.append('(LOWER(section) LIKE ? OR LOWER(category) LIKE ?)')
+                    params.extend([f'%{clean_filter.lower()}%', f'%{clean_filter.lower()}%'])
+                
+                if filter_conditions:
+                    query += ' WHERE ' + ' OR '.join(filter_conditions)
+        
+        # Execute query
+    cursor.execute(query, params)
+    total = cursor.fetchone()[0]
+    
+
+
+        
+        # Get total count for pagination
+        # cursor.execute('SELECT COUNT(*) FROM products')
+        # total = cursor.fetchone()[0]
+    total_pages = (total + per_page - 1) // per_page
+    page = min(max(1, page), total_pages)
+    offset = (page - 1) * per_page
+    
+    # Base query
+    query = '''
+        SELECT product_id, name, price, images, section, category, data 
+        FROM products
+    '''
+    params = []
+    
+    # Handle filters if present
+    if request.method == 'POST' and request.is_json:
+        filters = request.get_json().get('categories', [])
+        if filters:
+            filter_conditions = []
+            for filter_id in filters:
+                clean_filter = filter_id
+                for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+                    if clean_filter.startswith(prefix):
+                        clean_filter = clean_filter.replace(prefix, '')
+                # clean_filter = clean_filter.replace('-', ' ')
+                filter_conditions.append('(LOWER(section) LIKE ? OR LOWER(category) LIKE ?)')
+                params.extend([f'%{clean_filter.lower()}%', f'%{clean_filter.lower()}%'])
+            
+            if filter_conditions:
+                query += ' WHERE ' + ' OR '.join(filter_conditions)
+    cursor.execute(query, params)
+    products = cursor.fetchall()
+    if offset>len(products):
+        return "oppsss"
+    # Add pagination
+    query += ' LIMIT ? OFFSET ?'
+    params.extend([per_page, offset])
+    
+    # Execute final query
+    cursor.execute(query, params)
+    products = cursor.fetchall()
+    
+    # Get cart items
+    cart_conn = get_db_connection()
+    cart_cursor = cart_conn.cursor()
+    cart_cursor.execute('SELECT * FROM cart')
+    cart_items = cart_cursor.fetchall()
+    cart_conn.close()
+    cart = [dict(item) for item in cart_items]
+    
+    # Process products
+    processed_products = []
+    for product in products:
+        product_dict = dict(product)
+        product_dict['images'] = json.loads(product_dict['images'])
+        product_dict['data'] = json.loads(product_dict['data'])
+        processed_products.append(product_dict)
+    
+    conn.close()
+    return jsonify(
+        products=processed_products,
+        current_page=page,
+        total_pages=total_pages
+    )
 @app.route("/filter", methods=['GET', 'POST'])
 def filter():
     if request.method == 'POST':
@@ -233,8 +337,9 @@ def filter():
                 for filter_id in selected_filters:
                     clean_filter = filter_id
                     for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
-                        clean_filter = clean_filter.replace(prefix, '')
-                    clean_filter = clean_filter.replace('-', ' ')
+                        if clean_filter.startswith(prefix):
+                            clean_filter = clean_filter.replace(prefix, '')
+                    # clean_filter = clean_filter.replace('-', ' ')
                     filter_conditions.append('(LOWER(section) LIKE ? OR LOWER(category) LIKE ?)')
                     params.extend([f'%{clean_filter.lower()}%', f'%{clean_filter.lower()}%'])
                 
@@ -244,6 +349,8 @@ def filter():
         # Execute query
         cursor.execute(query, params)
         products = cursor.fetchall()
+        print(params)
+
         data=""
         if not products:
             return "<h5>no products found!</h5>"
@@ -311,6 +418,7 @@ def filter():
 def shop(page=1):
     per_page = 20
     
+    
     # Get database connection
     conn = get_db('ecommerce.db')
     cursor = conn.cursor()
@@ -337,7 +445,9 @@ def shop(page=1):
             for filter_id in filters:
                 clean_filter = filter_id
                 for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+                    print(clean_filter)
                     clean_filter = clean_filter.replace(prefix, '')
+                    
                 clean_filter = clean_filter.replace('-', ' ')
                 filter_conditions.append('(LOWER(section) LIKE ? OR LOWER(category) LIKE ?)')
                 params.extend([f'%{clean_filter.lower()}%', f'%{clean_filter.lower()}%'])

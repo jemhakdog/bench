@@ -21,7 +21,7 @@ pip install -r requirements.txt
 To run the application, execute the following command:
 
 ```bash
-python app.py
+python flask_app.py
 ```
 
 Visit `http://127.0.0.1:5000` in your web browser to access the application.

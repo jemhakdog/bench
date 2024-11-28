@@ -1,6 +1,8 @@
 # Project Title
+E-commerce Web Application
 
 A brief description of your project.
+This project is a web application built using Flask, which connects to a MySQL database and utilizes SQLite for local data storage. It provides functionalities for managing products, user accounts, and a shopping cart.
 
 ## Description
 

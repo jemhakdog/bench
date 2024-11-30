@@ -375,10 +375,12 @@ categories.forEach((category) => {
           categories: selectedCategories
         })
       })
-      .then(response => response.json())
+      .then(response => response.text())
       .then(data => {
         console.log(data);
-        updatePagination(data.current_page, data.total_pages);
+        document.getElementById("pagination").innerHTML=data;
+        
+        // updatePagination(data.current_page, data.total_pages);
       });
 
       
@@ -485,6 +487,8 @@ categories.forEach((category) => {
                     const productCard = createProductCard(product);
                     productList.innerHTML += productCard;
                 });
+
+                
                 
                 // updatePagination(data.current_page, data.total_pages);
             })
@@ -765,25 +769,23 @@ categories.forEach((category) => {
         </div>
       </div>
     </div>
+    
+
     <div class="row">
-  <div class="col-12">
-    <nav aria-label="Page navigation">
-  <ul class="pagination">
-    <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
-      <span class="page-link" onclick="fetchProducts({{ current_page - 1 }})">Previous</span>
-    </li>
-    {% for page in range(1, total_pages + 1) %}
-    <li class="page-item {% if page == current_page %}active{% endif %}">
-      <span class="page-link" onclick="fetchProducts({{ page }})">{{ page }}</span>
-    </li>
-    {% endfor %}
-    <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
-      <span class="page-link" onclick="fetchProducts({{ current_page + 1 }})">Next</span>
-    </li>
-  </ul>
-</nav>
+  <div class="col-12 d-flex justify-content-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination" id="pagination">
+          {% if pagination_links %}
+              {{ pagination_links|safe }}
+          {% endif %}
+      </ul>
+    </nav>
+  
   </div>
 </div>
+</div>
+
+
   </div>
   <footer>
     <div class="container py-4 py-lg-5" data-aos="zoom-in">
@@ -1259,7 +1261,30 @@ getData();
                 throw new Error('Network response was not ok.');
             })
 
+            
+
 </script>
+
+<script>
+  fetch('/pagination', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          categories: selectedCategories,
+          
+        })
+      })
+      .then(response => response.text())
+      .then(data => {
+        // console.log(data);
+        document.getElementById("pagination").innerHTML=data;
+    
+        // updatePagination(data.current_page, data.total_pages);
+      });
+  </script>
+
   <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
   <script src="/assets/js/aos.min.js"></script>
   <script src="/assets/js/bs-init.js"></script>
@@ -1268,3 +1293,4 @@ getData();
 </body>
 
 </html>
+

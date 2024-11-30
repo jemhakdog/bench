@@ -12,18 +12,48 @@ from datetime import datetime
 from typing import List, Dict, Any
 
 
-def generate_pagination_links(current_page, total_pages, page_range=5):
-    pagination_links = ""
-    start_page = max(1, current_page - (page_range // 2))
-    end_page = min(total_pages, start_page + page_range - 1)
+# def generate_pagination_links(current_page, total_pages, page_range=5):
+#     pagination_links = ""
+#     start_page = max(1, current_page - (page_range // 2))
+#     end_page = min(total_pages, start_page + page_range - 1)
 
+#     # Adjust start_page if at the end of range
+#     if end_page - start_page < page_range - 1:
+#         start_page = max(1, end_page - page_range + 1)
+
+#     # Previous button
+#     # if current_page > 1:
+#         # pagination_links += f"<li class='page-item'><a class='page-link' href='?page={current_page - 1}'>Previous</a></li>"
+
+#     # Page links
+#     for p in range(start_page, end_page + 1):
+#         if p == current_page:
+#             pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#         else:
+#             pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+
+#     # Next button
+#     # if current_page < total_pages:
+#         # pagination_links += f"<li class='page-item'><a class='page-link' href='?page={current_page + 1}'>Next</a></li>"
+
+#     # Current page of total pages
+#     pagination_links += f"<li class='page-item disabled'><span class='page-link'>Page {current_page} of {total_pages}</span></li>"
+    
+#     return pagination_links
+
+def generate_pagination_links(current_page, total_pages):
+    pagination_links = ""
+    print("generate_pagination_links:",current_page,total_pages)
+
+    start_page = max(1, current_page - (5 // 2))
+    end_page = min(total_pages, start_page + 5 - 1)
     # Adjust start_page if at the end of range
-    if end_page - start_page < page_range - 1:
-        start_page = max(1, end_page - page_range + 1)
+    if end_page - start_page < 5 - 1:
+        start_page = max(1, end_page - 5 + 1)
 
     # Previous button
-    # if current_page > 1:
-        # pagination_links += f"<li class='page-item'><a class='page-link' href='?page={current_page - 1}'>Previous</a></li>"
+    if current_page > 1:
+        pagination_links += f"<li class='page-item'><a class='page-link' href='?page={current_page - 1}'>Previous</a></li>"
 
     # Page links
     for p in range(start_page, end_page + 1):
@@ -33,14 +63,23 @@ def generate_pagination_links(current_page, total_pages, page_range=5):
             pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
 
     # Next button
-    # if current_page < total_pages:
-        # pagination_links += f"<li class='page-item'><a class='page-link' href='?page={current_page + 1}'>Next</a></li>"
+    if current_page < total_pages:
+        pagination_links += f"<li class='page-item'><a class='page-link' href='?page={current_page + 1}'>Next</a></li>"
+
+    # Jump to page select
+    
 
     # Current page of total pages
     pagination_links += f"<li class='page-item disabled'><span class='page-link'>Page {current_page} of {total_pages}</span></li>"
-    
+    pagination_links += f"""
+        <li class='page-item'>
+        <select class='page-link form-select' aria-label='Jump to' onchange='window.location.href = "?page=" + (this.value === "jump to" ? 1 : this.value)' >
+            <option value='1' selected>jump to</option>
+                {"".join(f"<option value='{p}' {'selected' if p == current_page else ''}>{p}</option>" for p in range(1, total_pages + 1))}
+            </select>
+        </li>
+    """
     return pagination_links
-
 
 
 class Page:
@@ -387,8 +426,10 @@ def getproduct(id: int) -> List[Dict[str, Any]]:
 @app.route("/pagination", methods=['GET', 'POST'])
 def pagination():
     if request.method == 'POST':
+        
         # Get the current page from the URL query string
         page = request.args.get('page', 1, type=int)
+        print("calling pagination from post:",page)
         
         current_page.set_current_page(page)
         
@@ -1311,10 +1352,126 @@ def filter():
 #             total_pages=total_pages,
 #             pagination_links=pagination_links,
 #         )
+
+
+# almost working
+# @app.route("/shop")
+# @app.route("/shop/<int:page>", methods=['GET', 'POST'])
+# def shop(page=1):
+#     per_page = 20
+#     page = int(request.args.get('page', page))
+#     current_page.set_current_page(page)
+    
+
+#     if page > total_pagez.get_total_pages() and total_pagez.get_total_pages() != 0:
+#         return redirect(url_for('shop'))
+
+#     # Get database connection
+#     conn = get_db('ecommerce.db')
+#     cursor = conn.cursor()
+
+#     # Get total count for pagination
+#     cursor.execute('SELECT COUNT(*) FROM products')
+#     total = cursor.fetchone()[0]
+#     total_pages = (total + per_page - 1) // per_page
+
+#     page = int(request.args.get('page', page))
+#     print("page found:",page)
+#     current_page.set_current_page(page)
+#     offset = (page - 1) * per_page
+
+#     # Base query
+#     query = '''
+#         SELECT product_id, name, price, images, section, category, data 
+#         FROM products
+#     '''
+#     params = []
+
+#     # Handle filters if present
+#     if request.method == 'POST' and request.is_json or filterz.get_current_filters():
+#         if filterz.get_current_filters():
+#             filters = filterz.get_current_filters()
+#         else:
+#             filters = request.get('categories', [])
+
+#         if filters:
+#             filter_conditions = []
+#             for filter_id in filters:
+#                 clean_filter = filter_id
+#                 for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                     if clean_filter.startswith(prefix):
+#                         the_category = clean_filter.replace(prefix, '')
+#                         the_section = prefix[:-1]
+#                         filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
+#                         params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
+
+#             if filter_conditions:
+#                 query += ' WHERE ' + ' OR '.join(filter_conditions)
+
+#     # Add pagination
+#     query += ' LIMIT ? OFFSET ?'
+#     params.extend([per_page, offset])
+
+#     # Execute final query
+#     cursor.execute(query, params)
+#     products = cursor.fetchall()
+
+#     # Get cart items
+#     cart_conn = get_db_connection()
+#     cart_cursor = cart_conn.cursor()
+#     cart_cursor.execute('SELECT * FROM cart')
+#     cart_items = cart_cursor.fetchall()
+#     cart_conn.close()
+#     cart = [dict(item) for item in cart_items]
+
+#     # Process products
+#     processed_products = []
+#     for product in products:
+#         product_dict = dict(product)
+#         product_dict['images'] = json.loads(product_dict['images'])
+#         product_dict['data'] = json.loads(product_dict['data'])
+#         processed_products.append(product_dict)
+
+#     conn.close()
+
+#     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+#         return jsonify({
+#             'products': processed_products,
+#             'cart': cart,
+#             'cart_len': len(cart),
+#             'current_page': page,
+#             'total_pages': total_pages
+#         })
+#     print("calling paginator:",page)
+#     # Generate pagination links
+#     pagination_links = generate_pagination_links(page, total_pages)
+
+#     if filterz.get_current_filters():
+#         return render_template(
+#             "menu.html",
+#             products=processed_products,
+#             cart=cart,
+#             cart_len=len(cart),
+#             current_page=page,
+#             total_pages=total_pages,
+#             filters=list(set(filterz.get_current_filters())),
+#             pagination_links=pagination_links
+#         )
+#     else:
+#         return render_template(
+#             "menu.html",
+#             pZroducts=processed_products,
+#             cart=cart,
+#             cart_len=len(cart),
+#             current_page=page,
+#             total_pages=total_pages,
+#             pagination_links=pagination_links,
+#         )
 @app.route("/shop")
 @app.route("/shop/<int:page>", methods=['GET', 'POST'])
 def shop(page=1):
     per_page = 20
+    page = int(request.args.get('page', page))
     current_page.set_current_page(page)
 
     if page > total_pagez.get_total_pages() and total_pagez.get_total_pages() != 0:
@@ -1325,12 +1482,12 @@ def shop(page=1):
     cursor = conn.cursor()
 
     # Get total count for pagination
-    cursor.execute('SELECT COUNT(*) FROM products')
-    total = cursor.fetchone()[0]
-    total_pages = (total + per_page - 1) // per_page
+    # This is not required as total pages are already calculated in pagination function
+    # cursor.execute('SELECT COUNT(*) FROM products')
+    # total = cursor.fetchone()[0]
+    # total_pages = (total + per_page - 1) // per_page
 
     page = int(request.args.get('page', page))
-    current_page.set_current_page(page)
     offset = (page - 1) * per_page
 
     # Base query
@@ -1379,6 +1536,8 @@ def shop(page=1):
 
     # Process products
     processed_products = []
+
+    total_pagez.set_total_pages(int(len(get_all_products())/20))
     for product in products:
         product_dict = dict(product)
         product_dict['images'] = json.loads(product_dict['images'])
@@ -1393,11 +1552,14 @@ def shop(page=1):
             'cart': cart,
             'cart_len': len(cart),
             'current_page': page,
-            'total_pages': total_pages
+            'total_pages': total_pagez.get_total_pages()
         })
+    print("calling paginator:", page)
 
     # Generate pagination links
-    pagination_links = generate_pagination_links(page, total_pages)
+    pagination_links = generate_pagination_links(page, total_pagez.get_total_pages())
+    # if request.method == 'GET':
+    #     pagination_links = generate_pagination_links(page, total_pagez.get_total_pages())
 
     if filterz.get_current_filters():
         return render_template(
@@ -1406,7 +1568,7 @@ def shop(page=1):
             cart=cart,
             cart_len=len(cart),
             current_page=page,
-            total_pages=total_pages,
+            total_pages=total_pagez.get_total_pages(),
             filters=list(set(filterz.get_current_filters())),
             pagination_links=pagination_links
         )
@@ -1417,10 +1579,9 @@ def shop(page=1):
             cart=cart,
             cart_len=len(cart),
             current_page=page,
-            total_pages=total_pages,
+            total_pages=total_pagez.get_total_pages(),
             pagination_links=pagination_links,
         )
-
 @app.route("/login")
 def login():
     return render_template("login.html")

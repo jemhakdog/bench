@@ -1265,25 +1265,25 @@ getData();
 
 </script>
 
-<script>
-  fetch('/pagination', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          categories: selectedCategories,
-          
-        })
-      })
-      .then(response => response.text())
-      .then(data => {
-        // console.log(data);
-        document.getElementById("pagination").innerHTML=data;
-    
-        // updatePagination(data.current_page, data.total_pages);
-      });
-  </script>
+  // <script>
+  //   fetch('/pagination', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           categories: selectedCategories,
+            
+  //         })
+  //       })
+  //       .then(response => response.text())
+  //       .then(data => {
+  //         // console.log(data);
+  //         document.getElementById("pagination").innerHTML=data;
+      
+  //         // updatePagination(data.current_page, data.total_pages);
+  //       });
+  //   </script>
 
   <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
   <script src="/assets/js/aos.min.js"></script>

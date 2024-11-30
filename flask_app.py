@@ -10,6 +10,39 @@ app = Flask(__name__, static_url_path="", static_folder="static", template_folde
 DATABASE = 'ecommerce.db'
 from datetime import datetime
 from typing import List, Dict, Any
+
+
+def generate_pagination_links(current_page, total_pages, page_range=5):
+    pagination_links = ""
+    start_page = max(1, current_page - (page_range // 2))
+    end_page = min(total_pages, start_page + page_range - 1)
+
+    # Adjust start_page if at the end of range
+    if end_page - start_page < page_range - 1:
+        start_page = max(1, end_page - page_range + 1)
+
+    # Previous button
+    # if current_page > 1:
+        # pagination_links += f"<li class='page-item'><a class='page-link' href='?page={current_page - 1}'>Previous</a></li>"
+
+    # Page links
+    for p in range(start_page, end_page + 1):
+        if p == current_page:
+            pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+        else:
+            pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+
+    # Next button
+    # if current_page < total_pages:
+        # pagination_links += f"<li class='page-item'><a class='page-link' href='?page={current_page + 1}'>Next</a></li>"
+
+    # Current page of total pages
+    pagination_links += f"<li class='page-item disabled'><span class='page-link'>Page {current_page} of {total_pages}</span></li>"
+    
+    return pagination_links
+
+
+
 class Page:
     def __init__(self):
         self.current_page = 1
@@ -34,10 +67,40 @@ class TotalPages:
     def get_total_pages(self):
         return self.total_pages
 
+class Pagination:
+    def __init__(self, page: Page, total_pages: TotalPages, filters: Filters):
+        self._page = page
+        self._total_pages = total_pages
+        self._filters = filters
+
+    def get_page(self) -> Page:
+        return self._page
+
+    def set_page(self, page: Page):
+        self._page = page
+
+    def get_total_pages(self) -> TotalPages:
+        return self._total_pages
+
+    def set_total_pages(self, total_pages: TotalPages):
+        self._total_pages = total_pages
+
+    def get_filters(self) -> Filters:
+        return self._filters
+
+    def set_filters(self, filters: Filters):
+        self._filters = filters
+
+    def get_paginations(self):
+        # You can implement the logic for get_paginations here
+        pass
+            
+        
 
 current_page=Page()
 filterz=Filters()
 total_pagez=TotalPages()
+pagination = Pagination(None,None,None)
 def get_db(DATABASE):
     
     """
@@ -236,13 +299,104 @@ def getproduct(id: int) -> List[Dict[str, Any]]:
     return jsonify(results)
 
 
+# @app.route("/pagination", methods=['GET', 'POST'])
+# def pagination():
+#     if request.method == 'POST':
+#         page=current_page.get_current_page()
+#         data = request.get_json()
+#         try:
+#             min=request.form['min']
+#             max=request.form['max']
+           
+#         except:
+#             min=None
+#             max=None
+        
+#         # Get database connection
+#         conn = get_db('ecommerce.db')
+#         cursor = conn.cursor()
+        
+#         # Base query
+#         query = '''
+#             SELECT product_id, name, price, images, section, category, data 
+#             FROM products
+#         '''
+#         params = []
+        
+#         # Add filters if present
+#         if data and 'categories' in data:
+#             selected_filters = data.get('categories', [])
+#             if selected_filters:
+#                 filter_conditions = []
+               
+#                 for filter_id in selected_filters:
+#                     clean_filter = filter_id
+#                     for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                         if clean_filter.startswith(prefix):
+#                             the_category = clean_filter.replace(prefix, '')
+#                             the_section = prefix[:-1]
+                            
+#                             filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
+#                             params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
+                
+#                 if filter_conditions:
+#                     query += ' WHERE ' + ' OR '.join(filter_conditions)
+        
+#         # Add price range filter if present
+#         if min and max:
+#             query += ' WHERE price BETWEEN ? AND ?'
+#             params.append(min)
+#             params.append(max)
+        
+#         # Execute query
+#         cursor.execute(query, params)
+#         products = cursor.fetchall()
+#         data=""
+
+#         pagination_links = generate_pagination_links(page, total_pages)
+        
+#         # pagination_links = ""
+#         # if total_pagez.get_total_pages() >= 1:
+#         #     for p in range(1,  total_pagez.get_total_pages() + 1):
+#         #         if p == current_page.get_current_page():
+#         #             pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#         #         else:
+#         #             pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#         # else:
+             
+#         #     for p in range(1,  58 + 1):
+#         #         if p == current_page.get_current_page():
+#         #             pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#         #         else:
+#         #             pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+
+#         print("current pagination links:",pagination_links)
+#         return   pagination_links 
+
+        # if not products:
+        #     return jsonify({'total_pages':0})
+        
+        # pagi = math.ceil(len(products)/20)
+        # total_pagez.set_total_pages(pagi)
+
+        
+        # return jsonify({'total_pages':pagi,'current_page':current_page.get_current_page(),'filters':filterz.get_current_filters()})
+        
+
+
 @app.route("/pagination", methods=['GET', 'POST'])
 def pagination():
     if request.method == 'POST':
+        # Get the current page from the URL query string
+        page = request.args.get('page', 1, type=int)
+        
+        current_page.set_current_page(page)
+        
         data = request.get_json()
         try:
             min=request.form['min']
             max=request.form['max']
+           
         except:
             min=None
             max=None
@@ -286,14 +440,233 @@ def pagination():
         # Execute query
         cursor.execute(query, params)
         products = cursor.fetchall()
-        data=""
-        if not products:
-            return jsonify({'total_pages':0})
+
+        # Calculate total pages
+        per_page = 20
+        total_pages = math.ceil(len(products)/per_page)
+
+        # Generate pagination links
+        pagination_links = generate_pagination_links(page, total_pages)
         
-        pagi = math.ceil(len(products)/20)
-        total_pagez.set_total_pages(pagi)
-        return jsonify({'total_pages':pagi,'current_page':current_page.get_current_page(),'filters':filterz.get_current_filters()})
+        return pagination_links 
+# @app.route("/pagination", methods=['GET', 'POST'])
+# def pagination():
+#     if request.method == 'POST':
+#         page=current_page.get_current_page()
+#         data = request.get_json()
+#         try:
+#             min=request.form['min']
+#             max=request.form['max']
+           
+#         except:
+#             min=None
+#             max=None
         
+#         # Get database connection
+#         conn = get_db('ecommerce.db')
+#         cursor = conn.cursor()
+        
+#         # Base query
+#         query = '''
+#             SELECT product_id, name, price, images, section, category, data 
+#             FROM products
+#         '''
+#         params = []
+        
+#         # Add filters if present
+#         if data and 'categories' in data:
+#             selected_filters = data.get('categories', [])
+#             if selected_filters:
+#                 filter_conditions = []
+               
+#                 for filter_id in selected_filters:
+#                     clean_filter = filter_id
+#                     for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                         if clean_filter.startswith(prefix):
+#                             the_category = clean_filter.replace(prefix, '')
+#                             the_section = prefix[:-1]
+                            
+#                             filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
+#                             params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
+                
+#                 if filter_conditions:
+#                     query += ' WHERE ' + ' OR '.join(filter_conditions)
+        
+#         # Add price range filter if present
+#         if min and max:
+#             query += ' WHERE price BETWEEN ? AND ?'
+#             params.append(min)
+#             params.append(max)
+        
+#         # Execute query
+#         cursor.execute(query, params)
+#         products = cursor.fetchall()
+
+#         # Calculate total pages
+#         per_page = 20
+#         total_pages = math.ceil(len(products)/per_page)
+
+#         # Generate pagination links
+#         pagination_links = generate_pagination_links(current_page.get_current_page(), total_pages)
+        
+#         return pagination_links 
+
+        # if not products:
+        #     return jsonify({'total_pages':0})
+        
+        # pagi = math.ceil(len(products)/20)
+        # total_pagez.set_total_pages(pagi)
+
+        
+        # return jsonify({'total_pages':pagi,'current_page':current_page.get_current_page(),'filters':filterz.get_current_filters()})
+
+# @app.route("/filter", methods=['GET', 'POST'])
+# def filter():
+#     if request.method == 'POST':
+#         data = request.get_json()
+
+#         filterz.set_current_filters(data.get('categories'))
+#         try:
+#             min=request.form['min']
+#             max=request.form['max']
+#         except:
+#             min=None
+#             max=None
+        
+#         # Get database connection
+#         conn = get_db('ecommerce.db')
+#         cursor = conn.cursor()
+        
+#         # Base query
+#         query = '''
+#             SELECT product_id, name, price, images, section, category, data 
+#             FROM products
+#         '''
+#         params = []
+        
+#         # Add filters if present
+#         if data and 'categories' in data:
+#             selected_filters = data.get('categories', [])
+#             if selected_filters:
+#                 filter_conditions = []
+               
+#                 for filter_id in selected_filters:
+#                     clean_filter = filter_id
+#                     for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                         if clean_filter.startswith(prefix):
+#                             the_category = clean_filter.replace(prefix, '')
+#                             the_section = prefix[:-1]
+                            
+#                             filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
+#                             params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
+                
+#                 if filter_conditions:
+#                     query += ' WHERE ' + ' OR '.join(filter_conditions)
+        
+#         # Add price range filter if present
+#         if min and max:
+#             if 'WHERE' in query:
+#                 query += ' AND price BETWEEN ? AND ?'
+#             else:
+#                 query += ' WHERE price BETWEEN ? AND ?'
+#             params.append(min)
+#             params.append(max)
+        
+#         # Execute query to get total count
+#         cursor.execute(query, params)
+#         total = len(cursor.fetchall())
+        
+#         # Calculate total pages
+#         per_page = 20
+#         total_pages = (total + per_page - 1) // per_page
+
+#         total_pagez.set_total_pages(total_pages)
+
+        
+#         # Get current page
+#         page = request.args.get('page', 1, type=int)
+        
+#         # Calculate offset
+#         offset = (page - 1) * per_page
+        
+#         # Add pagination to query
+#         query += ' LIMIT ? OFFSET ?'
+#         params.extend([per_page, offset])
+        
+#         # Execute query with pagination
+#         cursor.execute(query, params)
+#         products = cursor.fetchall()
+        
+#         data=""
+#         if not products:
+#             return "<h5>no products found!</h5>"
+        
+#         for i in products:
+#             thedata = json.loads(i['data'])
+#             data+=f"""<div class="col-lg-4 product-item" id="{ i['product_id'] } { i['section']}-{ i['category']}">
+#                 <div class="card border-0 shadow-sm rounded-3 mb-3">
+#                 <!-- <img class="card-img-top w-100 d-block card-img-top rounded-top-3" src="{json.loads(i['images'])[0]}" alt="Product Image"> -->
+#                 <!-- Main product image -->
+#                 <img class="card-img-top w-100 d-block card-img-top rounded-top-3" src="{json.loads(i['images'])[0]}"
+#                     alt="Product Image" id="main-image"
+#                     onclick="window.location.href = `/product/view/{ i['product_id'] }`">
+
+#                 <!-- Hover image for the same product -->
+#                 <img class="card-img-top w-100 d-block card-img-top rounded-top-3 card-img-hover"
+#                     src="{ json.loads(i['images'])[1] }" alt="Product Image Hover" id="hover-image"
+#                     onclick="window.location.href = `/product/view/{ i['product_id'] }`">
+
+#                 <div class="card-body">
+#                     <h5 class="fw-bold card-title mb-2">{ i['name'] }</h5>
+#                     <div class="d-flex justify-content-between align-items-center mb-3"><span class="fs-4 fw-bold">php { i['price'] }</span>
+#                     <!-- <div class="input-group input-group-sm" style="width:120px;"><button class="btn btn-outline-secondary"
+#                         type="button" id="decrease-quantity">-</button><input
+#                         class="form-control form-control text-center" type="number" id="quantity-input" min="1"
+#                         value="1"><button class="btn btn-outline-secondary" type="button"
+#                         id="increase-quantity">+</button>
+#                     </div> -->
+#                     <div class="input-group input-group-sm" style="width: 120px">
+#                         <button
+#                         class="btn btn-outline-secondary"
+#                         type="button"
+#                         onclick="updateQuantity(-1)"
+#                         >
+#                         -
+#                         </button>
+#                         <input
+#                         class="form-control form-control text-center"
+#                         type="number"
+#                         id="productQuantity"
+#                         name="productQuantity"
+#                         min="1"
+#                         value="1"
+#                         />
+#                         <button
+#                         class="btn btn-outline-secondary"
+#                         type="button"
+#                         onclick="updateQuantity(1)"
+#                         >
+#                         +
+#                         </button>
+#                     </div>
+#                     </div><button class="btn btn-primary w-100 rounded-pill" id="add-to-cart-btn" class="position-relative"
+#                     data-bs-toggle="modal" data-bs-target="#itemviewmodal">Add to Cart</button>
+#                 </div>
+#                 <div>
+#                     <input type="hidden" name="category" value="{ i['category'] }">
+#                     <input type="hidden" name="section" value="{ i['section'] }">
+#                 </div>
+#                 </div>
+#             </div>\n"""
+#         pagination_links = ""
+#         if total_pages > 1:
+#             for p in range(1, total_pages + 1):
+#                 if p == current_page.get_current_page():
+#                     pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#                 else:
+#                     pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#         return data + "<ul class='pagination'>" + pagination_links + "</ul>"
+
 
 @app.route("/filter", methods=['GET', 'POST'])
 def filter():
@@ -340,12 +713,36 @@ def filter():
         
         # Add price range filter if present
         if min and max:
-            query += ' WHERE price BETWEEN ? AND ?'
+            if 'WHERE' in query:
+                query += ' AND price BETWEEN ? AND ?'
+            else:
+                query += ' WHERE price BETWEEN ? AND ?'
             params.append(min)
             params.append(max)
-        query+=' LIMIT 20'
         
-        # Execute query
+        # Execute query to get total count
+        cursor.execute(query, params)
+        total = len(cursor.fetchall())
+        
+        # Calculate total pages
+        per_page = 20
+        total_pages = (total + per_page - 1) // per_page
+        print("filter is setting total pages to:",total_pages)
+        total_pagez.set_total_pages(total_pages)
+
+
+        
+        # Get current page
+        page = request.args.get('page', 1, type=int)
+        
+        # Calculate offset
+        offset = (page - 1) * per_page
+        
+        # Add pagination to query
+        query += ' LIMIT ? OFFSET ?'
+        params.extend([per_page, offset])
+        
+        # Execute query with pagination
         cursor.execute(query, params)
         products = cursor.fetchall()
         
@@ -410,43 +807,546 @@ def filter():
                 </div>
                 </div>
             </div>\n"""
-        return data
+        # pagination_links = ""
+        # if total_pagez.get_total_pages() > 1:
+        #     for p in range(1, total_pagez.get_total_pages() + 1):
+        #         if p == current_page.get_current_page():
+        #             pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+        #         else:
+        #             pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+        return data 
+# # @app.route("/filter", methods=['GET', 'POST'])
+# def filter():
+#     if request.method == 'POST':
+#         data = request.get_json()
+
+#         filterz.set_current_filters(data.get('categories'))
+#         try:
+#             min=request.form['min']
+#             max=request.form['max']
+#         except:
+#             min=None
+#             max=None
+        
+#         # Get database connection
+#         conn = get_db('ecommerce.db')
+#         cursor = conn.cursor()
+        
+#         # Base query
+#         query = '''
+#             SELECT product_id, name, price, images, section, category, data 
+#             FROM products
+#         '''
+#         params = []
+        
+#         # Add filters if present
+#         if data and 'categories' in data:
+#             selected_filters = data.get('categories', [])
+#             if selected_filters:
+#                 filter_conditions = []
+               
+#                 for filter_id in selected_filters:
+#                     clean_filter = filter_id
+#                     for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                         if clean_filter.startswith(prefix):
+#                             the_category = clean_filter.replace(prefix, '')
+#                             the_section = prefix[:-1]
+                            
+#                             filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
+#                             params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
+                
+#                 if filter_conditions:
+#                     query += ' WHERE ' + ' OR '.join(filter_conditions)
+        
+#         # Add price range filter if present
+#         if min and max:
+#             query += ' WHERE price BETWEEN ? AND ?'
+#             params.append(min)
+#             params.append(max)
+#         query+=' LIMIT 20'
+        
+#         # Execute query
+#         cursor.execute(query, params)
+#         products = cursor.fetchall()
+        
+#         data=""
+#         if not products:
+#             return "<h5>no products found!</h5>"
+        
+#         for i in products:
+#             thedata = json.loads(i['data'])
+#             data+=f"""<div class="col-lg-4 product-item" id="{ i['product_id'] } { i['section']}-{ i['category']}">
+#                 <div class="card border-0 shadow-sm rounded-3 mb-3">
+#                 <!-- <img class="card-img-top w-100 d-block card-img-top rounded-top-3" src="{json.loads(i['images'])[0]}" alt="Product Image"> -->
+#                 <!-- Main product image -->
+#                 <img class="card-img-top w-100 d-block card-img-top rounded-top-3" src="{json.loads(i['images'])[0]}"
+#                     alt="Product Image" id="main-image"
+#                     onclick="window.location.href = `/product/view/{ i['product_id'] }`">
+
+#                 <!-- Hover image for the same product -->
+#                 <img class="card-img-top w-100 d-block card-img-top rounded-top-3 card-img-hover"
+#                     src="{ json.loads(i['images'])[1] }" alt="Product Image Hover" id="hover-image"
+#                     onclick="window.location.href = `/product/view/{ i['product_id'] }`">
+
+#                 <div class="card-body">
+#                     <h5 class="fw-bold card-title mb-2">{ i['name'] }</h5>
+#                     <div class="d-flex justify-content-between align-items-center mb-3"><span class="fs-4 fw-bold">php { i['price'] }</span>
+#                     <!-- <div class="input-group input-group-sm" style="width:120px;"><button class="btn btn-outline-secondary"
+#                         type="button" id="decrease-quantity">-</button><input
+#                         class="form-control form-control text-center" type="number" id="quantity-input" min="1"
+#                         value="1"><button class="btn btn-outline-secondary" type="button"
+#                         id="increase-quantity">+</button>
+#                     </div> -->
+#                     <div class="input-group input-group-sm" style="width: 120px">
+#                         <button
+#                         class="btn btn-outline-secondary"
+#                         type="button"
+#                         onclick="updateQuantity(-1)"
+#                         >
+#                         -
+#                         </button>
+#                         <input
+#                         class="form-control form-control text-center"
+#                         type="number"
+#                         id="productQuantity"
+#                         name="productQuantity"
+#                         min="1"
+#                         value="1"
+#                         />
+#                         <button
+#                         class="btn btn-outline-secondary"
+#                         type="button"
+#                         onclick="updateQuantity(1)"
+#                         >
+#                         +
+#                         </button>
+#                     </div>
+#                     </div><button class="btn btn-primary w-100 rounded-pill" id="add-to-cart-btn" class="position-relative"
+#                     data-bs-toggle="modal" data-bs-target="#itemviewmodal">Add to Cart</button>
+#                 </div>
+#                 <div>
+#                     <input type="hidden" name="category" value="{ i['category'] }">
+#                     <input type="hidden" name="section" value="{ i['section'] }">
+#                 </div>
+#                 </div>
+#             </div>\n"""
+#         return data
     
+# @app.route("/shop")
+# @app.route("/shop/<int:page>", methods=['GET', 'POST'])
+# def shop(page=1):
+#     per_page = 20
+#     current_page.set_current_page(page)
+#     if page > total_pagez.get_total_pages() and total_pagez.get_total_pages()!=0:
+#         return redirect(url_for('shop', page=1))
+
+#     # Get database connection
+#     conn = get_db('ecommerce.db')
+#     cursor = conn.cursor()
+    
+#     # Get total count for pagination
+#     cursor.execute('SELECT COUNT(*) FROM products')
+#     total = cursor.fetchone()[0]
+#     total_pages = (total + per_page - 1) // per_page
+#     page = min(max(1, page), total_pages)
+#     offset = (page - 1) * per_page
+    
+#     # Base query
+#     query = '''
+#         SELECT product_id, name, price, images, section, category, data 
+#         FROM products
+#     '''
+#     params = []
+  
+    
+#     # Handle filters if present
+#     if request.method == 'POST' and request.is_json or filterz.get_current_filters():
+#         if filterz.get_current_filters():
+#             filters = filterz.get_current_filters()
+#         else:
+#             filters = request.get('categories', [])
+        
+       
+#         if filters:
+#             filter_conditions = []
+#             for filter_id in filters:
+#                 clean_filter = filter_id
+#                 for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                     if clean_filter.startswith(prefix):
+#                         the_category = clean_filter.replace(prefix, '')
+#                         the_section = prefix[:-1]
+#                         filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
+#                         params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
+    
+#                 # for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                 #     clean_filter = clean_filter.replace(prefix, '')
+#                 # clean_filter = clean_filter.replace('-', ' ')
+#                 # filter_conditions.append('(LOWER(section) LIKE ? OR LOWER(category) LIKE ?)')
+#                 # params.extend([f'%{clean_filter.lower()}%', f'%{clean_filter.lower()}%'])
+            
+#             if filter_conditions:
+#                 query += ' WHERE ' + ' OR '.join(filter_conditions)
+    
+#     # Add pagination
+#     query += ' LIMIT ? OFFSET ?'
+#     params.extend([per_page, offset])
+    
+#     # Execute final query
+#     cursor.execute(query, params)
+#     products = cursor.fetchall()
+    
+#     # Get cart items
+#     cart_conn = get_db_connection()
+#     cart_cursor = cart_conn.cursor()
+#     cart_cursor.execute('SELECT * FROM cart')
+#     cart_items = cart_cursor.fetchall()
+#     cart_conn.close()
+#     cart = [dict(item) for item in cart_items]
+    
+#     # Process products
+#     processed_products = []
+#     for product in products:
+#         product_dict = dict(product)
+#         product_dict['images'] = json.loads(product_dict['images'])
+#         product_dict['data'] = json.loads(product_dict['data'])
+#         processed_products.append(product_dict)
+    
+#     conn.close()
+    
+#     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+#         return jsonify({
+#             'products': processed_products,
+#             'cart': cart,
+#             'cart_len': len(cart),
+#             'current_page': page,
+#             'total_pages': total_pages
+#         })
+#     pagination_links = ""
+#     if total_pagez.get_total_pages() > 1:
+#         for p in range(1, total_pagez.get_total_pages() + 1):
+#             if p == current_page.get_current_page():
+#                 pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#             else:
+#                 pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#     print(total_pages,total_pagez.get_total_pages())
+
+#     if filterz.get_current_filters():
+#         return render_template(
+#             "menu.html",
+#             products=processed_products,
+#             cart=cart,
+#             cart_len=len(cart),
+#             current_page=page,
+#             total_pages=total_pages,
+#             filters=list(set(filterz.get_current_filters())),
+#             pagination_links=pagination_links
+#         )
+#     else:
+#         return render_template(
+#             "menu.html",
+#             products=processed_products,
+#             cart=cart,
+#             cart_len=len(cart),
+#             current_page=page,
+#             total_pages=total_pages,
+#             pagination_links=pagination_links,
+#         )
+    # return render_template(
+    #     "menu.html",
+    #     products=processed_products,
+    #     cart=cart,
+    #     cart_len=len(cart),
+    #     current_page=page,
+    #     total_pages=total_pages,
+#     # )
+# @app.route("/shop")
+# @app.route("/shop/<int:page>", methods=['GET', 'POST'])
+# def shop(page=1):
+#     per_page = 20
+#     current_page.set_current_page(page)
+#     if page > total_pagez.get_total_pages() and total_pagez.get_total_pages()!=0:
+#         return redirect(url_for('shop', page=1))
+
+#     # Get database connection
+#     conn = get_db('ecommerce.db')
+#     cursor = conn.cursor()
+    
+#     # Get total count for pagination
+#     cursor.execute('SELECT COUNT(*) FROM products')
+#     total = cursor.fetchone()[0]
+#     total_pages = (total + per_page - 1) // per_page
+#     page = min(max(1, page), total_pages)
+#     offset = (page - 1) * per_page
+    
+#     # Base query
+#     query = '''
+#         SELECT product_id, name, price, images, section, category, data 
+#         FROM products
+#     '''
+#     params = []
+  
+    
+#     # Handle filters if present
+#     if request.method == 'POST' and request.is_json or filterz.get_current_filters():
+#         if filterz.get_current_filters():
+#             filters = filterz.get_current_filters()
+#         else:
+#             filters = request.get('categories', [])
+        
+       
+#         if filters:
+#             filter_conditions = []
+#             for filter_id in filters:
+#                 clean_filter = filter_id
+#                 for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                     if clean_filter.startswith(prefix):
+#                         the_category = clean_filter.replace(prefix, '')
+#                         the_section = prefix[:-1]
+#                         filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
+#                         params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
+    
+#                 # for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                 #     clean_filter = clean_filter.replace(prefix, '')
+#                 # clean_filter = clean_filter.replace('-', ' ')
+#                 # filter_conditions.append('(LOWER(section) LIKE ? OR LOWER(category) LIKE ?)')
+#                 # params.extend([f'%{clean_filter.lower()}%', f'%{clean_filter.lower()}%'])
+            
+#             if filter_conditions:
+#                 query += ' WHERE ' + ' OR '.join(filter_conditions)
+    
+#     # Add pagination
+#     query += ' LIMIT ? OFFSET ?'
+#     params.extend([per_page, offset])
+    
+#     # Execute final query
+#     cursor.execute(query, params)
+#     products = cursor.fetchall()
+    
+#     # Get cart items
+#     cart_conn = get_db_connection()
+#     cart_cursor = cart_conn.cursor()
+#     cart_cursor.execute('SELECT * FROM cart')
+#     cart_items = cart_cursor.fetchall()
+#     cart_conn.close()
+#     cart = [dict(item) for item in cart_items]
+    
+#     # Process products
+#     processed_products = []
+#     for product in products:
+#         product_dict = dict(product)
+#         product_dict['images'] = json.loads(product_dict['images'])
+#         product_dict['data'] = json.loads(product_dict['data'])
+#         processed_products.append(product_dict)
+    
+#     conn.close()
+    
+#     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+#         return jsonify({
+#             'products': processed_products,
+#             'cart': cart,
+#             'cart_len': len(cart),
+#             'current_page': page,
+#             'total_pages': total_pages
+#         })
+#     pagination_links = ""
+#     if total_pagez.get_total_pages() > 1:
+#         for p in range(1, total_pagez.get_total_pages() + 1):
+#             if p == current_page.get_current_page():
+#                 pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#             else:
+#                 pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#     else:
+#         for p in range(1, 58 + 1):
+#             if p == current_page.get_current_page():
+#                 pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#             else:
+#                 pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+
+#     print(total_pages,total_pagez.get_total_pages())
+
+#     if filterz.get_current_filters():
+#         return render_template(
+#             "menu.html",
+#             products=processed_products,
+#             cart=cart,
+#             cart_len=len(cart),
+#             current_page=page,
+#             total_pages=total_pages,
+#             filters=list(set(filterz.get_current_filters())),
+#             pagination_links=pagination_links
+#         )
+#     else:
+#         return render_template(
+#             "menu.html",
+#             products=processed_products,
+#             cart=cart,
+#             cart_len=len(cart),
+#             current_page=page,
+#             total_pages=total_pages,
+#             pagination_links=pagination_links,
+#         )
+# @app.route("/shop")
+# @app.route("/shop/<int:page>", methods=['GET', 'POST'])
+# def shop(page=1):
+#     per_page = 20
+#     current_page.set_current_page(page)
+#     page = int(request.args.get('page', 1))
+#     print("total pages in shop are:",total_pagez.get_total_pages())
+
+#     if page > total_pagez.get_total_pages() and total_pagez.get_total_pages()!=0:
+#         return redirect(url_for('shop'))
+
+#     # Get database connection
+#     conn = get_db('ecommerce.db')
+#     cursor = conn.cursor()
+    
+#     # Get total count for pagination
+#     cursor.execute('SELECT COUNT(*) FROM products')
+#     total = cursor.fetchone()[0]
+#     total_pages = (total + per_page - 1) // per_page
+#     # total_pagez.set_total_pages(total_pages) # Set total pages here
+    
+#     page = min(max(1, page), total_pages)
+#     offset = (page - 1) * per_page
+#     print("page and offset:",page,offset)
+    
+#     # Base query
+#     query = '''
+#         SELECT product_id, name, price, images, section, category, data 
+#         FROM products
+#     '''
+#     params = []
+  
+    
+#     # Handle filters if present
+#     if request.method == 'POST' and request.is_json or filterz.get_current_filters():
+#         if filterz.get_current_filters():
+#             filters = filterz.get_current_filters()
+#         else:
+#             filters = request.get('categories', [])
+        
+       
+#         if filters:
+#             filter_conditions = []
+#             for filter_id in filters:
+#                 clean_filter = filter_id
+#                 for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                     if clean_filter.startswith(prefix):
+#                         the_category = clean_filter.replace(prefix, '')
+#                         the_section = prefix[:-1]
+#                         filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
+#                         params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
+    
+#                 # for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+#                 #     clean_filter = clean_filter.replace(prefix, '')
+#                 # clean_filter = clean_filter.replace('-', ' ')
+#                 # filter_conditions.append('(LOWER(section) LIKE ? OR LOWER(category) LIKE ?)')
+#                 # params.extend([f'%{clean_filter.lower()}%', f'%{clean_filter.lower()}%'])
+            
+#             if filter_conditions:
+#                 query += ' WHERE ' + ' OR '.join(filter_conditions)
+    
+#     # Add pagination
+#     query += ' LIMIT ? OFFSET ?'
+#     params.extend([per_page, offset])
+    
+#     # Execute final query
+#     cursor.execute(query, params)
+#     products = cursor.fetchall()
+#     print("len of proucts:",len(products))
+#     # Get cart items
+#     cart_conn = get_db_connection()
+#     cart_cursor = cart_conn.cursor()
+#     cart_cursor.execute('SELECT * FROM cart')
+#     cart_items = cart_cursor.fetchall()
+#     cart_conn.close()
+#     cart = [dict(item) for item in cart_items]
+    
+#     # Process products
+#     processed_products = []
+#     for product in products:
+#         product_dict = dict(product)
+#         product_dict['images'] = json.loads(product_dict['images'])
+#         product_dict['data'] = json.loads(product_dict['data'])
+#         processed_products.append(product_dict)
+    
+#     conn.close()
+    
+#     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+#         return jsonify({
+#             'products': processed_products,
+#             'cart': cart,
+#             'cart_len': len(cart),
+#             'current_page': page,
+#             'total_pages': total_pages
+#         })
+#     pagination_links = generate_pagination_links(page, total_pagez.get_total_pages())
+
+#     # if total_pagez.get_total_pages() > 1:
+#     #         for p in range(1, total_pagez.get_total_pages() + 1):
+#     #             if p == page:
+#     #                 pagination_links += f"<li class='page-item active'><a class='page-link' href='?page={p}'>{p}</a></li>"
+#     #             else:
+#     #                 pagination_links += f"<li class='page-item'><a class='page-link' href='?page={p}'>{p}</a></li>"
+
+
+#     if filterz.get_current_filters():
+#         return render_template(
+#             "menu.html",
+#             products=processed_products,
+#             cart=cart,
+#             cart_len=len(cart),
+#             current_page=page,
+#             total_pages=total_pages,
+#             filters=list(set(filterz.get_current_filters())),
+#             pagination_links=pagination_links
+#         )
+#     else:
+#         return render_template(
+#             "menu.html",
+#             products=processed_products,
+#             cart=cart,
+#             cart_len=len(cart),
+#             current_page=page,
+#             total_pages=total_pages,
+#             pagination_links=pagination_links,
+#         )
 @app.route("/shop")
 @app.route("/shop/<int:page>", methods=['GET', 'POST'])
 def shop(page=1):
     per_page = 20
     current_page.set_current_page(page)
-    if page > total_pagez.get_total_pages() and total_pagez.get_total_pages()!=0:
-        return redirect(url_for('shop', page=1))
+
+    if page > total_pagez.get_total_pages() and total_pagez.get_total_pages() != 0:
+        return redirect(url_for('shop'))
 
     # Get database connection
     conn = get_db('ecommerce.db')
     cursor = conn.cursor()
-    
+
     # Get total count for pagination
     cursor.execute('SELECT COUNT(*) FROM products')
     total = cursor.fetchone()[0]
     total_pages = (total + per_page - 1) // per_page
-    page = min(max(1, page), total_pages)
+
+    page = int(request.args.get('page', page))
+    current_page.set_current_page(page)
     offset = (page - 1) * per_page
-    
+
     # Base query
     query = '''
         SELECT product_id, name, price, images, section, category, data 
         FROM products
     '''
     params = []
-  
-    
+
     # Handle filters if present
     if request.method == 'POST' and request.is_json or filterz.get_current_filters():
         if filterz.get_current_filters():
             filters = filterz.get_current_filters()
         else:
             filters = request.get('categories', [])
-        
-       
+
         if filters:
             filter_conditions = []
             for filter_id in filters:
@@ -457,24 +1357,18 @@ def shop(page=1):
                         the_section = prefix[:-1]
                         filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
                         params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
-    
-                # for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
-                #     clean_filter = clean_filter.replace(prefix, '')
-                # clean_filter = clean_filter.replace('-', ' ')
-                # filter_conditions.append('(LOWER(section) LIKE ? OR LOWER(category) LIKE ?)')
-                # params.extend([f'%{clean_filter.lower()}%', f'%{clean_filter.lower()}%'])
-            
+
             if filter_conditions:
                 query += ' WHERE ' + ' OR '.join(filter_conditions)
-    
+
     # Add pagination
     query += ' LIMIT ? OFFSET ?'
     params.extend([per_page, offset])
-    
+
     # Execute final query
     cursor.execute(query, params)
     products = cursor.fetchall()
-    
+
     # Get cart items
     cart_conn = get_db_connection()
     cart_cursor = cart_conn.cursor()
@@ -482,7 +1376,7 @@ def shop(page=1):
     cart_items = cart_cursor.fetchall()
     cart_conn.close()
     cart = [dict(item) for item in cart_items]
-    
+
     # Process products
     processed_products = []
     for product in products:
@@ -490,9 +1384,9 @@ def shop(page=1):
         product_dict['images'] = json.loads(product_dict['images'])
         product_dict['data'] = json.loads(product_dict['data'])
         processed_products.append(product_dict)
-    
+
     conn.close()
-    
+
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return jsonify({
             'products': processed_products,
@@ -501,7 +1395,10 @@ def shop(page=1):
             'current_page': page,
             'total_pages': total_pages
         })
-    
+
+    # Generate pagination links
+    pagination_links = generate_pagination_links(page, total_pages)
+
     if filterz.get_current_filters():
         return render_template(
             "menu.html",
@@ -510,7 +1407,8 @@ def shop(page=1):
             cart_len=len(cart),
             current_page=page,
             total_pages=total_pages,
-            filters=list(set(filterz.get_current_filters()))
+            filters=list(set(filterz.get_current_filters())),
+            pagination_links=pagination_links
         )
     else:
         return render_template(
@@ -520,16 +1418,8 @@ def shop(page=1):
             cart_len=len(cart),
             current_page=page,
             total_pages=total_pages,
+            pagination_links=pagination_links,
         )
-    # return render_template(
-    #     "menu.html",
-    #     products=processed_products,
-    #     cart=cart,
-    #     cart_len=len(cart),
-    #     current_page=page,
-    #     total_pages=total_pages,
-    # )
-
 
 @app.route("/login")
 def login():

@@ -22,6 +22,30 @@
   <link rel="stylesheet" href="/assets/css/Sidebar-Cool-SB-Admin-Inspirate.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
+
+        .results-container {
+          border: 1px solid #ccc;
+          max-height: 200px;
+          overflow-y: auto;
+          position: absolute;
+          background-color: white;
+          z-index: 1000;
+          margin-top: 50px;
+          width: 100%;
+          
+
+        }
+
+        .result-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+
     .card {
       position: relative;
       width: 100%;
@@ -135,13 +159,81 @@
           d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5">
         </path>
         </svg>
-        <div class="row padMar">
-          <div class="col padMar">
-            <div class="input-group"><input class="form-control autocomplete" type="text"
-                placeholder="Busque las tablas"><button class="btn btn-warning" type="button"><i
-                  class="fa fa-search"></i></button></div>
-          </div>
-        </div>
+
+        <div class="input-group position-relative">
+          <input
+              class="form-control d-xl-flex justify-content-xl-center align-items-xl-center autocomplete"
+              id="searchInput" type="text" placeholder="search for an item...">
+          <button class="btn btn-warning" type="button" style="background: #eb4034;">
+              <i class="fa fa-search"></i>
+          </button>
+          <div id="results" class="results-container"></div> <!-- Results container -->
+      </div>
+
+<script>
+    // Data array to store product names
+    const data = [];
+{% if products %}
+{% for i in products %}
+let data = '{{ i.name| safe }}';
+data.push(data);
+{% endfor %}
+{% endif %}
+    
+
+    // Function to find the image by the product name
+    function find_img_by_name(name) {
+        {% for i in products %}
+        if (name === '{{ i['name'] }}') {
+            return '{{ i['images'][0] }}';
+        }
+        {% endfor %}
+    }
+
+    // Function to find the ID by the product name
+    function find_id_by_name(name) {
+        {% for i in products %}
+        if (name === '{{ i['name'] }}') {
+            return '{{ i['product_id'] }}';
+        }
+        {% endfor %}
+    }
+
+    // Search event listener for the input box
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const query = this.value.toLowerCase(); // Get the search query in lowercase
+        const resultsContainer = document.getElementById('results'); // Get the container for the results
+        resultsContainer.innerHTML = ''; // Clear previous results
+
+        if (query) {
+            // Filter data based on the search query
+            const filteredData = data.filter(item => item.toLowerCase().includes(query));
+
+            // Loop through filtered data and display the results
+            filteredData.forEach(item => {
+                const div = document.createElement('div'); // Create a div for each result
+                const img = document.createElement('img'); // Create an img element
+                img.src = find_img_by_name(item); // Use the `find_img_by_name` function to get the image
+                img.style.width = '30px'; // Set image width
+                img.style.height = '30px'; // Set image height
+                img.style.marginRight = '10px'; // Add some spacing between image and text
+
+                div.classList.add('result-item'); // Add styling class (if needed)
+                
+                // Add an event listener for clicking a result
+                div.addEventListener('click', () => {
+                    window.location.href = '/product/view/' + find_id_by_name(item); // Redirect to the product view page
+                });
+
+                div.style.cursor = 'pointer'; // Make it look clickable
+                div.appendChild(img); // Append the image to the result div
+                console.log(item);
+                div.appendChild(document.createTextNode(item)); // Append the product name after the image
+                resultsContainer.appendChild(div); // Add the result div to the container
+            });
+        }
+    });
+</script>
       </div>
       <div class="col-xl-12">
         <hr>
@@ -149,27 +241,7 @@
     </div>
     <div class="row">
       <div class="col-lg-3">
-        <!-- category
-                <div>
-                    <p class="justify-content-between" style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Category</p>
-                    <div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Headset</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" id="formCheck-4"><label class="form-check-label" for="formCheck-4">Earphones</label></div>
-                        <div class="form-check" style="color: #000000;"><input type="checkbox" class="form-check-input" id="formCheck-3"><label class="form-check-label" for="formCheck-3">Speaker</label></div>
-                    </div>
-                    <hr>
-                </div>
-             
-                <div>
-                    <p class="justify-content-between" style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Section</p>
-                    <div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Headset</label></div>
-                        <div class="form-check"><input type="checkbox" class="form-check-input" id="formCheck-4"><label class="form-check-label" for="formCheck-4">Earphones</label></div>
-                        <div class="form-check" style="color: #000000;"><input type="checkbox" class="form-check-input" id="formCheck-3"><label class="form-check-label" for="formCheck-3">Speaker</label></div>
-                    </div>
-                    <hr>
-                </div> -->
-        <!-- category -->
+        
         <div>
           <p class="justify-content-between"
             style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Category</p>
@@ -383,41 +455,6 @@ categories.forEach((category) => {
         // updatePagination(data.current_page, data.total_pages);
       });
 
-      
-  
-      // data.forEach(product => {
-      //   const productHtml = `
-      //     <div class="col-lg-4 product-item" id="${product.product_id} ${product.section}-${product.category}">
-      //       <div class="card border-0 shadow-sm rounded-3 mb-3">
-      //         <img class="card-img-top w-100 d-block rounded-top-3" 
-      //              src="${JSON.parse(product.images)[0]}"
-      //              alt="Product Image" 
-      //              id="main-image"
-      //              onclick="window.location.href = '/product/view/${product.product_id}'">
-      //         <img class="card-img-top w-100 d-block rounded-top-3 position-absolute top-0 start-0" 
-      //              src="${JSON.parse(product.images)[1]}"
-      //              alt="Product Image Hover" 
-      //              id="hover-image"
-      //              onclick="window.location.href = '/product/view/${product.product_id}'"
-      //              style="opacity: 0; transition: opacity 0.3s ease;">
-      //         <div class="card-body">
-      //           <h5 class="fw-bold card-title mb-2">${product.name}</h5>
-      //           <div class="d-flex justify-content-between align-items-center mb-3">
-      //             <span class="fs-4 fw-bold">php ${product.price}</span>
-      //             <div class="input-group input-group-sm" style="width: 120px">
-      //               <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(-1)">-</button>
-      //               <input class="form-control form-control text-center" type="number" id="productQuantity" name="productQuantity" min="1" value="1">
-      //               <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(1)">+</button>
-      //             </div>
-      //           </div>
-      //           <button class="btn btn-primary w-100 rounded-pill" id="add-to-cart-btn" data-bs-toggle="modal" data-bs-target="#itemviewmodal">
-      //             Add to Cart
-      //           </button>
-      //         </div>
-      //       </div>
-      //     </div>`;
-      //   productList.innerHTML += productHtml;
-      // });
     })
     .catch(error => {
       console.error('Error:', error);
@@ -571,72 +608,6 @@ categories.forEach((category) => {
     }
   });
 });
-          // var selectedCategories = [];
-          // var categories = document.querySelectorAll(".form-check-input");
-          // categories.forEach((category) => {
-          //   category.addEventListener("click", () => {
-          //     if (category.checked) {
-          //       selectedCategories.push(category.id);
-          //     } else {
-          //       const index = selectedCategories.indexOf(category.id);
-          //       if (index > -1) {
-          //         selectedCategories.splice(index, 1);
-          //       }
-          //     }
-              
-              
-          //     if (selectedCategories.length === 0) {
-          //       document.querySelectorAll(".product-item").forEach(el => {
-          //         el.style.display = "block";
-          //       });
-          //     } else {
-          //       const elementsToShow = new Set();
-          //       selectedCategories.forEach(element => {
-          //         element = element.replace("category-", "");
-          //         document.querySelectorAll(".product-item").forEach(el => {
-          //           if (el.id.includes(element)) {
-          //             elementsToShow.add(el);
-          //           }
-          //         });
-          //       });
-          //       fetch('/shop/1', {
-          //       method: 'POST',
-          //       body: {category:elementsToShow}
-          //   })
-          //       .then(response => {
-          //           if (response.ok) {
-          //               return response.text(); // or response.json() if expecting JSON
-          //           }
-          //           throw new Error('Network response was not ok.');
-          //       })
-          //       .then(data => {
-          //           console.log('Success:', data);
-          //           // Optionally redirect or update the UI
-          //           var toastEl = document.getElementById('liveToast');
-          //           var toast = new bootstrap.Toast(toastEl);
-          //           var myModal = new bootstrap.Modal(document.getElementById('editModal'));
-          //           myModal.hide();
-          //           // document.getElementById('closeaddmodal').click();
-          //           toast.show();
-          //           // window.location.href = '/admin'; // Redirect to the index page
-          //       })
-          //       .catch((error) => {
-          //           alert('Error:', error);
-          //           console.error('Error:', error);
-          //       });
-          //   // }); 
-          //     //   document.querySelectorAll(".product-item").forEach(el => {
-          //     //     if (elementsToShow.has(el)) {
-          //     //       el.style.display = "block";
-          //     //     } else {
-          //     //       el.style.display = "none";
-          //     //     }
-          //     //   });
-          //     // }
-          //   });
-          // })
-
-
         </script>
 
         <div>
@@ -1046,12 +1017,7 @@ categories.forEach((category) => {
         });
     }
 
-    // Render cart items when modal is shown
-    // $('#cartModal').on('show.bs.modal', function () {
-    //     renderCartItems();
-    // });
-  </script>
-
+    
   <!-- ENDMODAL -->
 
 
@@ -1124,18 +1090,7 @@ categories.forEach((category) => {
 
             const filteredData = data.filter(item => item.toLowerCase().includes(query));
 
-            // filteredData.forEach(item => {
-            //     const div = document.createElement('div');
-            //     const img = document.createElement('img');
-            //     img.src = 'images/' + find_img_by_name(item);
-            //     img.style.width = '30px';  // Set width to 10 pixels
-            //     img.style.height = '30px'; // Set height to 10 pixels
-            //     div.classList.add('result-item'); // Add some styling if needed
-
-            //     div.appendChild(img); // Append the image first
-            //     div.appendChild(document.createTextNode(item)); // Append the text after the image
-            //     resultsContainer.appendChild(div);
-            // });
+         
             filteredData.forEach(item => {
 const div = document.createElement('div');
 const img = document.createElement('img');
@@ -1236,22 +1191,7 @@ getData();
                 throw new Error('Network response was not ok.');
             })
     }
-     function getData() {
-
-    //   const url = "/products";
-    //   try {
-    //     const response = fetch(url);
-    //     if (!response.ok) {
-    //       throw new Error(`Response status: ${response.status}`);
-    //     }
-
-    //     // const json = response.json();
-    //     console.log(response);
-    //     // return json
-    //   } catch (error) {
-    //     console.error(error.message);
-    //   }
-     }
+    
     fetch('/products')
             .then(response => {
                 if (response.ok) {
@@ -1259,31 +1199,9 @@ getData();
                     return response.json(); // or response.json() if expecting JSON
                 }
                 throw new Error('Network response was not ok.');
-            })
-
-            
+            })           
 
 </script>
-
-  // <script>
-  //   fetch('/pagination', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           categories: selectedCategories,
-            
-  //         })
-  //       })
-  //       .then(response => response.text())
-  //       .then(data => {
-  //         // console.log(data);
-  //         document.getElementById("pagination").innerHTML=data;
-      
-  //         // updatePagination(data.current_page, data.total_pages);
-  //       });
-  //   </script>
 
   <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
   <script src="/assets/js/aos.min.js"></script>

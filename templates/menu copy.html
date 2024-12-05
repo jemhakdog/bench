@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>design</title>
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
+  <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="/assets/css/bs-theme-overrides.css">
+  <link rel="stylesheet" href="/assets/css/aos.min.css">
+  <link rel="stylesheet" href="/assets/css/animate.min.css">
+  <link rel="stylesheet" href="/assets/css/Bootstrap-Cards-v2.css">
+  <link rel="stylesheet" href="/assets/css/Hero-Clean-images.css">
+  <link rel="stylesheet" href="/assets/css/Hero-with-image-and-overlapping-content.css">
+  <link rel="stylesheet" href="/assets/css/Login-with-overlay-image.css">
+  <link rel="stylesheet" href="/assets/css/Navbar-Centered-Brand-Dark-icons.css">
+  <link rel="stylesheet" href="/assets/css/Nice-breadcrumb.css">
+  <link rel="stylesheet" href="/assets/css/responsive-blog-card-slider.css">
+  <link rel="stylesheet" href="/assets/css/Sidebar-Cool-SB-Admin-Inspirate.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+
+        .results-container {
+          border: 1px solid #ccc;
+          max-height: 200px;
+          overflow-y: auto;
+          position: absolute;
+          background-color: white;
+          z-index: 1000;
+          margin-top: 50px;
+          width: 100%;
+          
+
+        }
+
+        .result-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+
+    .card {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      /* Ensures the images are contained within the card */
+    }
+
+    .card-img-top {
+      height: 250px;
+      /* Fixed height for images */
+      object-fit: cover;
+      /* Maintain aspect ratio */
+      transition: opacity 0.3s ease;
+      /* Smooth transition for opacity */
+    }
+
+    .card-img-hover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      opacity: 0;
+      /* Initially hidden */
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover #main-image {
+      opacity: 0;
+      /* Hide the main image on hover */
+    }
+
+    .card:hover #hover-image {
+      opacity: 1;
+      /* Show the hover image on hover */
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md bg-dark pulse animated py-3" data-bs-theme="dark">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <span class="pulse animated infinite">Bench</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navcol-6"
+        aria-controls="navcol-6" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navcol-6">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="{{url_for('index')}}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('shop')}}">Shop</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('contact_us')}}">Contact us</a>
+          </li>
+        </ul>
+        <div class="d-flex justify-content-between align-items-baseline">
+          <a href="" class="position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16"
+              class="bi bi-cart2" style="color: #ffffff; font-size: 30px">
+              <path
+                d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0  0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0">
+              </path>
+            </svg>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {% if cart_len is defined %}
+                {% if cart_len > 99 %}99+{% else %}{{ cart_len }}{% endif %}
+              {% else %}
+                0
+              {% endif %}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </a>
+          <div class="dropdown">
+            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16"
+                class="bi bi-person-circle" style="color: #ffffff; margin-left: 8px; font-size: 30px">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
+                <path fill-rule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1">
+                </path>
+              </svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="#">Lagout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid" style="margin-top: 47px;">
+    <div class="row">
+      <div class="col-md-3">
+        <ol class="breadcrumb">
+          <li class="home"><a href="#"><i class="fas fa-home"></i><span>shop</span></a></li>
+          <li></li>
+          <li></li>
+          <li class="active"></li>
+        </ol>
+      </div>
+      <div class="col d-flex justify-content-end align-items-center">
+        <path
+          d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5">
+        </path>
+        </svg>
+
+        <div class="input-group position-relative">
+          <input
+              class="form-control d-xl-flex justify-content-xl-center align-items-xl-center autocomplete"
+              id="searchInput" type="text" placeholder="search for an item...">
+          <button class="btn btn-warning" type="button" style="background: #eb4034;">
+              <i class="fa fa-search"></i>
+          </button>
+          <div id="results" class="results-container"></div> <!-- Results container -->
+      </div>
+
+<script>
+    // Data array to store product names
+    const data = [];
+    {% if products %}
+    {% for i in products %}
+    let data = '{{ i.name| safe }}';
+    data.push(data);
+    {% endfor %}
+    {% endif %}
+        
+
+    // Function to find the image by the product name
+    function find_img_by_name(name) {
+        {% for i in products %}
+        if (name === '{{ i['name'] }}') {
+            return '{{ i['images'][0] }}';
+        }
+        {% endfor %}
+    }
+
+    // Function to find the ID by the product name
+    function find_id_by_name(name) {
+        {% for i in products %}
+        if (name === '{{ i['name'] }}') {
+            return '{{ i['product_id'] }}';
+        }
+        {% endfor %}
+    }
+
+    // Search event listener for the input box
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const query = this.value.toLowerCase(); // Get the search query in lowercase
+        const resultsContainer = document.getElementById('results'); // Get the container for the results
+        resultsContainer.innerHTML = ''; // Clear previous results
+
+        if (query) {
+            // Filter data based on the search query
+            const filteredData = data.filter(item => item.toLowerCase().includes(query));
+
+            // Loop through filtered data and display the results
+            filteredData.forEach(item => {
+                const div = document.createElement('div'); // Create a div for each result
+                const img = document.createElement('img'); // Create an img element
+                img.src = find_img_by_name(item); // Use the `find_img_by_name` function to get the image
+                img.style.width = '30px'; // Set image width
+                img.style.height = '30px'; // Set image height
+                img.style.marginRight = '10px'; // Add some spacing between image and text
+
+                div.classList.add('result-item'); // Add styling class (if needed)
+                
+                // Add an event listener for clicking a result
+                div.addEventListener('click', () => {
+                    window.location.href = '/product/view/' + find_id_by_name(item); // Redirect to the product view page
+                });
+
+                div.style.cursor = 'pointer'; // Make it look clickable
+                div.appendChild(img); // Append the image to the result div
+                console.log(item);
+                div.appendChild(document.createTextNode(item)); // Append the product name after the image
+                resultsContainer.appendChild(div); // Add the result div to the container
+            });
+        }
+    });
+</script>
+      </div>
+      <div class="col-xl-12">
+        <hr>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-3">
+        <!-- category
+                <div>
+                    <p class="justify-content-between" style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Category</p>
+                    <div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Headset</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" id="formCheck-4"><label class="form-check-label" for="formCheck-4">Earphones</label></div>
+                        <div class="form-check" style="color: #000000;"><input type="checkbox" class="form-check-input" id="formCheck-3"><label class="form-check-label" for="formCheck-3">Speaker</label></div>
+                    </div>
+                    <hr>
+                </div>
+             
+                <div>
+                    <p class="justify-content-between" style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Section</p>
+                    <div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Headset</label></div>
+                        <div class="form-check"><input type="checkbox" class="form-check-input" id="formCheck-4"><label class="form-check-label" for="formCheck-4">Earphones</label></div>
+                        <div class="form-check" style="color: #000000;"><input type="checkbox" class="form-check-input" id="formCheck-3"><label class="form-check-label" for="formCheck-3">Speaker</label></div>
+                    </div>
+                    <hr>
+                </div> -->
+        <!-- category -->
+        <div>
+          <p class="justify-content-between"
+            style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Category</p>
+          <div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="category-men">
+              <label class="form-check-label" for="category-men">Men</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="category-body-bath">
+              <label class="form-check-label" for="category-body-bath">Body &amp; Bath</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="category-women">
+              <label class="form-check-label" for="category-women">Women</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="category-brand">
+              <label class="form-check-label" for="category-brand">Brand</label>
+            </div>
+          </div>
+          <hr>
+        </div>
+
+        <!-- Men Section -->
+        <div>
+          <p class="justify-content-between"
+            style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Men</p>
+          <div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="men-accessories">
+              <label class="form-check-label" for="men-accessories">Accessories</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="men-footwear">
+              <label class="form-check-label" for="men-footwear">Footwear</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="men-tops">
+              <label class="form-check-label" for="men-tops">Tops</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="men-activewear-swimwear">
+              <label class="form-check-label" for="men-activewear-swimwear">Activewear &amp; Swimwear</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="men-bottoms">
+              <label class="form-check-label" for="men-bottoms">Bottoms</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="men-underwear">
+              <label class="form-check-label" for="men-underwear">Underwear</label>
+            </div>
+          </div>
+          <hr>
+        </div>
+
+        <!-- Body & Bath Section -->
+        <div>
+          <p class="justify-content-between"
+            style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Body &amp; Bath
+          </p>
+          <div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="body-bath-fragrances">
+              <label class="form-check-label" for="body-bath-fragrances">Fragrances</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="body-bath-home-living">
+              <label class="form-check-label" for="body-bath-home-living">Home Living</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="body-bath-baby-care">
+              <label class="form-check-label" for="body-bath-baby-care">Baby Care</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="body-bath-body-care">
+              <label class="form-check-label" for="body-bath-body-care">Body Care</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="body-bath-skin-care">
+              <label class="form-check-label" for="body-bath-skin-care">Skin Care</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="body-bath-hair-care">
+              <label class="form-check-label" for="body-bath-hair-care">Hair Care</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="body-bath-towels">
+              <label class="form-check-label" for="body-bath-towels">Towels</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="body-bath-beauty">
+              <label class="form-check-label" for="body-bath-beauty">Beauty</label>
+            </div>
+          </div>
+          <hr>
+        </div>
+
+        <!-- Women Section -->
+        <div>
+          <p class="justify-content-between"
+            style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Women</p>
+          <div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="women-tops">
+              <label class="form-check-label" for="women-tops">Tops</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="women-accessories">
+              <label class="form-check-label" for="women-accessories">Accessories</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="women-bottoms">
+              <label class="form-check-label" for="women-bottoms">Bottoms</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="women-underwear-loungewear">
+              <label class="form-check-label" for="women-underwear-loungewear">Underwear &amp; Loungewear</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="women-activewear-swimwear">
+              <label class="form-check-label" for="women-activewear-swimwear">Activewear &amp; Swimwear</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="women-footwear">
+              <label class="form-check-label" for="women-footwear">Footwear</label>
+            </div>
+          </div>
+          <hr>
+        </div>
+
+     
+        <!-- Brand Section -->
+        <div>
+          <p class="justify-content-between"
+            style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Brand</p>
+          <div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="brand-baby-bench">
+              <label class="form-check-label" for="brand-baby-bench">Baby Bench</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="brand-bench-organics">
+              <label class="form-check-label" for="brand-bench-organics">Bench Organics</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="brand-bench-daily-scent">
+              <label class="form-check-label" for="brand-bench-daily-scent">Bench Daily Scent</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="brand-bench-fix">
+              <label class="form-check-label" for="brand-bench-fix">Bench Fix</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="brand-bench-body">
+              <label class="form-check-label" for="brand-bench-body">Bench Body</label>
+            </div>
+          </div>
+          <hr>
+        </div>
+
+        <script>
+
+var selectedCategories = [];
+var categories = document.querySelectorAll(".form-check-input");
+
+categories.forEach((category) => {
+  category.addEventListener("click", () => {
+    if (category.checked) {
+      if (!selectedCategories.includes(category.id)) {
+        selectedCategories.push(category.id);
+      }
+    } else {
+      const index = selectedCategories.indexOf(category.id);
+      if (index > -1) {
+        selectedCategories.splice(index, 1);
+      }
+      selectedCategories.splice(index);
+    }
+    
+    // Send AJAX request to server with selected categories
+    fetch('/filter', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        categories: selectedCategories
+      })
+    })
+    .then(response => response.text())
+    .then(data => {
+      const productList = document.getElementById('product-list');
+      productList.innerHTML = '';
+      productList.innerHTML = data;
+      fetch('/pagination', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          categories: selectedCategories
+        })
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log(data);
+        document.getElementById("pagination").innerHTML=data;
+        
+        // updatePagination(data.current_page, data.total_pages);
+      });
+
+      
+  
+      // data.forEach(product => {
+      //   const productHtml = `
+      //     <div class="col-lg-4 product-item" id="${product.product_id} ${product.section}-${product.category}">
+      //       <div class="card border-0 shadow-sm rounded-3 mb-3">
+      //         <img class="card-img-top w-100 d-block rounded-top-3" 
+      //              src="${JSON.parse(product.images)[0]}"
+      //              alt="Product Image" 
+      //              id="main-image"
+      //              onclick="window.location.href = '/product/view/${product.product_id}'">
+      //         <img class="card-img-top w-100 d-block rounded-top-3 position-absolute top-0 start-0" 
+      //              src="${JSON.parse(product.images)[1]}"
+      //              alt="Product Image Hover" 
+      //              id="hover-image"
+      //              onclick="window.location.href = '/product/view/${product.product_id}'"
+      //              style="opacity: 0; transition: opacity 0.3s ease;">
+      //         <div class="card-body">
+      //           <h5 class="fw-bold card-title mb-2">${product.name}</h5>
+      //           <div class="d-flex justify-content-between align-items-center mb-3">
+      //             <span class="fs-4 fw-bold">php ${product.price}</span>
+      //             <div class="input-group input-group-sm" style="width: 120px">
+      //               <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(-1)">-</button>
+      //               <input class="form-control form-control text-center" type="number" id="productQuantity" name="productQuantity" min="1" value="1">
+      //               <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(1)">+</button>
+      //             </div>
+      //           </div>
+      //           <button class="btn btn-primary w-100 rounded-pill" id="add-to-cart-btn" data-bs-toggle="modal" data-bs-target="#itemviewmodal">
+      //             Add to Cart
+      //           </button>
+      //         </div>
+      //       </div>
+      //     </div>`;
+      //   productList.innerHTML += productHtml;
+      // });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  });
+});
+
+    // Function to update the product list in the UI
+    
+        function updatePagination(currentPage, totalPages) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            if (totalPages > 0) {
+                // Create pagination controls
+                const controls = [
+                    {page: 1, text: '« First', disabled: currentPage === 1},
+                    {page: currentPage - 1, text: 'Previous', disabled: currentPage === 1},
+                    ...Array.from({length: Math.min(3, totalPages)}, (_, i) => {
+                        const pageNum = Math.min(Math.max(currentPage - 1 + i, 1), totalPages);
+                        return {
+                            page: pageNum,
+                            text: pageNum.toString(),
+                            disabled: false,
+                            active: pageNum === currentPage
+                        };
+                    }),
+                    {page: currentPage + 1, text: 'Next', disabled: currentPage === totalPages},
+                    {page: totalPages, text: 'Last »', disabled: currentPage === totalPages}
+                ];
+
+                controls.forEach(control => {
+                    const li = document.createElement('li');
+                    li.className = `page-item${control.disabled ? ' disabled' : ''}${control.active ? ' active' : ''}`;
+                    
+                    const a = document.createElement('a');
+                    a.className = 'page-link';
+                    a.textContent = control.text;
+                    if (!control.disabled) {
+                        a.onclick = () => fetchProducts(control.page);
+                    }
+                    a.href = '/shop/' + control.page;
+                    
+                    li.appendChild(a);
+                    pagination.appendChild(li);
+                });
+            }
+        }
+
+        function fetchProducts(page) {
+            fetch('/filter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    categories: selectedCategories
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const productList = document.getElementById('product-list');
+                productList.innerHTML = '';
+                
+                data.products.forEach(product => {
+                    // Create product card HTML
+                    const productCard = createProductCard(product);
+                    productList.innerHTML += productCard;
+                });
+
+                
+                
+                // updatePagination(data.current_page, data.total_pages);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function createProductCard(product) {
+            return `
+                <div class="col-lg-4 product-item" id="${product.product_id} ${product.section}-${product.category}">
+                    <div class="card border-0 shadow-sm rounded-3 mb-3">
+                        <img class="card-img-top w-100 d-block rounded-top-3" 
+                             src="${product.images[0]}"
+                             alt="Product Image" 
+                             id="main-image"
+                             onclick="window.location.href = '/product/view/${product.product_id}'">
+                        <img class="card-img-top w-100 d-block rounded-top-3 position-absolute top-0 start-0" 
+                             src="${product.images[1]}"
+                             alt="Product Image Hover" 
+                             id="hover-image"
+                             onclick="window.location.href = '/product/view/${product.product_id}'"
+                             style="opacity: 0; transition: opacity 0.3s ease;">
+                        <div class="card-body">
+                            <h5 class="fw-bold card-title mb-2">${product.name}</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="fs-4 fw-bold">php ${product.price}</span>
+                                <div class="input-group input-group-sm" style="width: 120px">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(-1)">-</button>
+                                    <input class="form-control form-control text-center" type="number" id="productQuantity" name="productQuantity" min="1" value="1">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(1)">+</button>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 rounded-pill" id="add-to-cart-btn" data-bs-toggle="modal" data-bs-target="#itemviewmodal">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+var selectedCategories = [];
+var categories = document.querySelectorAll(".form-check-input");
+
+categories.forEach((category) => {
+  category.addEventListener("click", () => {
+    if (category.checked) {
+      selectedCategories.push(category.id);
+    } else {
+      const index = selectedCategories.indexOf(category.id);
+      if (index > -1) {
+        selectedCategories.splice(index, 1);
+      }
+    }
+    
+    // If no categories are selected, show all products
+    if (selectedCategories.length === 0) {
+      document.querySelectorAll(".product-item").forEach(el => {
+        el.style.display = "block";
+        
+      });
+    } else {
+      // Hide all products first
+      document.querySelectorAll(".product-item").forEach(el => {
+        el.style.display = "none";
+      });
+
+      // Show products that match selected categories
+      selectedCategories.forEach(selectedCategory => {
+        // Remove 'category-' prefix if present
+        const cleanCategory = selectedCategory.replace(/^category-/, '');
+        
+        document.querySelectorAll(".product-item").forEach(el => {
+          // Check if the product's ID contains the selected category
+          if (el.id.includes(cleanCategory)) {
+            el.style.display = "block";
+            productList = document.getElementById("product-list");
+            productList.appendChild(el);
+          }
+        });
+      });
+    }
+  });
+});
+          // var selectedCategories = [];
+          // var categories = document.querySelectorAll(".form-check-input");
+          // categories.forEach((category) => {
+          //   category.addEventListener("click", () => {
+          //     if (category.checked) {
+          //       selectedCategories.push(category.id);
+          //     } else {
+          //       const index = selectedCategories.indexOf(category.id);
+          //       if (index > -1) {
+          //         selectedCategories.splice(index, 1);
+          //       }
+          //     }
+              
+              
+          //     if (selectedCategories.length === 0) {
+          //       document.querySelectorAll(".product-item").forEach(el => {
+          //         el.style.display = "block";
+          //       });
+          //     } else {
+          //       const elementsToShow = new Set();
+          //       selectedCategories.forEach(element => {
+          //         element = element.replace("category-", "");
+          //         document.querySelectorAll(".product-item").forEach(el => {
+          //           if (el.id.includes(element)) {
+          //             elementsToShow.add(el);
+          //           }
+          //         });
+          //       });
+          //       fetch('/shop/1', {
+          //       method: 'POST',
+          //       body: {category:elementsToShow}
+          //   })
+          //       .then(response => {
+          //           if (response.ok) {
+          //               return response.text(); // or response.json() if expecting JSON
+          //           }
+          //           throw new Error('Network response was not ok.');
+          //       })
+          //       .then(data => {
+          //           console.log('Success:', data);
+          //           // Optionally redirect or update the UI
+          //           var toastEl = document.getElementById('liveToast');
+          //           var toast = new bootstrap.Toast(toastEl);
+          //           var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+          //           myModal.hide();
+          //           // document.getElementById('closeaddmodal').click();
+          //           toast.show();
+          //           // window.location.href = '/admin'; // Redirect to the index page
+          //       })
+          //       .catch((error) => {
+          //           alert('Error:', error);
+          //           console.error('Error:', error);
+          //       });
+          //   // }); 
+          //     //   document.querySelectorAll(".product-item").forEach(el => {
+          //     //     if (elementsToShow.has(el)) {
+          //     //       el.style.display = "block";
+          //     //     } else {
+          //     //       el.style.display = "none";
+          //     //     }
+          //     //   });
+          //     // }
+          //   });
+          // })
+
+
+        </script>
+
+        <div>
+          <p class="justify-content-between"
+            style="padding-top:0px;padding-bottom:0px;margin-bottom:9px;margin-top:0px;margin-right:15px;">Price</p>
+          <div class="d-flex">
+            <input type="number" class="form-control-sm" style="width:130px;" name="min">
+            <input type="number"
+              class="form-control-sm" style="width: 130px;margin-left: 6px;" name="max">
+              
+              <button class="btn btn-primary" onclick="sortByPrice()"
+              type="button" style="margin-left: 4px;"><svg class="bi bi-play" xmlns="http://www.w3.org/2000/svg"
+                width="1em" height="1em" fill="currentColor" viewbox="0 0 16 16" style="color:#ffffff;">
+                <path
+                  d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z">
+                </path>
+              </svg></button ></div>
+              <script>
+                function sortByPrice() {
+                  var min = document.querySelector('input[name="min"]').value;
+                  var max = document.querySelector('input[name="max"]').value;
+                  fetch('/filter', {
+                    method: 'POST',
+                    body: {min:min,max:max}
+                  })
+                  .then(response => {
+                      if (response.ok) {
+                          return response.text(); // or response.json() if expecting JSON
+                      }
+                      throw new Error('Network response was not ok.');
+                  })
+                  .then(data => {
+                      console.log('Success:', data);
+                      // Optionally redirect or update the UI
+                      var toastEl = document.getElementById('liveToast');
+                      var toast = new bootstrap.Toast(toastEl);
+                      var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+                }
+
+             
+              </script>
+              {% for i in filters %}
+              <script>
+                document.getElementById("{{i}}").checked = true;
+                selectedCategories.push("{{i}}");
+              </script>
+              {% endfor %}
+
+         
+          <hr>
+        </div>
+      </div>
+      <div class="col-lg-9">
+        <div class="row" id = "product-list">
+          {% for i in products %}
+          <div class="col-lg-4 product-item" id="{{ i['product_id'] }} {{ i['section']}}-{{ i['category']}}">
+            <div class="card border-0 shadow-sm rounded-3 mb-3">
+              <div class="position-relative">
+                <!-- Main product image -->
+                <img class="card-img-top w-100 d-block rounded-top-3" src="{{ i['images'][0] }}"
+                  alt="Product Image" id="main-image" style="height: 401px;object-fit: cover;"
+                  onclick="window.location.href = `/product/view/{{ i['product_id'] }}`">
+
+                <!-- Hover image for the same product -->
+                <img class="card-img-top w-100 d-block rounded-top-3 position-absolute top-0 start-0" 
+                  src="{{ i['images'][1] }}" alt="Product Image Hover" id="hover-image" 
+                  style="height: 401px; object-fit: cover; opacity: 0; transition: opacity 0.3s ease;"
+                  onclick="window.location.href = `/product/view/{{ i['product_id'] }}`"
+                  onmouseover="this.style.opacity=1"
+                  onmouseout="this.style.opacity=0">
+              </div>
+
+              <div class="card-body d-flex flex-column">
+                <h5 class="fw-bold card-title mb-2">{{ i['name'] }}</h5>
+                <p class="text-muted card-text mb-3">{{ i['description'] }}</p>
+                <!-- <p class="text-muted card-text mb-3" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                  {{ i['description'] }}
+                </p> -->
+                <div class="mt-auto d-flex justify-content-between align-items-center mb-3">
+                  <span class="fs-4 fw-bold">php {{ i['price'] }}</span>
+                  <!-- <div class="input-group input-group-sm" style="width:120px;"><button class="btn btn-outline-secondary"
+                      type="button" id="decrease-quantity">-</button><input
+                      class="form-control form-control text-center" type="number" id="quantity-input" min="1"
+                      value="1"><button class="btn btn-outline-secondary" type="button"
+                      id="increase-quantity">+</button>
+                  </div> -->
+                  <div class="input-group input-group-sm" style="width: 120px">
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="updateQuantity(-1)"
+                    >
+                      -
+                    </button>
+                    <input
+                      class="form-control form-control text-center"
+                      type="number"
+                      id="productQuantity"
+                      name="productQuantity"
+                      min="1"
+                      value="1"
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      onclick="updateQuantity(1)"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <script>
+                    function updateQuantity(change) {
+                      const quantityInput = document.getElementById('productQuantity');
+                      let currentQuantity = parseInt(quantityInput.value);
+                      let newQuantity = currentQuantity + change;
+                      if (newQuantity < 1) newQuantity = 1;
+                      quantityInput.value = newQuantity;
+                    }
+                  </script>
+                </div><button class="btn btn-primary w-100 rounded-pill" id="add-to-cart-btn" class="position-relative"
+                  data-bs-toggle="modal" data-bs-target="#itemviewmodal"  onclick="window.location.href = `/product/view/{{ i['product_id'] }}`"  >Add to Cart</button>
+              </div>
+              <div>
+                <input type="hidden" name="category" value="{{ i['category'] }}">
+                <input type="hidden" name="section" value="{{ i['section'] }}">
+              </div>
+            </div>
+          </div>
+          {%endfor%}
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="row">
+  <div class="col-12 d-flex justify-content-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination" id="pagination">
+          {% if pagination_links %}
+              {{ pagination_links|safe }}
+          {% endif %}
+      </ul>
+    </nav>
+  
+  </div>
+</div>
+</div>
+
+
+  </div>
+  <footer>
+    <div class="container py-4 py-lg-5" data-aos="zoom-in">
+      <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item" data-aos="zoom-in-up">
+          <h3 class="fs-6">Services</h3>
+          <ul class="list-unstyled">
+            <li><a class="link-secondary" href="#">Web design</a></li>
+            <li><a class="link-secondary" href="#">Development</a></li>
+            <li><a class="link-secondary" href="#">Hosting</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item" data-aos="zoom-in-up">
+          <h3 class="fs-6">About</h3>
+          <ul class="list-unstyled">
+            <li><a class="link-secondary" href="#">Company</a></li>
+            <li><a class="link-secondary" href="#">Team</a></li>
+            <li><a class="link-secondary" href="#">Legacy</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column item" data-aos="zoom-in-up">
+          <h3 class="fs-6">Careers</h3>
+          <ul class="list-unstyled">
+            <li><a class="link-secondary" href="#">Job openings</a></li>
+            <li><a class="link-secondary" href="#">Employee success</a></li>
+            <li><a class="link-secondary" href="#">Benefits</a></li>
+          </ul>
+        </div>
+        <div
+          class="col-lg-3 text-center text-lg-start d-flex flex-column align-items-center order-first align-items-lg-start order-lg-last item social"
+          data-aos="zoom-in-up">
+          <div class="fw-bold d-flex align-items-center mb-2"><span>Bench</span></div>
+          <p class="text-muted copyright">Sem eleifend donec molestie, integer quisque orci aliquam.</p>
+        </div>
+      </div>
+      <hr>
+      <div class="d-flex justify-content-between align-items-center pt-3">
+        <p class="text-muted mb-0" data-aos="fade-up">Copyright © 2024 Bench</p>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+              fill="currentColor" viewBox="0 0 16 16" class="bi bi-facebook" data-aos="zoom-in">
+              <path
+                d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951">
+              </path>
+            </svg></li>
+          <li class="list-inline-item"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+              fill="currentColor" viewBox="0 0 16 16" class="bi bi-twitter" data-aos="zoom-in">
+              <path
+                d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15">
+              </path>
+            </svg></li>
+          <li class="list-inline-item"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+              fill="currentColor" viewBox="0 0 16 16" class="bi bi-instagram" data-aos="zoom-in">
+              <path
+                d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334">
+              </path>
+            </svg></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function closeModal() {
+      const modalElement = document.getElementById("cartModal");
+      const modal = bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+      modal.hide(); // Use Bootstrap's method to hide the modal
+    }
+  </script>
+  <!-- Bootstrap Modal for Cart -->
+  <div
+    class="modal fade"
+    id="cartModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="cartModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cartModalLabel">
+            <i class="fas fa-arrow-left"  data-bs-dismiss="modal"
+            aria-label="Close"></i> Continue shopping
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            onclick=""
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="p-3">
+            <h2 class="mb-4">Shopping cart</h2>
+            <p class="text-muted">You have {{cart_len}} items in your cart</p>
+            <script>
+              var cartTotal = 0;
+              var selected = 0;
+              var totalcart = 0;
+            </script>
+            <ul class="list-group">
+              {% for item in cart %}
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center" id="cartItems"
+              >
+                <div class="d-flex align-items-center">
+                  <input
+                    class="form-check-input m-3 cart-ch"
+                    type="checkbox"
+                    value=""
+                    id="checkbox-{{item.id}}"
+                  />
+                  <script>
+                    totalcart+=({{item.price}}*{{item.quantity}})
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('checkbox-{{item.id}}').addEventListener('change', function() {
+                            if (this.checked) {
+                            cartTotal+=({{item.price}}*{{item.quantity}});
+                            document.getElementById("cart-total").innerText=cartTotal;
+                            selected+=1;
+                            document.getElementById("cart-selected").innerText=selected;
+                            if (selected=={{cart_len}}){
+                                document.getElementById("selected").innerText="Unselect all";
+                                document.getElementById("selected").onclick = UnSelectAll;
+                            }
+                            }
+                            else{
+                                cartTotal-=({{item.price}}*{{item.quantity}});
+                                document.getElementById("cart-total").innerText=cartTotal;
+                                selected-=1;
+                                document.getElementById("cart-selected").innerText=selected;
+                                if (selected<{{cart_len}}){
+                                document.getElementById("selected").innerText="Select all";
+                                document.getElementById("selected").onclick = SelectAll;
+                            }
+
+                            }
+                        });
+                    });
+                  </script>
+                  <img
+                    alt="Iphone 11 pro"
+                    src="{{ item.image }}"
+                    class="img-fluid rounded"
+                    style="width: 50px; height: 50px; object-fit: cover"
+                  />
+                  <div class="ms-3">
+                    <h6 class="mb-0">{{item.name}}</h6>
+                    <small class="text-muted"
+                      >size:{{ item.size }}, color:{{item.color}}</small
+                    >
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="me-3">{{ item.quantity }}</span>
+                  <span class="me-3">{{ item.price }}</span>
+                  <button class="btn btn-sm btn-danger">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="modal-footer d-flex justify-content-between align-items-center"
+        >
+          <div class="left-section">
+            <h5 class="mb-0">
+              Selected items: <span id="cart-selected">0</span>
+            </h5>
+            <div class="total">
+              <h5 class="mb-0">Total: <span id="cart-total">0</span></h5>
+            </div>
+          </div>
+          <div>
+            <button
+              type="button"
+              id="selected"
+              class="btn btn-secondary"
+              onclick="SelectAll()"
+            >
+              Select all
+            </button>
+            <button type="button" class="btn btn-primary">Check out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+
+    function SelectAll() {
+        cartTotal=totalcart
+        selected={{cart_len}}
+        document.getElementById("cart-total").innerText=cartTotal;
+        document.getElementById("cart-selected").innerText=selected;
+        if (selected=={{cart_len}}){
+                                                    document.getElementById("selected").innerText="Unselect all";
+                                                    document.getElementById("selected").onclick = UnSelectAll;
+                                                }
+        // Get all checkboxes with the class 'cart-ch'
+        const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
+        // Set each checkbox's checked property to true
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        // Optionally, you can also update the cart total and selected count here if needed
+    }
+
+    function UnSelectAll() {
+        cartTotal = 0;
+        selected = 0;
+        document.getElementById("cart-total").innerText=cartTotal;
+        document.getElementById("cart-selected").innerText=selected;
+        if (selected<{{cart_len}}){
+                                                    document.getElementById("selected").innerText="Select all";
+                                                    document.getElementById("selected").onclick = SelectAll;
+                                                }
+        // Get all checkboxes with the class 'cart-ch'
+        const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
+        // Set each checkbox's checked property to false
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        // Optionally, you can also update the cart total and selected count here if needed
+    }
+
+
+    </script>
+
+  <script>
+    const cart = {{ cart|tojson }};
+
+    function renderCartItems() {
+        const cartItemsContainer = document.getElementById('cartItems');
+        cartItemsContainer.innerHTML = ''; // Clear previous items
+
+        cart.forEach(item => {
+            const itemHtml = `
+                <div class="row mb-2">
+                    <div class="col-4">
+                        <img src="${item.image}" class="img-fluid" alt="${item.color}">
+                    </div>
+                    <div class="col-8">
+                        <h5>${item.color} - Size: ${item.size}</h5>
+                        <p>SKU: ${item.sku}</p>
+                        <p>Quantity: ${item.quantity}</p>
+                    </div>
+                </div>
+            `;
+            cartItemsContainer.innerHTML += itemHtml;
+        });
+    }
+
+    // Render cart items when modal is shown
+    // $('#cartModal').on('show.bs.modal', function () {
+    //     renderCartItems();
+    // });
+  </script>
+
+  <!-- ENDMODAL -->
+
+
+<script>
+    function clearFields() {
+        document.getElementById('edit_imagePreview').src = 'images/300.png'; // Clear image preview
+        document.getElementById('edit_productName').value = '';
+        document.getElementById('edit_productPrice').value = '';
+        document.getElementById('edit_productStock').value = '';
+        document.getElementById('edit_productRating').value = '';
+        document.getElementById('edit_productDescription').value = '';
+        document.getElementById('edit_category').selectedIndex = 0;
+
+
+
+    }
+    function editProduct(id, name, image, price, stock, rating, description) {
+        // Set the modal fields with the product data
+        document.getElementById('edit_id').value = id;
+        document.getElementById('edit_imagePreview').src = `images/${image}`
+        document.getElementById('edit_productName').value = name;
+        document.getElementById('edit_productPrice').value = price;
+        document.getElementById('edit_productStock').value = stock;
+        document.getElementById('edit_productRating').value = rating;
+        document.getElementById('edit_productDescription').value = description;
+        document.getElementById('edit_category').selectedIndex = 0;
+
+
+        // Show the modal
+        var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+        myModal.show();
+
+        document.getElementById('editModal').addEventListener('hidden.bs.modal', clearFields);
+
+    }
+
+    const data = [];
+    {%if products %}
+    {% for i in products %}
+    data.push('{{i['name']}}');
+    {% endfor %}
+    {% endif %}
+    // Example data
+
+    function find_img_by_name(name) {
+        {% for i in products %}
+        if (name == '{{i['name']}}') {
+            return '{{i['images'][0]}}';
+        }
+
+        {% endfor %}
+
+    }
+    function find_id_by_name(name) {
+        {% for i in products %}
+        if (name == '{{i['name']}}') {
+            return '{{i['product_id']}}';
+        }
+
+        {% endfor %}
+    }
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const resultsContainer = document.getElementById('results');
+
+        // Clear previous results
+        resultsContainer.innerHTML = '';
+
+        if (query) {
+
+            const filteredData = data.filter(item => item.toLowerCase().includes(query));
+
+            // filteredData.forEach(item => {
+            //     const div = document.createElement('div');
+            //     const img = document.createElement('img');
+            //     img.src = 'images/' + find_img_by_name(item);
+            //     img.style.width = '30px';  // Set width to 10 pixels
+            //     img.style.height = '30px'; // Set height to 10 pixels
+            //     div.classList.add('result-item'); // Add some styling if needed
+
+            //     div.appendChild(img); // Append the image first
+            //     div.appendChild(document.createTextNode(item)); // Append the text after the image
+            //     resultsContainer.appendChild(div);
+            // });
+            filteredData.forEach(item => {
+const div = document.createElement('div');
+const img = document.createElement('img');
+img.src = find_img_by_name(item);
+img.style.width = '30px';  // Set width to 30 pixels
+img.style.height = '30px'; // Set height to 30 pixels
+div.classList.add('result-item'); // Add some styling if needed
+
+// Add an event listener to the div
+div.addEventListener('click', () => {
+    // alert('You clicked on: ' + find_id_by_name(item));
+    window.location.href = '/product/view/'+find_id_by_name(item);
+});
+
+div.appendChild(img); // Append the image first
+div.appendChild(document.createTextNode(item)); // Append the text after the image
+resultsContainer.appendChild(div);
+});
+        }
+    });
+</script>
+<script>
+getData();
+    document.getElementById('submitProductBtn').addEventListener('click', function () {
+        const form = document.getElementById('addProductForm');
+        const formData = new FormData(form); // Create a FormData object
+
+        fetch('/products/add', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text(); // or response.json() if expecting JSON
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                console.log('Success:', data);
+                // Optionally redirect or update the UI
+                var toastEl = document.getElementById('liveToast');
+                var toast = new bootstrap.Toast(toastEl);
+                var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+                myModal.hide();
+                // document.getElementById('closeaddmodal').click();
+                toast.show();
+                // window.location.href = '/admin'; // Redirect to the index page
+            })
+            .catch((error) => {
+                alert('Error:', error);
+                console.error('Error:', error);
+            });
+    });
+    document.getElementById('edit_submitBtn').addEventListener('click', function () {
+        const form = document.getElementById('editProductForm');
+        const formData = new FormData(form); // Create a FormData object
+        for (const [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+        fetch('/products/edit/' + formData.get('id'), {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+
+                    return response.text(); // or response.json() if expecting JSON
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                console.log('Success:', data);
+                // Optionally redirect or update the UI
+                var toastEl = document.getElementById('editToast');
+                document.getElementById('closeeditmodal').click();
+
+                var toast = new bootstrap.Toast(toastEl);
+
+                toast.show();
+                // window.location.href = '/admin'; // Redirect to the index page
+            })
+            .catch((error) => {
+                alert('Error:', error);
+                console.error('Error:', error);
+            });
+    });
+
+    function delete_product(id) {
+
+        fetch(`/products/delete/${id}`, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/admin';
+                    return response.text(); // or response.json() if expecting JSON
+                }
+                throw new Error('Network response was not ok.');
+            })
+    }
+     function getData() {
+
+    //   const url = "/products";
+    //   try {
+    //     const response = fetch(url);
+    //     if (!response.ok) {
+    //       throw new Error(`Response status: ${response.status}`);
+    //     }
+
+    //     // const json = response.json();
+    //     console.log(response);
+    //     // return json
+    //   } catch (error) {
+    //     console.error(error.message);
+    //   }
+     }
+    fetch('/products')
+            .then(response => {
+                if (response.ok) {
+                    console.log(response);
+                    return response.json(); // or response.json() if expecting JSON
+                }
+                throw new Error('Network response was not ok.');
+            })
+
+            
+
+</script>
+
+  // <script>
+  //   fetch('/pagination', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           categories: selectedCategories,
+            
+  //         })
+  //       })
+  //       .then(response => response.text())
+  //       .then(data => {
+  //         // console.log(data);
+  //         document.getElementById("pagination").innerHTML=data;
+      
+  //         // updatePagination(data.current_page, data.total_pages);
+  //       });
+  //   </script>
+
+  <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/assets/js/aos.min.js"></script>
+  <script src="/assets/js/bs-init.js"></script>
+  <script src="/assets/js/responsive-blog-card-slider-01-swiper-bundle.min.js"></script>
+  <script src="/assets/js/responsive-blog-card-slider-02-responsive-blog-card-slider.js"></script>
+</body>
+
+</html>
+

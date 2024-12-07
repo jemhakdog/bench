@@ -3538,7 +3538,7 @@ def shop(page=1):
     params.extend([per_page, offset])
 
     # Execute final query
-    cursor.execute(query, params)``
+    cursor.execute(query, params)
     products = cursor.fetchall()
     full_product = products
     print(len(products))

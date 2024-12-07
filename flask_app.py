@@ -3538,9 +3538,10 @@ def shop(page=1):
     params.extend([per_page, offset])
 
     # Execute final query
-    cursor.execute(query, params)
+    cursor.execute(query, params)``
     products = cursor.fetchall()
-
+    full_product = products
+    print(len(products))
     # Get cart items
     cart_conn = get_db_connection()
     cart_cursor = cart_conn.cursor()
@@ -3949,9 +3950,13 @@ def delete_cart_item(item_id):
     conn.close()
     return jsonify({'message': 'Item deleted!'}), 200
 
-@app.route("/checkout")
+# @app.route("/checkout")
+# def checkout():
+#     return render_template('checkout.html')
+@app.route("/checkout", methods=["GET", "POST"])
 def checkout():
-    return render_template('checkout.html')
+    if request.method == "POST":
+        data = req
 
 @app.errorhandler(401)
 def unauthorized(e):

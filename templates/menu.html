@@ -175,14 +175,13 @@
     const data = [];
 {% if products %}
 {% for i in products %}
-let data = '{{ i.name| safe }}';
 data.push(data);
 {% endfor %}
 {% endif %}
-    
-
+   
     // Function to find the image by the product name
     function find_img_by_name(name) {
+      console.log("calling find");
         {% for i in products %}
         if (name === '{{ i['name'] }}') {
             return '{{ i['images'][0] }}';
@@ -201,13 +200,13 @@ data.push(data);
 
     // Search event listener for the input box
     document.getElementById('searchInput').addEventListener('input', function () {
-        const query = this.value.toLowerCase(); // Get the search query in lowercase
+        const query = this.value; // Get the search query in lowercase
         const resultsContainer = document.getElementById('results'); // Get the container for the results
         resultsContainer.innerHTML = ''; // Clear previous results
 
         if (query) {
             // Filter data based on the search query
-            const filteredData = data.filter(item => item.toLowerCase().includes(query));
+            const filteredData = data.filter(item => item.includes(query));
 
             // Loop through filtered data and display the results
             filteredData.forEach(item => {
@@ -645,7 +644,8 @@ categories.forEach((category) => {
                       var toastEl = document.getElementById('liveToast');
                       var toast = new bootstrap.Toast(toastEl);
                       var myModal = new bootstrap.Modal(document.getElementById('editModal'));
-                }
+                }); 
+              }
 
              
               </script>
@@ -859,70 +859,72 @@ categories.forEach((category) => {
               var selected = 0;
               var totalcart = 0;
             </script>
-            <ul class="list-group">
-              {% for item in cart %}
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center" id="cartItems"
-              >
-                <div class="d-flex align-items-center">
-                  <input
-                    class="form-check-input m-3 cart-ch"
-                    type="checkbox"
-                    value=""
-                    id="checkbox-{{item.id}}"
-                  />
-                  <script>
-                    totalcart+=({{item.price}}*{{item.quantity}})
+            <form id="cartForm" method="POST" action="/checkout">
+              <ul class="list-group">
+                {% for item in cart %}
+                <li
+                  class="list-group-item d-flex justify-content-between align-items-center" id="cartItems"
+                >
+                  <div class="d-flex align-items-center">
+                    <input
+                      class="form-check-input m-3 cart-ch"
+                      type="checkbox"
+                      value=""
+                      id="checkbox-{{item.id}}"
+                    />
+                    <script>
+                      totalcart+=({{item.price}}*{{item.quantity}})
 
-                    document.addEventListener('DOMContentLoaded', function() {
-                        document.getElementById('checkbox-{{item.id}}').addEventListener('change', function() {
-                            if (this.checked) {
-                            cartTotal+=({{item.price}}*{{item.quantity}});
-                            document.getElementById("cart-total").innerText=cartTotal;
-                            selected+=1;
-                            document.getElementById("cart-selected").innerText=selected;
-                            if (selected=={{cart_len}}){
-                                document.getElementById("selected").innerText="Unselect all";
-                                document.getElementById("selected").onclick = UnSelectAll;
-                            }
-                            }
-                            else{
-                                cartTotal-=({{item.price}}*{{item.quantity}});
-                                document.getElementById("cart-total").innerText=cartTotal;
-                                selected-=1;
-                                document.getElementById("cart-selected").innerText=selected;
-                                if (selected<{{cart_len}}){
-                                document.getElementById("selected").innerText="Select all";
-                                document.getElementById("selected").onclick = SelectAll;
-                            }
+                      document.addEventListener('DOMContentLoaded', function() {
+                          document.getElementById('checkbox-{{item.id}}').addEventListener('change', function() {
+                              if (this.checked) {
+                              cartTotal+=({{item.price}}*{{item.quantity}});
+                              document.getElementById("cart-total").innerText=cartTotal;
+                              selected+=1;
+                              document.getElementById("cart-selected").innerText=selected;
+                              if (selected=={{cart_len}}){
+                                  document.getElementById("selected").innerText="Unselect all";
+                                  document.getElementById("selected").onclick = UnSelectAll;
+                              }
+                              }
+                              else{
+                                  cartTotal-=({{item.price}}*{{item.quantity}});
+                                  document.getElementById("cart-total").innerText=cartTotal;
+                                  selected-=1;
+                                  document.getElementById("cart-selected").innerText=selected;
+                                  if (selected<{{cart_len}}){
+                                  document.getElementById("selected").innerText="Select all";
+                                  document.getElementById("selected").onclick = SelectAll;
+                              }
 
-                            }
-                        });
-                    });
-                  </script>
-                  <img
-                    alt="Iphone 11 pro"
-                    src="{{ item.image }}"
-                    class="img-fluid rounded"
-                    style="width: 50px; height: 50px; object-fit: cover"
-                  />
-                  <div class="ms-3">
-                    <h6 class="mb-0">{{item.name}}</h6>
-                    <small class="text-muted"
-                      >size:{{ item.size }}, color:{{item.color}}</small
-                    >
+                              }
+                          });
+                      });
+                    </script>
+                    <img
+                      alt="Iphone 11 pro"
+                      src="{{ item.image }}"
+                      class="img-fluid rounded"
+                      style="width: 50px; height: 50px; object-fit: cover"
+                    />
+                    <div class="ms-3">
+                      <h6 class="mb-0">{{item.name}}</h6>
+                      <small class="text-muted"
+                        >size:{{ item.size }}, color:{{item.color}}</small
+                      >
+                    </div>
                   </div>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span class="me-3">{{ item.quantity }}</span>
-                  <span class="me-3">{{ item.price }}</span>
-                  <button class="btn btn-sm btn-danger">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </li>
-              {% endfor %}
-            </ul>
+                  <div class="d-flex align-items-center">
+                    <span class="me-3">{{ item.quantity }}</span>
+                    <span class="me-3">{{ item.price }}</span>
+                    <button class="btn btn-sm btn-danger">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </form>
           </div>
         </div>
 
@@ -946,7 +948,7 @@ categories.forEach((category) => {
             >
               Select all
             </button>
-            <button type="button" class="btn btn-primary">Check out</button>
+            <button type="submit" class="btn btn-primary">Check out</button>
           </div>
         </div>
       </div>
@@ -991,9 +993,6 @@ categories.forEach((category) => {
     }
 
 
-    </script>
-
-  <script>
     const cart = {{ cart|tojson }};
 
     function renderCartItems() {
@@ -1017,11 +1016,8 @@ categories.forEach((category) => {
         });
     }
 
-    
-  <!-- ENDMODAL -->
 
 
-<script>
     function clearFields() {
         document.getElementById('edit_imagePreview').src = 'images/300.png'; // Clear image preview
         document.getElementById('edit_productName').value = '';
@@ -1054,10 +1050,10 @@ categories.forEach((category) => {
 
     }
 
-    const data = [];
+    const datap = [];
     {%if products %}
     {% for i in products %}
-    data.push('{{i['name']}}');
+    datap.push('{{i['name']}}');
     {% endfor %}
     {% endif %}
     // Example data
@@ -1087,9 +1083,10 @@ categories.forEach((category) => {
         resultsContainer.innerHTML = '';
 
         if (query) {
+          
 
-            const filteredData = data.filter(item => item.toLowerCase().includes(query));
-
+            const filteredData = datap.filter(item => item.toLowerCase().includes(query));
+            console.log(filteredData);
          
             filteredData.forEach(item => {
 const div = document.createElement('div');
@@ -1106,77 +1103,77 @@ div.addEventListener('click', () => {
 });
 
 div.appendChild(img); // Append the image first
-div.appendChild(document.createTextNode(item)); // Append the text after the image
+div.appendChild(document.createTextNode(item.replace("&#39;","'"))); // Append the text after the image
 resultsContainer.appendChild(div);
 });
         }
     });
 </script>
 <script>
-getData();
-    document.getElementById('submitProductBtn').addEventListener('click', function () {
-        const form = document.getElementById('addProductForm');
-        const formData = new FormData(form); // Create a FormData object
+// getData();to
+    // document.getElementById('submitProductBtn').addEventListener('click', function () {
+    //     const form = document.getElementById('addProductForm');
+    //     const formData = new FormData(form); // Create a FormData object
 
-        fetch('/products/add', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.text(); // or response.json() if expecting JSON
-                }
-                throw new Error('Network response was not ok.');
-            })
-            .then(data => {
-                console.log('Success:', data);
-                // Optionally redirect or update the UI
-                var toastEl = document.getElementById('liveToast');
-                var toast = new bootstrap.Toast(toastEl);
-                var myModal = new bootstrap.Modal(document.getElementById('editModal'));
-                myModal.hide();
-                // document.getElementById('closeaddmodal').click();
-                toast.show();
-                // window.location.href = '/admin'; // Redirect to the index page
-            })
-            .catch((error) => {
-                alert('Error:', error);
-                console.error('Error:', error);
-            });
-    });
-    document.getElementById('edit_submitBtn').addEventListener('click', function () {
-        const form = document.getElementById('editProductForm');
-        const formData = new FormData(form); // Create a FormData object
-        for (const [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-        }
-        fetch('/products/edit/' + formData.get('id'), {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (response.ok) {
+    //     fetch('/products/add', {
+    //         method: 'POST',
+    //         body: formData
+    //     })
+    //         .then(response => {
+    //             if (response.ok) {
+    //                 return response.text(); // or response.json() if expecting JSON
+    //             }
+    //             throw new Error('Network response was not ok.');
+    //         })
+    //         .then(data => {
+    //             console.log('Success:', data);
+    //             // Optionally redirect or update the UI
+    //             var toastEl = document.getElementById('liveToast');
+    //             var toast = new bootstrap.Toast(toastEl);
+    //             var myModal = new bootstrap.Modal(document.getElementById('editModal'));
+    //             myModal.hide();
+    //             // document.getElementById('closeaddmodal').click();
+    //             toast.show();
+    //             // window.location.href = '/admin'; // Redirect to the index page
+    //         })
+    //         .catch((error) => {
+    //             alert('Error:', error);
+    //             console.error('Error:', error);
+    //         });
+    // });
+    // document.getElementById('edit_submitBtn').addEventListener('click', function () {
+    //     const form = document.getElementById('editProductForm');
+    //     const formData = new FormData(form); // Create a FormData object
+    //     for (const [key, value] of formData.entries()) {
+    //         console.log(`${key}: ${value}`);
+    //     }
+    //     fetch('/products/edit/' + formData.get('id'), {
+    //         method: 'POST',
+    //         body: formData
+    //     })
+    //         .then(response => {
+    //             if (response.ok) {
 
-                    return response.text(); // or response.json() if expecting JSON
-                }
-                throw new Error('Network response was not ok.');
-            })
-            .then(data => {
-                console.log('Success:', data);
-                // Optionally redirect or update the UI
-                var toastEl = document.getElementById('editToast');
-                document.getElementById('closeeditmodal').click();
+    //                 return response.text(); // or response.json() if expecting JSON
+    //             }
+    //             throw new Error('Network response was not ok.');
+    //         })
+    //         .then(data => {
+    //             console.log('Success:', data);
+    //             // Optionally redirect or update the UI
+    //             var toastEl = document.getElementById('editToast');
+    //             document.getElementById('closeeditmodal').click();
 
-                var toast = new bootstrap.Toast(toastEl);
+    //             var toast = new bootstrap.Toast(toastEl);
 
-                toast.show();
-                // window.location.href = '/admin'; // Redirect to the index page
-            })
-            .catch((error) => {
-                alert('Error:', error);
-                console.error('Error:', error);
-            });
-    });
+    //             toast.show();
+    //             // window.location.href = '/admin'; // Redirect to the index page
+    //         })
+    //         .catch((error) => {
+    //             alert('Error:', error);
+    //             console.error('Error:', error);
+    //         });
+    // });
 
     function delete_product(id) {
 

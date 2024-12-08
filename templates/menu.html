@@ -22,44 +22,36 @@
   <link rel="stylesheet" href="/assets/css/Sidebar-Cool-SB-Admin-Inspirate.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
+    .results-container {
+      border: 1px solid #ccc;
+      max-height: 200px;
+      overflow-y: auto;
+      position: absolute;
+      background-color: white;
+      z-index: 1000;
+      margin-top: 50px;
+      width: 100%;
+    }
 
-        .results-container {
-          border: 1px solid #ccc;
-          max-height: 200px;
-          overflow-y: auto;
-          position: absolute;
-          background-color: white;
-          z-index: 1000;
-          margin-top: 50px;
-          width: 100%;
-          
+    .result-item {
+      padding: 8px;
+      cursor: pointer;
+    }
 
-        }
-
-        .result-item {
-            padding: 8px;
-            cursor: pointer;
-        }
-
-        .result-item:hover {
-            background-color: #f0f0f0;
-        }
-
+    .result-item:hover {
+      background-color: #f0f0f0;
+    }
 
     .card {
       position: relative;
       width: 100%;
       overflow: hidden;
-      /* Ensures the images are contained within the card */
     }
 
     .card-img-top {
       height: 250px;
-      /* Fixed height for images */
       object-fit: cover;
-      /* Maintain aspect ratio */
       transition: opacity 0.3s ease;
-      /* Smooth transition for opacity */
     }
 
     .card-img-hover {
@@ -70,18 +62,15 @@
       height: 250px;
       object-fit: cover;
       opacity: 0;
-      /* Initially hidden */
       transition: opacity 0.3s ease;
     }
 
     .card:hover #main-image {
       opacity: 0;
-      /* Hide the main image on hover */
     }
 
     .card:hover #hover-image {
       opacity: 1;
-      /* Show the hover image on hover */
     }
   </style>
 </head>
@@ -116,14 +105,75 @@
                 d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0  0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0">
               </path>
             </svg>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              {% if cart_len is defined %}
-                {% if cart_len > 99 %}99+{% else %}{{ cart_len }}{% endif %}
-              {% else %}
-                0
-              {% endif %}
+          
+            <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+              0
               <span class="visually-hidden">unread messages</span>
-            </span>
+          </span>
+          
+          <script>
+              // Function to update cart badge
+              function updateCartBadge() {
+                  fetch('/api/cart/count')
+                      .then(response => {
+                          if (!response.ok) {
+                              throw new Error('Network response was not ok');
+                          }
+                          return response.json();
+                      })
+                      .then(data => {
+                          const cartBadge = document.getElementById('cart-badge');
+                          const cartLength = data.cart_len;
+          
+                          // Update badge text
+                          cartBadge.textContent = cartLength > 99 ? '99+' : cartLength;
+          
+                          // Conditional visibility
+                          if (cartLength === 0) {
+                              cartBadge.classList.add('d-none');
+                          } else {
+                              cartBadge.classList.remove('d-none');
+                          }
+                      })
+                      .catch(error => {
+                          console.error('Error fetching cart data:', error);
+                          // Optionally hide badge on error
+                          const cartBadge = document.getElementById('cart-badge');
+                          cartBadge.classList.add('d-none');
+                      });
+              }
+          
+              // Call on page load
+              document.addEventListener('DOMContentLoaded', updateCartBadge);
+          
+              // Global function to refresh cart badge after cart actions
+              function refreshCartBadge() {
+                  updateCartBadge();
+              }
+          
+              // Optional: Add event listeners to cart modification functions
+              // For example, after adding or removing an item
+              function addToCart() {
+                  // Your existing add to cart logic
+                  fetch('/add-to-cart', { method: 'POST' })
+                      .then(response => response.json())
+                      .then(data => {
+                          // Your existing success handling
+                          refreshCartBadge(); // Update cart badge
+                      });
+              }
+          
+              function removeFromCart() {
+                  // Your existing remove from cart logic
+                  fetch('/remove-from-cart', { method: 'POST' })
+                      .then(response => response.json())
+                      .then(data => {
+                          // Your existing success handling
+                          refreshCartBadge(); // Update cart badge
+                      });
+              }
+          </script>
+          
           </a>
           <div class="dropdown">
             <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -213,6 +263,17 @@ data.push(data);
                 const div = document.createElement('div'); // Create a div for each result
                 const img = document.createElement('img'); // Create an img element
                 img.src = find_img_by_name(item); // Use the `find_img_by_name` function to get the image
+                img.style.width = '30px'; // Set image width
+                img.style.height = '30px'; // Set image height
+                img.style.marginRight = '10px'; // Add some spacing between image and text
+
+                div.classList.add('result-item'); // Add styling class (if needed)
+                
+                // Add an event listener for clicking a result
+                div.addEventListener('click', () => {
+                    window.location.href = '/product/view/' + find_id_by_name(item); // Redirect to the product view page
+                });
+
                 img.style.width = '30px'; // Set image width
                 img.style.height = '30px'; // Set image height
                 img.style.marginRight = '10px'; // Add some spacing between image and text
@@ -405,7 +466,7 @@ data.push(data);
 
         <script>
 
-var selectedCategories = [];
+
 var categories = document.querySelectorAll(".form-check-input");
 
 categories.forEach((category) => {
@@ -449,7 +510,7 @@ categories.forEach((category) => {
       .then(response => response.text())
       .then(data => {
         console.log(data);
-        document.getElementById("pagination").innerHTML=data;
+        // document.getElementById("pagination").innerHTML=data;
         
         // updatePagination(data.current_page, data.total_pages);
       });
@@ -564,7 +625,7 @@ categories.forEach((category) => {
                 </div>`;
         }
 
-var selectedCategories = [];
+
 var categories = document.querySelectorAll(".form-check-input");
 
 categories.forEach((category) => {
@@ -649,111 +710,517 @@ categories.forEach((category) => {
 
              
               </script>
-              {% for i in filters %}
+              <!-- {% for i in filters %}
               <script>
                 document.getElementById("{{i}}").checked = true;
                 selectedCategories.push("{{i}}");
               </script>
-              {% endfor %}
+              {% endfor %} -->
+
+              <script>
+                // Initialize selectedCategories array
+                let selectedCategories = [];
+            
+                // Fetch and set filters
+                fetch('/get_filters')  // Adjust the endpoint as needed
+                    .then(response => response.json())
+                    .then(filters => {
+                        filters.forEach(i => {
+                            const filterElement = document.getElementById(i);
+                            if (filterElement) {
+                                filterElement.checked = true;
+                                selectedCategories.push(i);
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching filters:', error);
+                    });
+            </script>
 
          
           <hr>
         </div>
       </div>
       <div class="col-lg-9">
-        <div class="row" id = "product-list">
-          {% for i in products %}
-          <div class="col-lg-4 product-item" id="{{ i['product_id'] }} {{ i['section']}}-{{ i['category']}}">
-            <div class="card border-0 shadow-sm rounded-3 mb-3">
-              <div class="position-relative">
-                <!-- Main product image -->
-                <img class="card-img-top w-100 d-block rounded-top-3" src="{{ i['images'][0] }}"
-                  alt="Product Image" id="main-image" style="height: 401px;object-fit: cover;"
-                  onclick="window.location.href = `/product/view/{{ i['product_id'] }}`">
-
-                <!-- Hover image for the same product -->
-                <img class="card-img-top w-100 d-block rounded-top-3 position-absolute top-0 start-0" 
-                  src="{{ i['images'][1] }}" alt="Product Image Hover" id="hover-image" 
-                  style="height: 401px; object-fit: cover; opacity: 0; transition: opacity 0.3s ease;"
-                  onclick="window.location.href = `/product/view/{{ i['product_id'] }}`"
-                  onmouseover="this.style.opacity=1"
-                  onmouseout="this.style.opacity=0">
-              </div>
-
-              <div class="card-body d-flex flex-column">
-                <h5 class="fw-bold card-title mb-2">{{ i['name'] }}</h5>
-                <p class="text-muted card-text mb-3">{{ i['description'] }}</p>
-                <!-- <p class="text-muted card-text mb-3" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                  {{ i['description'] }}
-                </p> -->
-                <div class="mt-auto d-flex justify-content-between align-items-center mb-3">
-                  <span class="fs-4 fw-bold">php {{ i['price'] }}</span>
-                  <!-- <div class="input-group input-group-sm" style="width:120px;"><button class="btn btn-outline-secondary"
-                      type="button" id="decrease-quantity">-</button><input
-                      class="form-control form-control text-center" type="number" id="quantity-input" min="1"
-                      value="1"><button class="btn btn-outline-secondary" type="button"
-                      id="increase-quantity">+</button>
-                  </div> -->
-                  <div class="input-group input-group-sm" style="width: 120px">
-                    <button
-                      class="btn btn-outline-secondary"
-                      type="button"
-                      onclick="updateQuantity(-1)"
-                    >
-                      -
-                    </button>
-                    <input
-                      class="form-control form-control text-center"
-                      type="number"
-                      id="productQuantity"
-                      name="productQuantity"
-                      min="1"
-                      value="1"
-                    />
-                    <button
-                      class="btn btn-outline-secondary"
-                      type="button"
-                      onclick="updateQuantity(1)"
-                    >
-                      +
-                    </button>
-                  </div>
-                  <script>
-                    function updateQuantity(change) {
-                      const quantityInput = document.getElementById('productQuantity');
-                      let currentQuantity = parseInt(quantityInput.value);
-                      let newQuantity = currentQuantity + change;
-                      if (newQuantity < 1) newQuantity = 1;
-                      quantityInput.value = newQuantity;
-                    }
-                  </script>
-                </div><button class="btn btn-primary w-100 rounded-pill" id="add-to-cart-btn" class="position-relative"
-                  data-bs-toggle="modal" data-bs-target="#itemviewmodal"  onclick="window.location.href = `/product/view/{{ i['product_id'] }}`"  >Add to Cart</button>
-              </div>
-              <div>
-                <input type="hidden" name="category" value="{{ i['category'] }}">
-                <input type="hidden" name="section" value="{{ i['section'] }}">
-              </div>
-            </div>
-          </div>
-          {%endfor%}
+        <div class="row" id="product-list">
+            <!-- Products will be dynamically loaded here -->
         </div>
-      </div>
+    </div>
+    
+    <script>
+        // Function to create product card HTML
+        function createProductCard(product) {
+            return `
+                <div class="col-lg-4 product-item" id="${product.product_id} ${product.section}-${product.category}">
+                    <div class="card border-0 shadow-sm rounded-3 mb-3">
+                        <div class="position-relative">
+                            <img class="card-img-top w-100 d-block rounded-top-3" 
+                                 src="${product.images[0]}"
+                                 alt="Product Image" 
+                                 id="main-image" 
+                                 style="height: 401px;object-fit: cover;"
+                                 onclick="window.location.href = '/product/view/${product.product_id}'">
+    
+                            <img class="card-img-top w-100 d-block rounded-top-3 position-absolute top-0 start-0" 
+                                 src="${product.images[1]}" 
+                                 alt="Product Image Hover" 
+                                 id="hover-image" 
+                                 style="height: 401px; object-fit: cover; opacity: 0; transition: opacity 0.3s ease;"
+                                 onclick="window.location.href = '/product/view/${product.product_id}'"
+                                 onmouseover="this.style.opacity=1"
+                                 onmouseout="this.style.opacity=0">
+                        </div>
+    
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="fw-bold card-title mb-2">${product.name}</h5>
+                            <p class="text-muted card-text mb-3">${product.description}</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center mb-3">
+                                <span class="fs-4 fw-bold">php ${product.price}</span>
+                                <div class="input-group input-group-sm" style="width: 120px">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(this, -1)">-</button>
+                                    <input class="form-control form-control text-center" 
+                                           type="number" 
+                                           id="productQuantity" 
+                                           name="productQuantity" 
+                                           min="1" 
+                                           value="1">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(this, 1)">+</button>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 rounded-pill" 
+                                    onclick="window.location.href = '/product/view/${product.product_id}'">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    
+        // Function to update quantity
+        function updateQuantity(button, change) {
+            const quantityInput = button.parentElement.querySelector('input');
+            let currentQuantity = parseInt(quantityInput.value);
+            let newQuantity = currentQuantity + change;
+            if (newQuantity < 1) newQuantity = 1;
+            quantityInput.value = newQuantity;
+        }
+    
+        // Function to fetch and render products
+       
+
+        
+function fetchProducts(page = 1) {
+    const productList = document.getElementById('product-list');
+    const paginationContainer = document.getElementById('pagination');
+    
+    // Clear previous content and show loading
+    productList.innerHTML = `
+        <div class="col-12 text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `;
+    paginationContainer.innerHTML = '';
+
+    fetch(`/api/shop_data?page=${page}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Check if products exist
+            if (!data.products || data.products.length === 0) {
+                productList.innerHTML = `
+                    <div class="col-12 text-center">
+                        <p>No products found.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Clear loading and render products
+            productList.innerHTML = '';
+            
+            data.products.forEach(product => {
+                // Create product card (use your existing createProductCard function)
+                const productCard = createProductCard(product);
+                productList.innerHTML += productCard;
+            });
+
+            // Render pagination
+            renderPagination(data.pagination);
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+            productList.innerHTML = `
+                <div class="col-12 text-center">
+                    <p>Error loading products. Please try again later.</p>
+                    <button onclick="fetchProducts()" class="btn btn-primary">Retry</button>
+                </div>
+            `;
+        });
+}
+
+// // Pagination rendering function
+// function renderPagination(paginationData) {
+//     const paginationContainer = document.getElementById('pagination');
+//     paginationContainer.innerHTML = '';
+
+//     // Previous button
+//     if (paginationData.current_page > 1) {
+//         const prevButton = document.createElement('button');
+//         prevButton.textContent = 'Previous';
+//         prevButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+//         prevButton.onclick = () => fetchProducts(paginationData.current_page - 1);
+//         paginationContainer.appendChild(prevButton);
+//     }
+
+//     // Page number buttons
+//     for (let i = 1; i <= paginationData.total_pages; i++) {
+//         const pageButton = document.createElement('button');
+//         pageButton.textContent = i;
+//         pageButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+        
+//         if (i === paginationData.current_page) {
+//             pageButton.classList.add('btn-primary');
+//         }
+        
+//         pageButton.onclick = () => fetchProducts(i);
+//         paginationContainer.appendChild(pageButton);
+//     }
+
+//     // Next button
+//     if (paginationData.current_page < paginationData.total_pages) {
+//         const nextButton = document.createElement('button');
+//         nextButton.textContent = 'Next';
+//         nextButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+//         nextButton.onclick = () => fetchProducts(paginationData.current_page + 1);
+//         paginationContainer.appendChild(nextButton);
+//     }
+// // }
+// function renderPagination(paginationData) {
+//     const paginationContainer = document.getElementById('pagination');
+//     paginationContainer.innerHTML = '';
+
+   
+
+//     // Previous button
+//     if (paginationData.current_page > 1) {
+//         const prevButton = document.createElement('button');
+//         prevButton.textContent = '«';
+//         prevButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+//         prevButton.onclick = () => fetchProducts(paginationData.current_page - 1);
+//         paginationContainer.appendChild(prevButton);
+//     }
+
+//     // Calculate the range of page numbers to display
+//     let startPage = Math.max(1, paginationData.current_page - 2);
+//     let endPage = Math.min(paginationData.total_pages, startPage + 4);
+
+//     // Adjust start page if we're near the end
+//     if (endPage - startPage < 4) {
+//         startPage = Math.max(1, endPage - 4);
+//     }
+
+//     // Page number buttons
+//     for (let i = startPage; i <= endPage; i++) {
+//         const pageButton = document.createElement('button');
+//         pageButton.textContent = i;
+//         pageButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+        
+//         if (i === paginationData.current_page) {
+//             pageButton.classList.add('btn-primary', 'active');
+//         }
+        
+//         pageButton.onclick = () => fetchProducts(i);
+//         paginationContainer.appendChild(pageButton);
+//     }
+
+//     // Next button
+//     if (paginationData.current_page < paginationData.total_pages) {
+//         const nextButton = document.createElement('button');
+//         nextButton.textContent = '»';
+//         nextButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+//         nextButton.onclick = () => fetchProducts(paginationData.current_page + 1);
+//         paginationContainer.appendChild(nextButton);
+//     }
+
+//      // Display current page and total pages
+//      const pageInfo = document.createElement('span');
+//     pageInfo.textContent = `Page ${paginationData.current_page} of ${paginationData.total_pages}`;
+//     paginationContainer.appendChild(pageInfo);
+
+//     // Dropdown for selecting a specific page
+//     const pageSelect = document.createElement('select');
+//     pageSelect.classList.add('form-select', 'm-2');
+//     pageSelect.onchange = (event) => {
+//         const selectedPage = parseInt(event.target.value);
+//         fetchProducts(selectedPage);
+//     };
+
+//     // Populate the dropdown with page numbers
+//     for (let i = 1; i <= paginationData.total_pages; i++) {
+//         const option = document.createElement('option');
+//         option.value = i;
+//         option.textContent = `Page ${i}`;
+//         if (i === paginationData.current_page) {
+//             option.selected = true;
+//         }
+//         pageSelect.appendChild(option);
+//     }
+
+//     paginationContainer.appendChild(pageSelect);
+// }
+
+function renderPagination(paginationData) {
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = '';
+
+    // Display current page and total pages
+    const pageInfo = document.createElement('span');
+    pageInfo.textContent = `Page ${paginationData.current_page} of ${paginationData.total_pages}`;
+    paginationContainer.appendChild(pageInfo);
+
+    // Previous button
+    if (paginationData.current_page > 1) {
+        const prevButton = document.createElement('button');
+        prevButton.textContent = '«';
+        prevButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+        prevButton.onclick = () => fetchProducts(paginationData.current_page - 1);
+        paginationContainer.appendChild(prevButton);
+    }
+
+    // Calculate the range of page numbers to display
+    let startPage = Math.max(1, paginationData.current_page - 2);
+    let endPage = Math.min(paginationData.total_pages, startPage + 4);
+
+    // Adjust start page if we're near the end
+    if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
+    }
+
+    // Page number buttons
+    for (let i = startPage; i <= endPage; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+        
+        if (i === paginationData.current_page) {
+            pageButton.classList.add('btn-primary', 'active');
+        }
+        
+        pageButton.onclick = () => fetchProducts(i);
+        paginationContainer.appendChild(pageButton);
+    }
+
+    // Next button
+    if (paginationData.current_page < paginationData.total_pages) {
+        const nextButton = document.createElement('button');
+        nextButton.textContent = '»';
+        nextButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+        nextButton.onclick = () => fetchProducts(paginationData.current_page + 1);
+        paginationContainer.appendChild(nextButton);
+    }
+
+    // Dropdown for selecting a specific page
+    const pageSelect = document.createElement('select');
+    pageSelect.classList.add('form-select', 'm-2');
+    pageSelect.onchange = (event) => {
+        const selectedPage = parseInt(event.target.value);
+        fetchProducts(selectedPage);
+    };
+
+    // Populate the dropdown with page numbers
+    for (let i = 1; i <= paginationData.total_pages; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Page ${i}`;
+        if (i === paginationData.current_page) {
+            option.selected = true;
+        }
+        pageSelect.appendChild(option);
+    }
+
+    paginationContainer.appendChild(pageSelect);
+}
+
+
+// Initial load when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    fetchProducts();
+});
+    </script>
+    
+    <!-- Pagination container -->
+    <div id="pagination" class="text-center mt-3"></div>
+
+
     </div>
     
 
-    <div class="row">
-  <div class="col-12 d-flex justify-content-center">
-    <nav aria-label="Page navigation example">
-        <ul class="pagination" id="pagination">
-          {% if pagination_links %}
-              {{ pagination_links|safe }}
-          {% endif %}
-      </ul>
-    </nav>
-  
-  </div>
+<!-- Remove the old pagination section and replace with this -->
+<div class="row">
+    <div class="col-12 d-flex justify-content-center">
+        <div id="pagination" class="pagination"></div>
+    </div>
 </div>
+
+<script>
+// Pagination rendering function
+function renderPagination(paginationData) {
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = ''; // Clear existing pagination
+
+    // Previous button
+    if (paginationData.current_page > 1) {
+        const prevButton = document.createElement('button');
+        prevButton.textContent = 'Previous';
+        prevButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+        prevButton.onclick = () => fetchProducts(paginationData.current_page - 1);
+        paginationContainer.appendChild(prevButton);
+    }
+
+    // Page number buttons
+    for (let i = 1; i <= paginationData.total_pages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+        
+        if (i === paginationData.current_page) {
+            pageButton.classList.add('btn-primary');
+        }
+        
+        pageButton.onclick = () => fetchProducts(i);
+        paginationContainer.appendChild(pageButton);
+    }
+
+    // Next button
+    if (paginationData.current_page < paginationData.total_pages) {
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'Next';
+        nextButton.classList.add('btn', 'btn-outline-secondary', 'm-1');
+        nextButton.onclick = () => fetchProducts(paginationData.current_page + 1);
+        paginationContainer.appendChild(nextButton);
+    }
+}
+
+// Updated fetchProducts function
+function fetchProducts(page = 1, filterData = {}) {
+    const productList = document.getElementById('product-list');
+    const paginationContainer = document.getElementById('pagination');
+    
+    // Clear previous content and show loading
+    productList.innerHTML = `
+        <div class="col-12 text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `;
+    paginationContainer.innerHTML = '';
+
+    // Construct URL with query parameters
+    const url = new URL('/api/shop_data', window.location.origin);
+    url.searchParams.set('page', page);
+
+    // Add filter parameters if any
+    if (filterData.categories && filterData.categories.length > 0) {
+        url.searchParams.set('categories', JSON.stringify(filterData.categories));
+    }
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Check if products exist
+            if (!data.products || data.products.length === 0) {
+                productList.innerHTML = `
+                    <div class="col-12 text-center">
+                        <p>No products found.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Clear loading and render products
+            productList.innerHTML = '';
+            
+            data.products.forEach(product => {
+                // Create product card (use your existing createProductCard function)
+                const productCard = createProductCard(product);
+                productList.innerHTML += productCard;
+            });
+
+            // Render pagination
+            alert("rendering pagination");
+            renderPagination(data.pagination);
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+            productList.innerHTML = `
+                <div class="col-12 text-center">
+                    <p>Error loading products. Please try again later.</p>
+                    <button onclick="fetchProducts()" class="btn btn-primary">Retry</button>
+                </div>
+            `;
+        });
+}
+
+function applyFilter() {
+    const filterCriteria = getFilterCriteria(); // Implement this function to get your filter criteria
+    fetchFilteredProducts(filterCriteria);
+}
+
+function fetchFilteredProducts(filterCriteria) {
+    fetch(`/products?filter=${filterCriteria}`)
+        .then(response => response.json())
+        .then(data => {
+            // Assuming the response contains pagination data
+            renderProducts(data.products); // Function to render products
+            renderPagination(data.pagination); // Function to render pagination
+        })
+        .catch(error => console.error('Error fetching filtered products:', error));
+}
+
+
+
+// Category filtering setup
+let selectedCategories = [];
+
+function handleCategorySelection(checkbox) {
+    const categoryValue = checkbox.id;
+    
+    if (checkbox.checked) {
+        // Add to selected categories if not already present
+        if (!selectedCategories.includes(categoryValue)) {
+            selectedCategories.push(categoryValue);
+        }
+    } else {
+        // Remove from selected categories
+        selectedCategories = selectedCategories.filter(category => category !== categoryValue);
+    }
+
+    // Apply filters
+    fetchProducts(1, { categories: selectedCategories });
+}
+
+// Attach event listeners to checkboxes
+document.querySelectorAll('.form-check-input').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        handleCategorySelection(this);
+    });
+});
+</script>
+
 </div>
 
 
@@ -871,6 +1338,8 @@ categories.forEach((category) => {
                       type="checkbox"
                       value=""
                       id="checkbox-{{item.id}}"
+                      name="{{item.id}}"
+                     
                     />
                     <script>
                       totalcart+=({{item.price}}*{{item.quantity}})
@@ -878,6 +1347,7 @@ categories.forEach((category) => {
                       document.addEventListener('DOMContentLoaded', function() {
                           document.getElementById('checkbox-{{item.id}}').addEventListener('change', function() {
                               if (this.checked) {
+                                this.value="1"
                               cartTotal+=({{item.price}}*{{item.quantity}});
                               document.getElementById("cart-total").innerText=cartTotal;
                               selected+=1;
@@ -888,6 +1358,7 @@ categories.forEach((category) => {
                               }
                               }
                               else{
+                                this.value=""
                                   cartTotal-=({{item.price}}*{{item.quantity}});
                                   document.getElementById("cart-total").innerText=cartTotal;
                                   selected-=1;
@@ -924,7 +1395,7 @@ categories.forEach((category) => {
                 </li>
                 {% endfor %}
               </ul>
-            </form>
+       
           </div>
         </div>
 
@@ -936,7 +1407,7 @@ categories.forEach((category) => {
               Selected items: <span id="cart-selected">0</span>
             </h5>
             <div class="total">
-              <h5 class="mb-0">Total: <span id="cart-total">0</span></h5>
+              <h5 class="mb-0">Sub Total: <span id="cart-total">0</span></h5>
             </div>
           </div>
           <div>
@@ -948,12 +1419,16 @@ categories.forEach((category) => {
             >
               Select all
             </button>
-            <button type="submit" class="btn btn-primary">Check out</button>
+            <form action="/checkout" method="post">
+              <input name="cart_data" type="hidden">
+              <button type="submit" class="btn btn-primary">Check out</button>
+            </form>
           </div>
         </div>
-      </div>
+      </div>  
     </div>
   </div>
+</form>
   <script>
 
     function SelectAll() {
@@ -970,6 +1445,7 @@ categories.forEach((category) => {
         // Set each checkbox's checked property to true
         checkboxes.forEach(checkbox => {
             checkbox.checked = true;
+            checkbox.value = "1";
         });
         // Optionally, you can also update the cart total and selected count here if needed
     }
@@ -988,12 +1464,21 @@ categories.forEach((category) => {
         // Set each checkbox's checked property to false
         checkboxes.forEach(checkbox => {
             checkbox.checked = false;
+            checkbox.value = "";
         });
         // Optionally, you can also update the cart total and selected count here if needed
     }
 
 
-    const cart = {{ cart|tojson }};
+fetch('/get-cart-items')
+  .then(response => response.json())
+  .then(data => {
+    const cart = data.cart;
+    // You can now manipulate the cart items as needed
+    console.log(cart);
+    // Continue with your logic to display or use cart items
+  })
+  .catch(error => console.error('Error fetching cart items:', error));
 
     function renderCartItems() {
         const cartItemsContainer = document.getElementById('cartItems');

@@ -598,7 +598,7 @@
               <button
                 class="btn btn-outline-secondary"
                 type="button"
-                id="decrease-quantity"
+                onclick="updateQuantity(-1)"
               >
                 -
               </button>
@@ -613,11 +613,21 @@
               <button
                 class="btn btn-outline-secondary"
                 type="button"
-                id="increase-quantity"
+                onclick="updateQuantity(1)"
               >
                 +
               </button>
             </div>
+
+            <script>
+              function updateQuantity(change) {
+                const quantityInput = document.getElementById('productQuantity');
+                let quantity = parseInt(quantityInput.value) || 1;
+                quantity += change;
+                if (quantity < 1) quantity = 1;
+                quantityInput.value = quantity;
+              }
+            </script>
 
             <!-- <div class="quantity">
               <button class="btn btn-outline-secondary">-</button>

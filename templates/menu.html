@@ -507,9 +507,10 @@ categories.forEach((category) => {
           categories: selectedCategories
         })
       })
-      .then(response => response.text())
+      .then(response => response.json())
       .then(data => {
         console.log(data);
+        renderPagination(data.pagination);
         // document.getElementById("pagination").innerHTML=data;
         
         // updatePagination(data.current_page, data.total_pages);
@@ -981,10 +982,6 @@ function renderPagination(paginationData) {
     const paginationContainer = document.getElementById('pagination');
     paginationContainer.innerHTML = '';
 
-    // Display current page and total pages
-    const pageInfo = document.createElement('span');
-    pageInfo.textContent = `Page ${paginationData.current_page} of ${paginationData.total_pages}`;
-    paginationContainer.appendChild(pageInfo);
 
     // Previous button
     if (paginationData.current_page > 1) {
@@ -1026,6 +1023,12 @@ function renderPagination(paginationData) {
         nextButton.onclick = () => fetchProducts(paginationData.current_page + 1);
         paginationContainer.appendChild(nextButton);
     }
+
+        // Display current page and total pages
+    const pageInfo = document.createElement('span');
+    pageInfo.textContent = `Page ${paginationData.current_page} of ${paginationData.total_pages}`;
+    paginationContainer.appendChild(pageInfo);
+
 
     // Dropdown for selecting a specific page
     const pageSelect = document.createElement('select');
@@ -1339,7 +1342,7 @@ document.querySelectorAll('.form-check-input').forEach(checkbox => {
                       value=""
                       id="checkbox-{{item.id}}"
                       name="{{item.id}}"
-                     
+
                     />
                     <script>
                       totalcart+=({{item.price}}*{{item.quantity}})
@@ -1394,6 +1397,7 @@ document.querySelectorAll('.form-check-input').forEach(checkbox => {
                   </div>
                 </li>
                 {% endfor %}
+
               </ul>
        
           </div>

@@ -2251,10 +2251,10 @@ def delete_cart_item(item_id):
 @app.route("/checkout", methods=["GET", "POST"])
 def checkout():
     if request.method == "POST":
-        cart_items = request.form
-       
+        cart_items = request.form.get("cartData")
+        print(cart_items)
         selected_ids = {int(id) for id, value in cart_items.items() if value == "1"}
-        print("selected ids:",cart_items)
+        # print("selected ids:",cart_items)
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM cart')

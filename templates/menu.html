@@ -1707,16 +1707,15 @@
                               if (this.checked) {
                                 cartTotal += parseFloat(this.value);
                                 selected += 1;
-                                if (!selected_items_in_cart.includes(item.id)) {
-                                    selected_items_in_cart.push(item.id);
+                                if (!selected_items_in_cart.includes(checkbox.id )) {
+                                    selected_items_in_cart.push(checkbox.id);
                                 }
                               } else {
                                 cartTotal -= parseFloat(this.value);
                                 selected -= 1;
-                                index = selected_items_in_cart.indexOf(item.id);
+                                index = selected_items_in_cart.indexOf(checkbox.id);
                                 if (index > -1) {
-                                  alert("Item removed from cart: " + item.name,index);
-                                  selected_items_in_cart.splice(index);
+                                  selected_items_in_cart.splice(index,1);
                                 }
                               }
                               updateCartDisplay();
@@ -1871,7 +1870,7 @@
   function SelectAll() {
     const checkboxes = document.querySelectorAll(".cart-ch");
     checkboxes.forEach((checkbox) => {
-      checkbox.click()
+      checkbox.checked = true;
       const itemId = checkbox.id;
       const itemValue = parseFloat(checkbox.value);
 
@@ -1904,8 +1903,7 @@
 </script>
 
                 </ul>
-              </form>
-
+            
               <!-- Cart items container to be filled by JS -->
               <ul id="cartItems" class="list-group"></ul>
             </div>
@@ -1932,21 +1930,43 @@
                 Select all
               </button>
               
-<button onclick="alert(JSON.stringify(selected_items_in_cart))" class="btn btn-primary">Check out</button>
-             
+<button  onclick="submitCartForm()" class="btn btn-primary">Check out</button>
+             </div>
+            </form>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <script>
+  
+      // function submitCartForm() {
+      //   alert('The cart is empty.');
+      //   const cartDataInput = document.getElementById('cartData');
+      //   cartDataInput.value = JSON.stringify(selected_items_in_cart);
+      //   document.getElementById('cartForm').submit();
+      // }
 
+      function submitCartForm() {
+        alert("submitting form");
+    const formData = new FormData();
+    formData.append('cartData', JSON.stringify(selected_items_in_cart));
+    fetch('/checkout', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
+  }
+    </script>
 
     <script>
     
 
 
-alert( JSON.stringify(checkedItems);)
+alert( JSON.stringify(checkedItems))
 
 // Set the value of cart_data to the stringified version of checkedItems
 document.querySelector('input[name="cart_data"]').value = JSON.stringify(checkedItems);

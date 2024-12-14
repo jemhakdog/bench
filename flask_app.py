@@ -2135,6 +2135,7 @@ def delete_cart_item(item_id):
 def checkout():
     if request.method == "POST":
         cart_items = request.form
+       
         selected_ids = {int(id) for id, value in cart_items.items() if value == "1"}
 
         conn = get_db_connection()
@@ -2145,7 +2146,10 @@ def checkout():
 
         # Filter cart items based on selected IDs
         cart = [dict(item) for item in items if item["id"] in selected_ids]
-        return render_template("checkout.html", cart=cart)
+        totals= [{item["id"]:float(item["quantity"]*float(item["price"]))} for item in cart]
+        sub_total = sum([float(i[a]) for i in totals for a in i])
+        print(sub_total)
+        return render_template("checkout.html", cart=cart,totals=totals,sub_total=sub_total)
 @app.route("/get-cart-items")
 def get_cart_itemz():
     conn = get_db_connection()

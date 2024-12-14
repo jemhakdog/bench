@@ -1,10 +1,11 @@
 import math
-from flask import *
+import json  # Make sure to import json for JSON operations
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from werkzeug.utils import secure_filename
-
 import sqlite3
-
 import os
+from datetime import datetime
+from typing import List, Dict, Any
 app = Flask(__name__, static_url_path="", static_folder="static", template_folder="templates")
 
 DATABASE = 'ecommerce.db'
@@ -1468,6 +1469,7 @@ def filter():
 #             total_pages=total_pages,
 #             pagination_links=pagination_links,
 #         )
+
 @app.route("/shop")
 @app.route("/shop/<int:page>", methods=['GET', 'POST'])
 def shop(page=1):
@@ -1557,7 +1559,7 @@ def shop(page=1):
             'cart_len': len(cart),
             'current_page': page,
             'total_pages': total_pagez.get_total_pages()
-        })
+        })  
     print("calling paginator:", page)
 
     # Generate pagination links
@@ -1587,22 +1589,137 @@ def shop(page=1):
             pagination_links=pagination_links,
         )
 
-@app.route('/api/products')
-def get_products():
-    page = request.args.get('page', 1, type=int)
-    per_page = 9  # Products per page
 
-    # Fetch products from database
-    products = Product.query.paginate(page=page, per_page=per_page)
+@app.route("/products")
+@app.route("/products/<int:page>", methods=['GET', 'POST'])
+def productssss(page=1):
+    per_page = 20
+    page = int(request.args.get('page', page))
+   
+    current_page.set_current_page(page)
 
-    return jsonify({
-        'products': [product.to_dict() for product in products.items],
-        'pagination': {
+    # Get database connection
+    conn = get_db('ecommerce.db')
+    cursor = conn.cursor()
+
+    # Get total count for pagination
+    # This is not required as total pages are already calculated in pagination function
+    # cursor.execute('SELECT COUNT(*) FROM products')
+    # total = cursor.fetchone()[0]
+    # total_pages = (total + per_page - 1) // per_page
+
+    page = int(request.args.get('page', page))
+    offset = (page - 1) * per_page
+
+    # Base query
+    query = '''
+        SELECT product_id, name, price, images, section, category, data
+        FROM products
+    '''
+    params = []
+
+    # Handle filters if present
+    if request.method == 'POST' and request.is_json or filterz.get_current_filters():
+        if filterz.get_current_filters():
+            filters = filterz.get_current_filters()
+        else:
+            filters = request.get('categories', [])
+
+        if filters:
+            filter_conditions = []
+            for filter_id in filters:
+                clean_filter = filter_id
+                for prefix in ['category-', 'men-', 'women-', 'body-bath-', 'brand-']:
+                    if clean_filter.startswith(prefix):
+                        the_category = clean_filter.replace(prefix, '')
+                        the_section = prefix[:-1]
+                        filter_conditions.append('(LOWER(section) LIKE ? and LOWER(category) LIKE ?)')
+                        params.extend([f'%{the_section.lower()}%', f'%{the_category.lower()}%'])
+
+            if filter_conditions:
+                query += ' WHERE ' + ' OR '.join(filter_conditions)
+
+    # Add pagination
+    query += ' LIMIT ? OFFSET ?'
+    params.extend([per_page, offset])
+
+    # Execute final query
+    cursor.execute(query, params)
+    products = cursor.fetchall()
+    full_product = products
+   
+    # Get cart items
+    cart_conn = get_db_connection()
+    cart_cursor = cart_conn.cursor()
+    cart_cursor.execute('SELECT * FROM cart')
+    cart_items = cart_cursor.fetchall()
+    cart_conn.close()
+    cart = [dict(item) for item in cart_items]
+
+    # Process products
+    processed_products = []
+
+    total_pagez.set_total_pages(int(len(get_all_products())/20))
+    for product in products:
+        product_dict = dict(product)
+        product_dict['images'] = json.loads(product_dict['images'])
+        product_dict['data'] = json.loads(product_dict['data'])
+        processed_products.append(product_dict)
+
+    conn.close()
+    return jsonify({"len":len(processed_products),"product":processed_products})
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({
+            'products': processed_products,
+            'cart': cart,
+            'cart_len': len(cart),
             'current_page': page,
-            'total_pages': products.pages,
-            'total_items': products.total
-        }
-    })
+            'total_pages': total_pagez.get_total_pages()
+        })
+
+    # Generate pagination links
+    pagination_links = generate_pagination_links(page, total_pagez.get_total_pages())
+    # if request.method == 'GET':
+    #     pagination_links = generate_pagination_links(page, total_pagez.get_total_pages())
+
+    if filterz.get_current_filters():
+        return render_template(
+            "menu.html",
+            products=processed_products,
+            cart=cart,
+            cart_len=len(cart),
+            current_page=page,
+            total_pages=total_pagez.get_total_pages(),
+            filters=list(set(filterz.get_current_filters())),
+            pagination_links=pagination_links
+        )
+    else:
+        return jsonify({
+            'products': processed_products,
+            'cart': cart,
+            'cart_len': len(cart),
+            'current_page': page,
+            'total_pages': total_pagez.get_total_pages(),
+            'pagination_links': pagination_links
+        })
+
+# @app.route('/api/products')
+# def get_products():
+#     page = request.args.get('page', 1, type=int)
+#     per_page = 9  # Products per page
+
+#     # Fetch products from database
+#     products = Product.query.paginate(page=page, per_page=per_page)
+
+#     return jsonify({
+#         'products': [product.to_dict() for product in products.items],
+#         'pagination': {
+#             'current_page': page,
+#             'total_pages': products.pages,
+#             'total_items': products.total
+#         }
+#     })
 
 
 # def get_shop_data():
@@ -2136,7 +2253,7 @@ def checkout():
     if request.method == "POST":
         cart_items = request.form
         selected_ids = {int(id) for id, value in cart_items.items() if value == "1"}
-
+        print("selected ids:",cart_items)
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM cart')
@@ -2167,8 +2284,30 @@ def api_products():
     for product in products:
         product['images'] = json.loads(product['images'])
         product['data'] = product['data']
-    print(products)  # Debugging: Print out product data on the server-side
+     # Debugging: Print out product data on the server-side
     return jsonify(products)
+
+@app.route('/api/cart/count', methods=['GET'])
+def cart_count():
+    """
+    Returns the count of items in the cart.
+
+    This API endpoint retrieves all cart items from the database and returns
+    the total count of items as a JSON response.
+
+    Returns
+    -------
+    JSON response with the key 'cart_len' containing the total number of cart items.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT COUNT(*) AS cart_len FROM cart')
+    cart_count = cursor.fetchone()['cart_len']
+    conn.close()
+
+    return jsonify({'cart_len': cart_count})
+
+
 @app.errorhandler(401)
 def unauthorized(e):
     return render_template('401.html'), 401

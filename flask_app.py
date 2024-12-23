@@ -1262,27 +1262,39 @@ def edit_product(id):
         conn.close()
         return render_template('edit_product.html', product=product)
 
-@app.route('/products/delete/<int:id>', methods=['POST'])
-def delete_product(id):
-    product = get_product_by_id(id)
+# @app.route('/products/delete/<int:id>', methods=['POST'])
+# def delete_product(id):
+#     product = get_product_by_id(id)
 
-    if product:
-        # Construct the full path to the image file
-        image_path = os.path.join(app.config['UPLOAD_FOLDER'], product['image'])
 
-        # Remove the image file from the filesystem
-        if os.path.exists(image_path):
-            os.remove(image_path)
+#     conn = get_db('ecommerce.db')
+#     cursor = conn.cursor()
+#     cursor.execute("DELETE FROM products WHERE id=?", (id,))
+#     conn.commit()
+#     conn.close()
 
-    conn = get_db('ecommerce.db')
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM products WHERE id=?", (id,))
-    conn.commit()
-    conn.close()
-
-    return redirect(url_for('index'))
+#     return redirect(url_for('index'))
 #c===============cart===============
 
+@app.route('/cart/delete/<id>',methods=['GET','DELETE'])
+def delete_cart_product(id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Check if the product exists in the cart
+    cursor.execute("SELECT * FROM cart WHERE id=?", (id,))
+    product = cursor.fetchone()
+
+    if not product:
+        conn.close()
+        return jsonify({'success': False, 'message': 'Product not found in cart'}), 404
+
+    # Delete the product from the cart
+    cursor.execute("DELETE FROM cart WHERE id=?", (id,))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({'success': True, 'message': 'Product successfully removed from cart'}), 200
 
 
 # Create a new cart item
@@ -1420,23 +1432,78 @@ def delete_cart_item(item_id):
 @app.route("/checkout", methods=["GET", "POST"])
 def checkout():
     if request.method == "POST":
-        cart_items = request.form.get("cartData")
+        cart_items = request.form
         print(cart_items)
-        selected_ids = {int(id) for id, value in cart_items.items() if value == "1"}
-        # print("selected ids:",cart_items)
+        selected_ids =[]
+        for i in cart_items:
+                try:
+                    selected_ids.append(int(i))
+                    selected_ids.append(str(i))
+                except:
+                    pass
+
+        if cart_items is None:
+            return jsonify({"error": "No cart data provided"}), 400
+
+     
+        print("selected ids:",selected_ids)
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM cart')
         items = cursor.fetchall()
         conn.close()
+        
 
         # Filter cart items based on selected IDs
         cart = [dict(item) for item in items if item["id"] in selected_ids]
         totals= [{item["id"]:float(item["quantity"]*float(item["price"]))} for item in cart]
         sub_total = sum([float(i[a]) for i in totals for a in i])
-        print(sub_total)
+        print(sub_total,cart)
         return render_template("checkout.html", cart=cart,totals=totals,sub_total=sub_total)
-@app.route("/get-cart-items")
+
+
+
+@app.route('/get-cart-items', methods=['GET'])
+def get_cart_itemsss():
+    """
+    Retrieve all cart items.
+
+    Returns
+    -------
+    A JSON object containing a list of all cart items. Each item is represented as a dictionary with the following keys:
+    - id: The item's ID
+    - user_id: The user ID associated with this cart item
+    - product_id: The product ID associated with this cart item
+    - order_date: The date and time when the item was added to the cart
+    - color: The color of the item
+    - size: The size of the item
+    - quantity: The quantity of the item in the cart
+    - sku: The Stock Keeping Unit (SKU) of the item
+    - image: The URL of the item's image
+    - name: The name of the item
+    - price: The price of the item
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM cart')
+    items = cursor.fetchall()
+    conn.close()
+    return jsonify([dict(item) for item in items])
+
+    
+@app.route("/bill")
+def bill():
+    # Retrieve cart items from the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM cart')
+    items = cursor.fetchall()
+    conn.close()
+    
+    # Calculate total
+    total = sum(item['price'] * item['quantity'] for item in items)
+    
+    return render_template("bill.html", items=items, total=total)
 def get_cart_itemz():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -1484,6 +1551,7 @@ def cart_count():
 @app.errorhandler(401)
 def unauthorized(e):
     return render_template('401.html'), 401
+
 
 if __name__== "__main__":
 	app.run(debug=True)

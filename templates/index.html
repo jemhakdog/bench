@@ -87,12 +87,63 @@
               ></path>
             </svg>
             <span
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-            >
-              {%if cart_len<=99%} {{cart_len}} {%else%} {{cart_len}}+
-              {%endif%}
-              <span class="visually-hidden">unread messages</span>
-            </span>
+            id="cart-badge"
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"
+          >
+            0
+            <span class="visually-hidden">unread messages</span>
+          </span>
+
+          <script>
+            // Function to update cart badge
+            function updateCartBadge() {
+              fetch("/api/cart/count") // Ensure this endpoint exists in your Flask app
+                .then((response) => {
+                  if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                  }
+                  return response.json();
+                })
+                .then((data) => {
+                  const cartBadge = document.getElementById("cart-badge");
+                  const cartLength = data.cart_len;
+
+                  // Update badge text
+                  cartBadge.textContent =
+                    cartLength > 99 ? "99+" : cartLength;
+
+                  // Conditional visibility
+                  if (cartLength === 0) {
+                    cartBadge.classList.add("d-none");
+                  } else {
+                    cartBadge.classList.remove("d-none");
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error fetching cart data:", error);
+                  // Optionally hide badge on error
+                  const cartBadge = document.getElementById("cart-badge");
+                  cartBadge.classList.add("d-none");
+                });
+            }
+
+            // Call on page load
+            document.addEventListener("DOMContentLoaded", updateCartBadge);
+
+            // Global function to refresh cart badge after cart actions
+            function refreshCartBadge() {
+              updateCartBadge();
+            }
+
+            // Check cart length on initial load
+            document.addEventListener("DOMContentLoaded", function () {
+              const cartBadge = document.getElementById("cart-badge");
+              if (cartBadge.textContent === "0") {
+                cartBadge.classList.add("d-none");
+              }
+            });
+          </script>
+
           </a>
           <div class="dropdown">
             <a
@@ -804,8 +855,12 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="cartModalLabel">
-              <i class="fas fa-arrow-left"  data-bs-dismiss="modal"
-              aria-label="Close"></i> Continue shopping
+              <i
+                class="fas fa-arrow-left"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></i>
+              Continue shopping
             </h5>
             <button
               type="button"
@@ -818,76 +873,232 @@
           <div class="modal-body">
             <div class="p-3">
               <h2 class="mb-4">Shopping cart</h2>
-              <p class="text-muted">You have {{cart_len}} items in your cart</p>
+              <p class="text-muted">
+                You have <span id="cart-count">0</span> items in your cart
+              </p>
+              <input type="hidden" id="hidden-cart-count" value="0" />
+
+              <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                  // Fetch the cart count from the API
+                  fetch("/api/cart/count", {
+                    method: "GET",
+                  })
+                    .then((response) => {
+                      if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                      }
+                      return response.json();
+                    })
+                    .then((data) => {
+                      // Update the visible cart count
+                      document.getElementById("cart-count").innerText =
+                        data.cart_len;
+                      // Update the hidden input with the cart count
+                      document.getElementById("hidden-cart-count").value =
+                        data.cart_len;
+                    })
+                    .catch((error) => {
+                      console.error("Error fetching cart data:", error);
+                    });
+                });
+              </script>
               <script>
                 var cartTotal = 0;
                 var selected = 0;
                 var totalcart = 0;
               </script>
-              <ul class="list-group">
-                {% for item in cart %}
-                <li
-                  class="list-group-item d-flex justify-content-between align-items-center"
-                >
-                  <div class="d-flex align-items-center">
-                    <input
-                      class="form-check-input m-3 cart-ch"
-                      type="checkbox"
-                      value=""
-                      id="checkbox-{{item.id}}"
-                    />
-                    <script>
-                      totalcart+=({{item.price}}*{{item.quantity}})
+              <form id="cartForm" method="POST" action="/checkout">
+                <ul class="list-group">
+                  <script>
+                    let selected_items_in_cart = [];
+                    // Function to load cart items on page load
+                    function loadCartItems() {
+                      fetch("/cart", {
+                        method: "GET",
+                      })
+                        .then((response) => {
+                          if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                          }
+                          return response.json();
+                        })
+                        .then((cartItems) => {
+                          const cartItemsContainer =
+                            document.getElementById("cartItems");
+                          cartItemsContainer.innerHTML = ""; // Clear existing items
 
-                      document.addEventListener('DOMContentLoaded', function() {
-                          document.getElementById('checkbox-{{item.id}}').addEventListener('change', function() {
+                          cartItems.forEach((item) => {
+                            // Create list item for each cart item
+                            const listItem = document.createElement("li");
+                            listItem.className =
+                              "list-group-item d-flex justify-content-between align-items-center";
+
+                            const alignItemsDiv = document.createElement("div");
+                            alignItemsDiv.className =
+                              "d-flex align-items-center";
+
+                            // Checkbox
+                            const checkbox = document.createElement("input");
+                            checkbox.type = "checkbox";
+                            checkbox.className = "form-check-input m-3 cart-ch";
+                            checkbox.id = `${item.id}`;
+                            checkbox.name = item.id;
+                            checkbox.value = item.price * item.quantity;
+                            checkbox.addEventListener("change", function () {
                               if (this.checked) {
-                              cartTotal+=({{item.price}}*{{item.quantity}});
-                              document.getElementById("cart-total").innerText=cartTotal;
-                              selected+=1;
-                              document.getElementById("cart-selected").innerText=selected;
-                              if (selected=={{cart_len}}){
-                                  document.getElementById("selected").innerText="Unselect all";
-                                  document.getElementById("selected").onclick = UnSelectAll;
+                                cartTotal += parseFloat(this.value);
+                                selected += 1;
+                                if (!selected_items_in_cart.includes(checkbox.id )) {
+                                    selected_items_in_cart.push(checkbox.id);
+                                }
+                              } else {
+                                cartTotal -= parseFloat(this.value);
+                                selected -= 1;
+                                index = selected_items_in_cart.indexOf(checkbox.id);
+                                if (index > -1) {
+                                  selected_items_in_cart.splice(index,1);
+                                }
                               }
-                              }
-                              else{
-                                  cartTotal-=({{item.price}}*{{item.quantity}});
-                                  document.getElementById("cart-total").innerText=cartTotal;
-                                  selected-=1;
-                                  document.getElementById("cart-selected").innerText=selected;
-                                  if (selected<{{cart_len}}){
-                                  document.getElementById("selected").innerText="Select all";
-                                  document.getElementById("selected").onclick = SelectAll;
-                              }
+                              updateCartDisplay();
+                            });
+                            // Image
+                            const img = document.createElement("img");
+                            img.src = item.image;
+                            img.alt = item.color;
+                            img.className = "img-fluid rounded";
+                            img.style.cssText =
+                              "width: 50px; height: 50px; object-fit: cover;";
 
-                              }
+                            // Product Details
+                            const div = document.createElement("div");
+                            div.className = "ms-3";
+
+                            const productName = document.createElement("h6");
+                            productName.className = "mb-0";
+                            productName.textContent = item.name;
+
+                            const productDetails =
+                              document.createElement("small");
+                            productDetails.className = "text-muted";
+                            productDetails.textContent = `size: ${item.size}, color: ${item.color}`;
+
+                            div.appendChild(productName);
+                            div.appendChild(productDetails);
+
+                            alignItemsDiv.appendChild(checkbox);
+                            alignItemsDiv.appendChild(img);
+                            alignItemsDiv.appendChild(div);
+
+                            // Price and Quantity
+                            const quantityDiv = document.createElement("div");
+                            quantityDiv.className = "d-flex align-items-center";
+
+                            const quantitySpan = document.createElement("span");
+                            quantitySpan.className = "me-3";
+                            quantitySpan.textContent = item.quantity;
+
+                            const priceSpan = document.createElement("span");
+                            priceSpan.className = "me-3";
+                            priceSpan.textContent = `php ${(
+                              item.price * item.quantity
+                            ).toFixed(2)}`;
+
+                            const deleteButton =
+                              document.createElement("button");
+                            deleteButton.className = "btn btn-sm btn-danger";
+                            deleteButton.innerHTML =
+                              '<i class="fas fa-trash"></i>';
+                              deleteButton.onclick = function(event) {
+    event.preventDefault(); // Prevent default action
+    const productId = item.id; // Use product_id instead of sku
+    fetch(`/cart/delete/${productId}`, {
+          method: "DELETE",
+        }).then((response) => {
+          if (response.ok) {
+            loadCartItems();
+          } else {
+            alert("Failed to delete product");
+          }
+        }).catch((error) => {
+          console.error("Error deleting product:", error);
+        })
+                            };
+
+
+                            quantityDiv.appendChild(quantitySpan);
+                            quantityDiv.appendChild(priceSpan);
+                            quantityDiv.appendChild(deleteButton);
+
+                            listItem.appendChild(alignItemsDiv);
+                            listItem.appendChild(quantityDiv);
+
+                            cartItemsContainer.appendChild(listItem);
                           });
-                      });
-                    </script>
-                    <img
-                      alt="{{item.name}}"
-                      src="{{ item.image }}"
-                      class="img-fluid rounded"
-                      style="width: 50px; height: 50px; object-fit: cover"
-                    />
-                    <div class="ms-3">
-                      <h6 class="mb-0">{{item.name}}</h6>
-                      <small class="text-muted"
-                        >size:{{ item.size }}, color:{{item.color}}</small
-                      >
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <span class="me-3">{{ item.quantity }}</span>
-                    <span class="me-3">{{ item.price }}</span>
-                    <button class="btn btn-sm btn-danger">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </div>
-                </li>
-                {% endfor %}
-              </ul>
+                        })
+                        .catch((error) =>
+                          console.error("Error fetching cart items:", error)
+                        );
+                    }
+
+                            
+
+  function updateCartDisplay() {
+    const cartLen = parseInt(
+      document.getElementById("hidden-cart-count").value,
+      10
+    );
+    document.getElementById("cart-total").innerText = cartTotal.toFixed(2);
+    document.getElementById("cart-selected").innerText = selected;
+
+    if (selected === cartLen) {
+      document.getElementById("selected").innerText = "Unselect all";
+      document.getElementById("selected").onclick = UnSelectAll;
+    } else {
+      document.getElementById("selected").innerText = "Select all";
+      document.getElementById("selected").onclick = SelectAll;
+    }
+  }
+
+  function SelectAll() {
+    const checkboxes = document.querySelectorAll(".cart-ch");
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = true;
+      const itemId = checkbox.id;
+      const itemValue = parseFloat(checkbox.value);
+
+      if (!selected_items_in_cart.includes(itemId)) {
+        selected_items_in_cart.push(itemId);
+      }
+      cartTotal += itemValue;
+    });
+    selected = checkboxes.length;
+    updateCartDisplay();
+  }
+
+  function UnSelectAll() {
+    const checkboxes = document.querySelectorAll(".cart-ch");
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+      const itemId = checkbox.id;
+
+      const index = selected_items_in_cart.indexOf(itemId);
+      if (index > -1) {
+        selected_items_in_cart.splice(index);
+      }
+    });
+    cartTotal = 0;
+    selected = 0;
+    updateCartDisplay();
+  }
+
+  document.addEventListener("DOMContentLoaded", loadCartItems);
+</script>
+
+                </ul>
+            
+              <!-- Cart items container to be filled by JS -->
+              <ul id="cartItems" class="list-group"></ul>
             </div>
           </div>
 
@@ -899,24 +1110,29 @@
                 Selected items: <span id="cart-selected">0</span>
               </h5>
               <div class="total">
-                <h5 class="mb-0">Total: <span id="cart-total">0</span></h5>
+                <h5 class="mb-0">Sub Total: <span id="cart-total">0</span></h5>
               </div>
             </div>
-            <div>
+            <div class="d-flex">
               <button
                 type="button"
                 id="selected"
-                class="btn btn-secondary"
+                class="btn btn-secondary me-2"
                 onclick="SelectAll()"
               >
                 Select all
               </button>
-              <button type="button" class="btn btn-primary">Check out</button>
+              
+<button  onclick="submitCartForm()" class="btn btn-primary">Check out</button>
+             </div>
+            </form>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    
     <script>
 
       function SelectAll() {

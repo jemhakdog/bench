@@ -118,18 +118,14 @@
                                                         scope="col"
                                                         class="border-0 bg-light"
                                                     >
-                                                        <div
-                                                            class="py-2 text-uppercase"
-                                                        >
-                                                            Remove
-                                                        </div>
+
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <script>
                                                 let total = 0;
                                             </script>
-                                            `
+                                           
                                             <tbody>
                                                 {%for i in cart%}
                                                 <!-- {{i}} -->
@@ -179,17 +175,7 @@
                                                             >{{i.quantity}}</strong
                                                         >
                                                     </td>
-                                                    <td
-                                                        class="border-0 align-middle"
-                                                    >
-                                                        <a
-                                                            href="#"
-                                                            class="text-dark"
-                                                            ><i
-                                                                class="fa fa-trash"
-                                                            ></i
-                                                        ></a>
-                                                    </td>
+                                                   
                                                 </tr>
 
                                                 {%endfor%}
@@ -304,11 +290,39 @@
                                                 </h5>
                                             </li>
                                         </ul>
-                                        <a
-                                            href="#"
-                                            class="btn btn-dark rounded-pill py-2 btn-block"
-                                            >Procceed to checkout</a
-                                        >
+                                        <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">
+                                            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">
+                                                Cash Payment
+                                            </div>
+                                            <div class="p-4">
+                                                <input type="number" id="cashPayment" placeholder="Enter cash amount" class="form-control mb-3" oninput="calculateChange()">
+                                                <div id="changeDisplay" class="font-weight-bold"></div>
+<form id="checkoutForm" action="/bill" method="POST" style="display: none;">
+    <input type="hidden" name="products" id="productsInput">
+    <input type="hidden" name="total" id="totalInput">
+    <input type="hidden" name="cash" id="cashInput">
+    <button id="proceedButton" type="submit" class="btn btn-dark rounded-pill py-2 btn-block">Proceed to checkout</button>
+</form>
+                                            </div>
+                                            
+                                            <script>
+                                                const totalAmount = {{ sub_total | tojson }}; // Use tojson filter to safely pass the value
+                                            
+                                                function calculateChange() {
+                                                    const cashInput = document.getElementById('cashPayment').value;
+                                                    const changeDisplay = document.getElementById('changeDisplay');
+                                                    const proceedButton = document.getElementById('proceedButton');
+                                            
+                                                    if (cashInput >= totalAmount) {
+                                                        const change = cashInput - totalAmount;
+                                                        changeDisplay.textContent = `Change: $${change.toFixed(2)}`;
+                                                        proceedButton.style.display = 'block'; // Show button
+                                                    } else {
+                                                        changeDisplay.textContent = '';
+                                                        proceedButton.style.display = 'none'; // Hide button
+                                                    }
+                                                }
+                                            </script>
                                     </div>
                                 </div>
                             </div>

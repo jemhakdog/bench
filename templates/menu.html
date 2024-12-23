@@ -1767,6 +1767,22 @@
                             deleteButton.className = "btn btn-sm btn-danger";
                             deleteButton.innerHTML =
                               '<i class="fas fa-trash"></i>';
+                              deleteButton.onclick = function(event) {
+    event.preventDefault(); // Prevent default action
+    const productId = item.id; // Use product_id instead of sku
+    fetch(`/cart/delete/${productId}`, {
+          method: "DELETE",
+        }).then((response) => {
+          if (response.ok) {
+            loadCartItems();
+          } else {
+            alert("Failed to delete product");
+          }
+        }).catch((error) => {
+          console.error("Error deleting product:", error);
+        })
+                            };
+
 
                             quantityDiv.appendChild(quantitySpan);
                             quantityDiv.appendChild(priceSpan);
@@ -1783,72 +1799,7 @@
                         );
                     }
 
-                    // function updateCartDisplay() {
-                    //   const cartLen = parseInt(
-                    //     document.getElementById("hidden-cart-count").value,
-                    //     10
-                    //   );
-                    //   document.getElementById("cart-total").innerText =
-                    //     cartTotal.toFixed(2);
-                    //   document.getElementById("cart-selected").innerText =
-                    //     selected;
-
-                    //   if (selected === cartLen) {
-                    //     document.getElementById("selected").innerText =
-                    //       "Unselect all";
-                    //     document.getElementById("selected").onclick =
-                    //       UnSelectAll;
-                    //   } else {
-                    //     document.getElementById("selected").innerText =
-                    //       "Select all";
-                    //     document.getElementById("selected").onclick = SelectAll;
-                    //   }
-                    // }
-
-                    // function SelectAll() {
-                    //   const checkboxes = document.querySelectorAll(".cart-ch");
-                    //   cartTotal = 0;
-                    //   checkboxes.forEach((checkbox) => {
-                    //     checkbox.checked = true;
-                    //     cartTotal += parseFloat(checkbox.value);
-                    //     if (!selected_items_in_cart.includes(checkbox.id)) {
-                    //                 selected_items_in_cart.push(checkbox.id);
-                    //     }
-                    //   });
-                    //   selected = parseInt(
-                    //     document.getElementById("hidden-cart-count").value,
-                    //     10
-                    //   );
-                    //   updateCartDisplay();
-                    // }
-
-                    // function UnSelectAll() {
-                      
-                    //   const checkboxes = document.querySelectorAll(".cart-ch");
-                    //   cartTotal = 0;
-                    //   selected = 0;
-                    //   updateCartDisplay();
-                    //   checkboxes.forEach((checkbox) => {
-                    //     checkbox.checked = false;
-                    //     try {
-                    //       index = selected_items_in_cart.indexOf(checkbox.id);
-                    //     if (index > -1) {
-                    //       selected_items_in_cart.splice(index, 1);
-                    //     }
-                    //     } catch (error) {
-                    //       console.error("Error updating cart: ", error);
-                    //     }
-                       
-                    //   });
-                    // }
-
-
-
-                  //   document.addEventListener(
-                  //     "DOMContentLoaded",
-                  //     loadCartItems
-                  //   );
-               
+                            
 
   function updateCartDisplay() {
     const cartLen = parseInt(
@@ -1971,18 +1922,16 @@ alert( JSON.stringify(checkedItems))
 // Set the value of cart_data to the stringified version of checkedItems
 document.querySelector('input[name="cart_data"]').value = JSON.stringify(checkedItems);
 
-      }
+    
+      function renderCartItems() {
+          
       fetch("/get-cart-items")
         .then((response) => response.json())
         .then((data) => {
           const cart = data.cart;
-          // You can now manipulate the cart items as needed
-          console.log(cart);
-          // Continue with your logic to display or use cart items
         })
         .catch((error) => console.error("Error fetching cart items:", error));
 
-      function renderCartItems() {
         const cartItemsContainer = document.getElementById("cartItems");
         cartItemsContainer.innerHTML = ""; // Clear previous items
 

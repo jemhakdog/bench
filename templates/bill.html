@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bill</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/css/aos.min.css">
+    <link rel="stylesheet" href="/assets/css/animate.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .receipt {
             max-width: 600px;
@@ -15,6 +21,7 @@
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            flex: 1;
         }
         .receipt h2 {
             text-align: center;
@@ -30,10 +37,46 @@
         .receipt .total {
             font-weight: bold;
             font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .back-to-shop {
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md bg-dark pulse animated py-3" data-bs-theme="dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="pulse animated infinite">Bench</span>
+            </a>
+            <button data-bs-toggle="collapse" data-bs-target="#navcol-6" class="navbar-toggler">
+                <span class="visually-hidden">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse flex-grow-0 order-md-first" id="navcol-6">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{url_for('index')}}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('shop')}}">Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('contact_us')}}">Contact us</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-none d-md-block">
+                <a class="btn btn-light me-2" role="button" href="#">Login</a>
+                <a class="btn btn-primary" role="button" href="#">Sign up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Receipt Content -->
     <div class="receipt">
         <h2>Receipt</h2>
         <table class="table">
@@ -57,7 +100,66 @@
         <div class="total">
             Total: ${{ total }}
         </div>
+        <div class="back-to-shop">
+            <a href="{{url_for('shop')}}" class="btn btn-primary">Back to Shop</a>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light mt-5">
+        <div class="container py-4 py-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column">
+                    <h3 class="fs-6">Services</h3>
+                    <ul class="list-unstyled">
+                        <li><a class="link-light" href="#">Web design</a></li>
+                        <li><a class="link-light" href="#">Development</a></li>
+                        <li><a class="link-light" href="#">Hosting</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column">
+                    <h3 class="fs-6">About</h3>
+                    <ul class="list-unstyled">
+                        <li><a class="link-light" href="#">Company</a></li>
+                        <li><a class="link-light" href="#">Team</a></li>
+                        <li><a class="link-light" href="#">Legacy</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 col-md-3 text-center text-lg-start d-flex flex-column">
+                    <h3 class="fs-6">Careers</h3>
+                    <ul class="list-unstyled">
+                        <li><a class="link-light" href="#">Job openings</a></li>
+                        <li><a class="link-light" href="#">Employee success</a></li>
+                        <li><a class="link-light" href="#">Benefits</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 text-center text-lg-start d-flex flex-column align-items-center order-first align-items-lg-start order-lg-last">
+                    <div class="fw-bold d-flex align-items-center mb-2">
+                        <span class="text-light">Bench</span>
+                    </div>
+                    <p class="text-muted">Your trusted gaming gear partner</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="d-flex justify-content-between align-items-center pt-3">
+                <p class="text-muted mb-0">Copyright © 2024 Bench</p>
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                        <a href="#" class="text-light"><i class="fa fa-facebook"></i></a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#" class="text-light"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#" class="text-light"><i class="fa fa-instagram"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/aos.min.js"></script>
+    <script src="/assets/js/bs-init.js"></script>
 </body>
 </html>

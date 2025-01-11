@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import List, Dict, Any
 
 
-
+from routes.checkout import init_checkout_routes
 def generate_pagination_links(current_page, total_pages):
     pagination_links = ""
     print("generate_pagination_links:",current_page,total_pages)
@@ -221,6 +221,9 @@ def get_product_by_id(product_id: int) -> dict | None:
         return dict(row)
     else:
         return []  # or raise an exception or return an appropriate message
+
+
+init_checkout_routes(app)
 
 @app.route("/")
 def index():
@@ -571,7 +574,7 @@ def filter():
 
                 <!-- Hover image for the same product -->
                 <img class="card-img-top w-100 d-block card-img-top rounded-top-3 card-img-hover"
-                    src="{ json.loads(i['images'])[1] }" alt="Product Image Hover" id="hover-image"
+                    src="{json.loads(i['images'])[1] }" alt="Product Image Hover" id="hover-image"
                        style="height: 401px;"
                     onclick="window.location.href = `/product/view/{ i['product_id'] }`">
 
@@ -1429,37 +1432,37 @@ def delete_cart_item(item_id):
     conn.close()
     return jsonify({'message': 'Item deleted!'}), 200
 
-@app.route("/checkout", methods=["GET", "POST"])
-def checkout():
-    if request.method == "POST":
-        cart_items = request.form
-        print(cart_items)
-        selected_ids =[]
-        for i in cart_items:
-                try:
-                    selected_ids.append(int(i))
-                    selected_ids.append(str(i))
-                except:
-                    pass
+# @app.route("/checkout", methods=["GET", "POST"])
+# def checkout():
+#     if request.method == "POST":
+#         cart_items = request.form
+#         print(cart_items)
+#         selected_ids =[]
+#         for i in cart_items:
+#                 try:
+#                     selected_ids.append(int(i))
+#                     selected_ids.append(str(i))
+#                 except:
+#                     pass
 
-        if cart_items is None:
-            return jsonify({"error": "No cart data provided"}), 400
+#         if cart_items is None:
+#             return jsonify({"error": "No cart data provided"}), 400
 
      
-        print("selected ids:",selected_ids)
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM cart')
-        items = cursor.fetchall()
-        conn.close()
+#         print("selected ids:",selected_ids)
+#         conn = get_db_connection()
+#         cursor = conn.cursor()
+#         cursor.execute('SELECT * FROM cart')
+#         items = cursor.fetchall()
+#         conn.close()
         
 
-        # Filter cart items based on selected IDs
-        cart = [dict(item) for item in items if item["id"] in selected_ids]
-        totals= [{item["id"]:float(item["quantity"]*float(item["price"]))} for item in cart]
-        sub_total = sum([float(i[a]) for i in totals for a in i])
-        print(sub_total,cart)
-        return render_template("checkout.html", cart=cart,totals=totals,sub_total=sub_total)
+#         # Filter cart items based on selected IDs
+#         cart = [dict(item) for item in items if item["id"] in selected_ids]
+#         totals= [{item["id"]:float(item["quantity"]*float(item["price"]))} for item in cart]
+#         sub_total = sum([float(i[a]) for i in totals for a in i])
+#         print(sub_total,cart)
+#         return render_template("checkout.html", cart=cart,totals=totals,sub_total=sub_total)
 
 
 
@@ -1491,19 +1494,19 @@ def get_cart_itemsss():
     return jsonify([dict(item) for item in items])
 
     
-@app.route("/bill")
-def bill():
-    # Retrieve cart items from the database
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM cart')
-    items = cursor.fetchall()
-    conn.close()
+# @app.route("/bill")
+# def bill():
+#     # Retrieve cart items from the database
+#     conn = get_db_connection()
+#     cursor = conn.cursor()
+#     cursor.execute('SELECT * FROM cart')
+#     items = cursor.fetchall()
+#     conn.close()
     
-    # Calculate total
-    total = sum(item['price'] * item['quantity'] for item in items)
+#     # Calculate total
+#     total = sum(item['price'] * item['quantity'] for item in items)
     
-    return render_template("bill.html", items=items, total=total)
+#     return render_template("bill.html", items=items, total=total)
 def get_cart_itemz():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -1512,11 +1515,11 @@ def get_cart_itemz():
     conn.close()
     cart = [dict(item) for item in items]
     return jsonify({"cart":cart})
-@app.route("/set_checkout")
-def set_checkout():
-    total = request.form.get("total")
-    items = request.form.get("items")
-    return [total,items]
+# @app.route("/set_checkout")
+# def set_checkout():
+#     total = request.form.get("total")
+#     items = request.form.get("items")
+#     return [total,items]
 @app.route('/api/products')
 def api_products():
     """Fetch products data to be used in the product listing frontend."""
@@ -1526,6 +1529,38 @@ def api_products():
         product['data'] = product['data']
      # Debugging: Print out product data on the server-side
     return jsonify(products)
+
+@app.route('/api/search')
+def search_products():
+    """Search products by name."""
+    query = request.args.get('q', '').lower()
+    if not query:
+        return jsonify([])
+        
+    conn = get_db('ecommerce.db')
+    cursor = conn.cursor()
+    
+    # Use LIKE for case-insensitive partial matching
+    cursor.execute("""
+        SELECT product_id, name, price, images
+        FROM products
+        WHERE LOWER(name) LIKE ?
+        LIMIT 10
+    """, (f'%{query}%',))
+    
+    products = cursor.fetchall()
+    conn.close()
+    
+    results = []
+    for product in products:
+        results.append({
+            'id': product['product_id'],
+            'name': product['name'],
+            'price': product['price'],
+            'images': json.loads(product['images'])
+        })
+    
+    return jsonify(results)
 
 @app.route('/api/cart/count', methods=['GET'])
 def cart_count():

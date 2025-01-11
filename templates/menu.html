@@ -62,13 +62,57 @@
         overflow: hidden;
       }
 
-      .card-img-top {
-        height: 250px;
-        object-fit: cover;
+      .product-image-container {
+        position: relative;
+        overflow: hidden;
+      }
+
+      @media (max-width: 767.98px) {
+        .card {
+          display: flex;
+          flex-direction: row;
+          padding: 8px;
+        }
+        .product-image-container {
+          width: 35%;
+          min-height: 100px;
+          margin-right: 12px;
+        }
+        .card-img {
+          height: auto;
+          max-height: 100px;
+          width: 100%;
+          object-fit: contain;
+        }
+        .card-body {
+          width: 65%;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .btn-sm {
+          padding: 4px 8px;
+          font-size: 0.8rem;
+          margin-top: 8px;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .product-image-container {
+          width: 100%;
+        }
+        .card-img {
+          height: 250px;
+          object-fit: cover;
+        }
+      }
+
+      .card-img {
         transition: opacity 0.3s ease;
       }
 
-      .card-img-hover {
+      /* .card-img-hover {
         position: absolute;
         top: 0;
         left: 0;
@@ -85,7 +129,7 @@
 
       .card:hover #hover-image {
         opacity: 1;
-      }
+      } */
     </style>
   </head>
 
@@ -208,7 +252,7 @@
                 // Optional: Add event listeners to cart modification functions
                 // For example, after adding or removing an item
                 function addToCart() {
-                  // Your existing add to cart logic
+                  // Your existing View Product logic
                   fetch("/add-to-cart", { method: "POST" })
                     .then((response) => response.json())
                     .then((data) => {
@@ -274,12 +318,7 @@
           </ol>
         </div>
         <div class="col d-flex justify-content-end align-items-center">
-          <svg>
-            <path
-              d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"
-            />
-          </svg>
-
+         
           <div class="input-group position-relative">
             <input
               class="form-control d-xl-flex justify-content-xl-center align-items-xl-center autocomplete"
@@ -301,26 +340,87 @@
           <script>
             // Data array to store product names
             document.addEventListener("DOMContentLoaded", () => {
-              const data = [];
+              const searchInput = document.getElementById("searchInput");
+              const resultsContainer = document.getElementById("results");
+              let searchTimeout;
 
-              // Fetch products data
-              fetch("/products")
-                .then((response) => {
-                  if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                  }
-                  return response.json();
-                })
-                .then((products) => {
-                  products.forEach((product) => {
-                    data.push(product.name);
-                  });
+              searchInput.addEventListener("input", function() {
+                const query = this.value.trim();
+                
+                // Clear previous timeout
+                clearTimeout(searchTimeout);
+                
+                // Clear results if query is empty
+                if (!query) {
+                  resultsContainer.innerHTML = "";
+                  return;
+                }
 
-                  // Your existing logic to use the `data` array can go here
-                })
-                .catch((error) => {
-                  console.error("Error fetching products:", error);
-                });
+                // Add debounce to prevent too many requests
+                searchTimeout = setTimeout(() => {
+                  fetch(`/api/search?q=${encodeURIComponent(query)}`)
+                    .then(response => {
+                      if (!response.ok) throw new Error("Search request failed");
+                      return response.json();
+                    })
+                    .then(products => {
+                      resultsContainer.innerHTML = "";
+                      
+                      if (products.length === 0) {
+                        resultsContainer.innerHTML = "<div class='result-item'>No products found</div>";
+                        return;
+                      }
+
+                      products.forEach(product => {
+                        const div = document.createElement("div");
+                        div.classList.add("result-item");
+                        
+                        const img = document.createElement("img");
+                        img.src = product.images[0];
+                        img.alt = product.name;
+                        img.style.width = "30px";
+                        img.style.height = "30px";
+                        img.style.marginRight = "10px";
+                        img.style.objectFit = "cover";
+                        
+                        const nameSpan = document.createElement("span");
+                        nameSpan.textContent = product.name;
+                        
+                        const priceSpan = document.createElement("span");
+                        priceSpan.textContent = `₱${product.price.toLocaleString()}`;
+                        priceSpan.style.marginLeft = "auto";
+                        priceSpan.style.color = "#2b2b2b";
+                        priceSpan.style.fontWeight = "bold";
+                        
+                        div.style.display = "flex";
+                        div.style.alignItems = "center";
+                        div.style.padding = "8px";
+                        div.style.cursor = "pointer";
+                        
+                        div.appendChild(img);
+                        div.appendChild(nameSpan);
+                        div.appendChild(priceSpan);
+                        
+                        div.addEventListener("click", () => {
+                          window.location.href = `/product/view/${product.id}`;
+                        });
+                        
+                        resultsContainer.appendChild(div);
+                      });
+                    })
+                    .catch(error => {
+                      console.error("Search error:", error);
+                      resultsContainer.innerHTML = "<div class='result-item'>Error performing search</div>";
+                    });
+                }, 300); // Wait 300ms after user stops typing
+              });
+
+              // Close results when clicking outside
+              document.addEventListener("click", (e) => {
+                if (!searchInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+                  resultsContainer.innerHTML = "";
+                }
+              });
             });
 
             // Function to find the image by the product name
@@ -426,57 +526,34 @@
       <div class="row">
         <div class="col-lg-3">
           <div>
-            <p
-              class="justify-content-between"
-              style="
-                padding-top: 0px;
-                padding-bottom: 0px;
-                margin-bottom: 9px;
-                margin-top: 0px;
-                margin-right: 15px;
-              "
-            >
-              Category
-            </p>
+            <p class="justify-content-between mb-2">Category</p>
+            <!-- Active Filters Container -->
+            <div id="active-filters" class="mb-3">
+              <div class="d-flex flex-wrap gap-2"></div>
+            </div>
+            <style>
+              .filter-badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.35rem 0.75rem;
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 50px;
+                margin: 0.25rem;
+                font-size: 0.875rem;
+              }
+              .filter-badge .remove-filter {
+                margin-left: 0.5rem;
+                cursor: pointer;
+                color: #dc3545;
+                font-weight: bold;
+              }
+              .filter-badge .remove-filter:hover {
+                color: #bd2130;
+              }
+            </style>
             <div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="category-men"
-                />
-                <label class="form-check-label" for="category-men">Men</label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="category-body-bath"
-                />
-                <label class="form-check-label" for="category-body-bath"
-                  >Body &amp; Bath</label
-                >
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="category-women"
-                />
-                <label class="form-check-label" for="category-women"
-                  >Women</label
-                >
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="category-brand"
-                />
-                <label class="form-check-label" for="category-brand"
-                  >Brand</label
-                >
-              </div>
+              <!-- Category checkboxes removed as requested -->
             </div>
             <hr />
           </div>
@@ -966,7 +1043,7 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary w-100 rounded-pill" id="add-to-cart-btn" data-bs-toggle="modal" data-bs-target="#itemviewmodal">
-                                Add to Cart
+                                View Product
                             </button>
                         </div>
                     </div>
@@ -975,16 +1052,60 @@
 
             var categories = document.querySelectorAll(".form-check-input");
 
+            // Function to get display name for filter
+            function getFilterDisplayName(filterId) {
+              const label = document.querySelector(`label[for="${filterId}"]`);
+              return label ? label.textContent : filterId;
+            }
+
+            // Function to update active filters display
+            function updateActiveFilters() {
+              const activeFiltersContainer = document.querySelector('#active-filters > div');
+              activeFiltersContainer.innerHTML = '';
+              
+              selectedCategories.forEach(filterId => {
+                const badge = document.createElement('div');
+                badge.className = 'filter-badge';
+                badge.innerHTML = `
+                  ${getFilterDisplayName(filterId)}
+                  <span class="remove-filter" data-filter="${filterId}">&times;</span>
+                `;
+                
+                badge.querySelector('.remove-filter').addEventListener('click', () => {
+                  // Uncheck the checkbox
+                  const checkbox = document.getElementById(filterId);
+                  if (checkbox) checkbox.checked = false;
+                  
+                  // Remove from selected categories
+                  const index = selectedCategories.indexOf(filterId);
+                  if (index > -1) {
+                    selectedCategories.splice(index, 1);
+                  }
+                  
+                  // Update display and fetch products
+                  updateActiveFilters();
+                  fetchProducts(1, { categories: selectedCategories });
+                });
+                
+                activeFiltersContainer.appendChild(badge);
+              });
+            }
+
             categories.forEach((category) => {
               category.addEventListener("click", () => {
                 if (category.checked) {
-                  selectedCategories.push(category.id);
+                  if (!selectedCategories.includes(category.id)) {
+                    selectedCategories.push(category.id);
+                  }
                 } else {
                   const index = selectedCategories.indexOf(category.id);
                   if (index > -1) {
                     selectedCategories.splice(index, 1);
                   }
                 }
+
+                // Update active filters display
+                updateActiveFilters();
 
                 // If no categories are selected, show all products
                 if (selectedCategories.length === 0) {
@@ -1125,47 +1246,34 @@
 
         <script>
           // Function to create product card HTML
-          function createProductCard(product) {
+function createProductCard(product) {
             return `
                 <div class="col-lg-4 product-item" id="${product.product_id} ${product.section}-${product.category}">
                     <div class="card border-0 shadow-sm rounded-3 mb-3">
-                        <div class="position-relative">
-                            <img class="card-img-top w-100 d-block rounded-top-3" 
+                        <div class="position-relative product-image-container">
+                            <img class="card-img w-100" 
                                  src="${product.images[0]}"
                                  alt="Product Image" 
                                  id="main-image" 
-                                 style="height: 401px;object-fit: cover;"
                                  onclick="window.location.href = '/product/view/${product.product_id}'">
     
-                            <img class="card-img-top w-100 d-block rounded-top-3 position-absolute top-0 start-0" 
+                            <img class="card-img w-100 position-absolute top-0 start-0" 
                                  src="${product.images[1]}" 
                                  alt="Product Image Hover" 
                                  id="hover-image" 
-                                 style="height: 401px; object-fit: cover; opacity: 0; transition: opacity 0.3s ease;"
                                  onclick="window.location.href = '/product/view/${product.product_id}'"
                                  onmouseover="this.style.opacity=1"
                                  onmouseout="this.style.opacity=0">
                         </div>
     
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="fw-bold card-title mb-2">${product.name}</h5>
-                            <p class="text-muted card-text mb-3">${product.description}</p>
-                            <div class="mt-auto d-flex justify-content-between align-items-center mb-3">
-                                <span class="fs-4 fw-bold">php ${product.price}</span>
-                                <div class="input-group input-group-sm" style="width: 120px">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(this, -1)">-</button>
-                                    <input class="form-control form-control text-center" 
-                                           type="number" 
-                                           id="productQuantity" 
-                                           name="productQuantity" 
-                                           min="1" 
-                                           value="1">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(this, 1)">+</button>
-                                </div>
+                        <div class="card-body p-2">
+                            <h5 class="fw-bold card-title mb-2 text-truncate" style="font-size: 0.9rem;">${product.name}</h5>
+                            <div class="mb-2">
+                                <span class="fw-bold" style="color: #2b2b2b; font-size: 0.9rem;">₱${product.price.toLocaleString()}</span>
                             </div>
-                            <button class="btn btn-primary w-100 rounded-pill" 
+                            <button class="btn btn-primary btn-sm rounded-pill w-100" 
                                     onclick="window.location.href = '/product/view/${product.product_id}'">
-                                Add to Cart
+                                View
                             </button>
                         </div>
                     </div>
@@ -1427,7 +1535,6 @@
               });
 
               // Render pagination
-              alert("rendering pagination");
               renderPagination(data.pagination);
             })
             .catch((error) => {

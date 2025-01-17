@@ -30,9 +30,259 @@
       rel="stylesheet"
       href="assets/css/Sidebar-Cool-SB-Admin-Inspirate.css"
     />
+    <!-- Animation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.2.0/svg.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/node-waves/0.7.6/waves.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Animation Styles -->
+    <style>
+      body {
+        background: #1a1a1a;
+        color: #ffffff;
+      }
+      
+      #particles-js {
+        background: transparent;
+        pointer-events: none;
+      }
+      
+      #waves-container {
+        background: transparent;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+      }
+      
+      .container {
+        position: relative;
+        z-index: 1;
+      }
+      
+      .card {
+        background: rgba(30, 30, 30, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 87, 51, 0.2);
+        color: #ffffff;
+      }
+      
+      .card h5 a {
+        color: #ff5733 !important;
+        text-decoration: none;
+      }
+      
+      .card p {
+        color: #cccccc;
+      }
+      
+      .modal-content {
+        background: rgba(30, 30, 30, 0.95);
+        backdrop-filter: blur(10px);
+        color: #ffffff;
+      }
+      
+      .navbar {
+        background: rgba(20, 20, 20, 0.9) !important;
+        backdrop-filter: blur(10px);
+      }
+
+      .btn-primary {
+        background-color: #ff5733;
+        border-color: #ff5733;
+      }
+
+      .btn-primary:hover {
+        background-color: #e64a2e;
+        border-color: #e64a2e;
+      }
+
+      .btn-outline-primary {
+        color: #ff5733;
+        border-color: #ff5733;
+      }
+
+      .btn-outline-primary:hover {
+        background-color: #ff5733;
+        border-color: #ff5733;
+      }
+
+      .text-primary {
+        color: #ff5733 !important;
+      }
+
+      .text-muted {
+        color: #999999 !important;
+      }
+
+      .blog-slider {
+        background: rgba(30, 30, 30, 0.8);
+        backdrop-filter: blur(10px);
+      }
+
+      .blog-slider__content {
+        color: #ffffff;
+      }
+
+      .blog-slider__title {
+        color: #ffffff;
+      }
+
+      .blog-slider__title p {
+        color: #ffffff !important;
+      }
+
+      .blog-slider__text {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .blog-slider__button {
+        background: #ff5733;
+        color: #ffffff;
+      }
+
+      .blog-slider__code {
+        color: #ff5733;
+      }
+
+      .blog-slider {
+        background: rgba(30, 30, 30, 0.8);
+      }
+
+      .bs-icon-primary {
+        background: #ff5733;
+      }
+
+      .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+
+      .form-control:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #ff5733;
+        color: #ffffff;
+      }
+
+      ::placeholder {
+        color: #999999;
+      }
+
+      /* Dark theme text colors */
+      .text-secondary {
+        color: rgba(255, 255, 255, 0.8) !important;
+      }
+
+      .bg-body {
+        background-color: rgba(30, 30, 30, 0.8) !important;
+      }
+
+      .card {
+        background: rgba(30, 30, 30, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 87, 51, 0.1);
+      }
+
+      .card h5 a {
+        color: #ffffff !important;
+      }
+
+      .card p {
+        color: rgba(255, 255, 255, 0.7) !important;
+      }
+
+      .bootstrap_cards2 {
+        background: rgba(30, 30, 30, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 10px;
+        padding: 20px;
+      }
+
+      .bootstrap_cards2 h2 {
+        color: #ffffff !important;
+      }
+
+      .bootstrap_cards2 .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+      }
+
+      .bootstrap_cards2 .text-dark {
+        color: #ffffff !important;
+      }
+    </style>
   </head>
 
   <body>
+    <!-- Background animation container -->
+    <div id="particles-js" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+    <div id="waves-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.6;"></div>
+
+    <!-- Initialize animations -->
+    <script>
+      // Initialize Particles.js
+      document.addEventListener('DOMContentLoaded', function() {
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 60, density: { enable: true, value_area: 1000 } },
+            color: { value: '#ff5733' },
+            shape: { type: 'circle' },
+            opacity: { value: 0.3, random: true },
+            size: { value: 2, random: true },
+            move: {
+              enable: true,
+              speed: 1.5,
+              direction: 'none',
+              random: true,
+              out_mode: 'out'
+            }
+          },
+          interactivity: {
+            detect_on: 'canvas',
+            events: {
+              onhover: { enable: true, mode: 'repulse' },
+              onclick: { enable: true, mode: 'push' },
+              resize: true
+            }
+          }
+        });
+
+        // Initialize Waves
+        const wavesContainer = document.getElementById('waves-container');
+        const draw = SVG().addTo('#waves-container').size('100%', '100%');
+        
+        // Create multiple waves with different properties
+        function createWave(color, height, duration, delay) {
+          const width = window.innerWidth;
+          const points = [];
+          const segments = 20;
+          
+          for(let i = 0; i <= segments; i++) {
+            points.push([width * i/segments, height]);
+          }
+          
+          const wave = draw.polyline(points).fill('none').stroke({ color, width: 2 });
+          
+          function animateWave() {
+            const newPoints = points.map((point, i) => {
+              const x = point[0];
+              const y = height + Math.sin(Date.now()/1000 + i) * 30;
+              return [x, y];
+            });
+            wave.plot(newPoints);
+            requestAnimationFrame(animateWave);
+          }
+          
+          setTimeout(() => animateWave(), delay);
+        }
+
+        // Create multiple waves
+        createWave('rgba(255, 87, 51, 0.15)', 200, 4000, 0);
+        createWave('rgba(255, 87, 51, 0.1)', 250, 5000, 1000);
+        createWave('rgba(255, 87, 51, 0.05)', 300, 6000, 2000);
+      });
+    </script>
+
     <nav
     class="navbar navbar-expand-md bg-dark pulse animated py-3"
     data-bs-theme="dark"
@@ -178,7 +428,7 @@
       </div>
     </div>
   </nav>
-    <div class="container py-4 py-xl-5">
+    <div class="container">
       <div
         class="row gy-4 gy-md-0"
         style="padding-bottom: 0px; margin-bottom: -1px"
@@ -572,7 +822,8 @@
               />
             </div>
             <div
-              class="container bg-body p-5 mt-md-n6 position-relative rounded"
+              class="container p-5 mt-md-n6 position-relative rounded"
+              style="background: rgba(30, 30, 30, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 87, 51, 0.1);"
             >
               <div class="row">
                 <div class="col-md-10 offset-md-1">
@@ -580,7 +831,7 @@
                     <div>
                       <h1
                         data-aos="fade-up"
-                        class="fw-bolder display-3 text-rk-brown-grey"
+                        class="fw-bolder display-3 text-white"
                       >
                         LIGHTWEIGHT AND COMFORT
                       </h1>
@@ -1135,91 +1386,86 @@
     
     <script>
 
+      // Cart selection functions
       function SelectAll() {
-          cartTotal=totalcart
-          selected={{cart_len}}
-          document.getElementById("cart-total").innerText=cartTotal;
-          document.getElementById("cart-selected").innerText=selected;
-          if (selected=={{cart_len}}){
-                                                      document.getElementById("selected").innerText="Unselect all";
-                                                      document.getElementById("selected").onclick = UnSelectAll;
-                                                  }
-          // Get all checkboxes with the class 'cart-ch'
-          const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
-          // Set each checkbox's checked property to true
-          checkboxes.forEach(checkbox => {
+          cartTotal = totalcart;
+          selected = cartLen;
+          document.getElementById("cart-total").innerText = cartTotal;
+          document.getElementById("cart-selected").innerText = selected;
+          if (selected === cartLen) {
+              document.getElementById("selected").innerText = "Unselect all";
+              document.getElementById("selected").onclick = UnSelectAll;
+          }
+          let allCheckboxes = document.querySelectorAll('.cart-ch');
+          allCheckboxes.forEach(checkbox => {
               checkbox.checked = true;
           });
-          // Optionally, you can also update the cart total and selected count here if needed
       }
 
       function UnSelectAll() {
           cartTotal = 0;
           selected = 0;
-          document.getElementById("cart-total").innerText=cartTotal;
-          document.getElementById("cart-selected").innerText=selected;
-          if (selected<{{cart_len}}){
-                                                      document.getElementById("selected").innerText="Select all";
-                                                      document.getElementById("selected").onclick = SelectAll;
-                                                  }
-          // Get all checkboxes with the class 'cart-ch'
-          const checkboxes = document.querySelectorAll('.cart-ch'); // Changed from '#cart-ch' to '.cart-ch'
-          // Set each checkbox's checked property to false
-          checkboxes.forEach(checkbox => {
+          document.getElementById("cart-total").innerText = cartTotal;
+          document.getElementById("cart-selected").innerText = selected;
+          if (selected < cartLen) {
+              document.getElementById("selected").innerText = "Select all";
+              document.getElementById("selected").onclick = SelectAll;
+          }
+          let allCheckboxes = document.querySelectorAll('.cart-ch');
+          allCheckboxes.forEach(checkbox => {
               checkbox.checked = false;
           });
-          // Optionally, you can also update the cart total and selected count here if needed
       }
-
-
       </script>
       
     <script>
-      const cart = {{ cart|tojson }};
+      // Cart rendering
+      window.cartItems = JSON.parse('{{ cart|tojson|safe if cart else "[]" }}');
 
       function renderCartItems() {
-          const cartItemsContainer = document.getElementById('cartItems');
-          cartItemsContainer.innerHTML = ''; // Clear previous items
+          let cartItemsContainer = document.getElementById('cartItems');
+          if (!cartItemsContainer) return;
+          
+          cartItemsContainer.innerHTML = '';
 
-          cart.forEach(item => {
-              const itemHtml = `
-                  <div class="row mb-2">
-                      <div class="col-4">
-                          <img src="${item.image}" class="img-fluid" alt="${item.color} ${item.size}">
+          if (window.cartItems && Array.isArray(window.cartItems)) {
+              window.cartItems.forEach(item => {
+                  const itemHtml = `
+                      <div class="row mb-2">
+                          <div class="col-4">
+                              <img src="${item.image}" class="img-fluid" alt="${item.color} ${item.size}">
+                          </div>
+                          <div class="col-8">
+                              <h5>${item.color} - Size: ${item.size}</h5>
+                              <p>SKU: ${item.sku}</p>
+                              <p>Quantity: ${item.quantity}</p>
+                          </div>
                       </div>
-                      <div class="col-8">
-                          <h5>${item.color} - Size: ${item.size}</h5>
-                          <p>SKU: ${item.sku}</p>
-                          <p>Quantity: ${item.quantity}</p>
-                      </div>
-                  </div>
-              `;
-              cartItemsContainer.innerHTML += itemHtml;
-          });
+                  `;
+                  cartItemsContainer.innerHTML += itemHtml;
+              });
+          }
       }
 
-     
-
-      // Render cart items when modal is shown
-      $('#cartModal').on('show.bs.modal', function () {
-          renderCartItems();
+      // Initialize modal event
+      document.addEventListener('DOMContentLoaded', function() {
+          const cartModal = document.getElementById('cartModal');
+          if (cartModal) {
+              cartModal.addEventListener('show.bs.modal', renderCartItems);
+          }
       });
-
-    
-      
     </script>
 
     <script>
-      const product = {{ get_product_by_id("387010") | tojson }};
-      if (product) {
-        Object.entries(product).forEach(([key, value]) => {
-          if (key === "category") {
-            console.log(`Category: ${value}`);
-          }else if (key === "section") {
-            console.log(`Section: ${value}`);
-          }
-          // console.log(`${key}: ${value}`);
-        });
+      // Product details
+      window.productDetails = JSON.parse('{{ get_product_by_id("387010")|tojson|safe if get_product_by_id else "null" }}');
+      
+      if (window.productDetails) {
+          Object.entries(window.productDetails).forEach(([key, value]) => {
+              if (key === "category" || key === "section") {
+                  console.log(`${key}: ${value}`);
+              }
+          });
       }
     </script>
     <!-- ENDMODAL -->

@@ -30,6 +30,8 @@
       rel="stylesheet"
       href="assets/css/Sidebar-Cool-SB-Admin-Inspirate.css"
     />
+    <!-- Typed.js -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <!-- Animation Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.2.0/svg.min.js"></script>
@@ -446,8 +448,21 @@
         <div class="col-md-6 d-md-flex align-items-md-center">
           <div style="max-width: 350px">
             <h2 class="text-uppercase fw-bold" data-aos="fade-up">
-              Biben dum<br />fringi dictum, augue purus
+              <span id="typed-text"></span>
             </h2>
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                new Typed('#typed-text', {
+                  strings: ['Biben dum\nfringi dictum, augue purus'],
+                  typeSpeed: 50,
+                  backSpeed: 30,
+                  loop: true,
+                  cursorChar: '|',
+                  showCursor: true,
+                  smartBackspace: true
+                });
+              });
+            </script>
             <p data-aos="fade-up" class="my-3">
               Tincidunt laoreet leo, adipiscing taciti tempor. Primis senectus
               sapien, risus donec ad fusce augue interdum.
@@ -477,6 +492,7 @@
           </p>
         </div>
       </div>
+    
       <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-xl-3">
         <div class="col">
           <div
@@ -814,7 +830,7 @@
               <img
                 data-aos="zoom-in"
                 class="img-fluid w-100 min-vh-25 min-vh-md-50 mb-n7"
-                src="assets/img/blackshark-v2-x-usb-usp-advanced-passive-noise-cancel.webp"
+                src="https://shop.bench.com.ph/media/slideshow/cache/1920x933/wysiwyg/Pokemon_Homepage_Banner_Web_1920x933.jpg"
                 alt="image"
                 style="max-height: 580px; object-fit: cover"
                 width="936"
